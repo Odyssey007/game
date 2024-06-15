@@ -1,5 +1,6 @@
 #include "../header/game.h"
 
+
 //preset values into setting up window
 Game::Game() {
     //initalize varaibels for window
@@ -8,6 +9,7 @@ Game::Game() {
     //this->window->setFramerateLimit(60); 
     this->resolution = sf::VideoMode(1920, 1080);
     this->curWindow();
+    this->player = Player();
 }
 
 //sets up the window
@@ -33,6 +35,7 @@ void Game::update() {
 //render objects onto the screen || display frame on window
 void Game::render() {
     this->window->clear();
+    this->window->draw(player.player_sprite);
     this->window->display();
 }
 

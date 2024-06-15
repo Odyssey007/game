@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 //?pre-compiled header
 //game engine
+#include <../header/player.h>
 
 class Game {
 private:
@@ -15,6 +16,8 @@ private:
 public:
     Game(); //constructor
     ~Game(); //destructor
+
+    Player player; 
 
     //checks
     bool winRunning() const;

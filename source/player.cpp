@@ -3,8 +3,11 @@
 Player::Player() {
     //!image is not loading as it suppose to
     if (!player_texture.loadFromFile("../assets/player.png")) {
-        exit;
+        return;
     }
     player_sprite.setTexture(player_texture);
 }
 
+Player::~Player() {
+
+}
