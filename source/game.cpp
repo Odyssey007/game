@@ -2,10 +2,10 @@
 
 //preset values into setting up window
 Game::Game() {
-    //initalize varaibels
+    //initalize varaibels for window
     this->window = nullptr;
+    this->window->setFramerateLimit(60);
     this->resolution = sf::VideoMode(1920, 1080);
-
     this->curWindow();
 }
 
@@ -16,7 +16,7 @@ void Game::curWindow() {
 }
 
 //check if window is open
-const bool Game::winRunning() const {
+bool Game::winRunning() const {
     return this->window->isOpen();
 }
 
