@@ -1,4 +1,4 @@
-#include "player.h"
+#include "../header/player.h"
 
 Player::Player() {
     //!image is not loading as it suppose to

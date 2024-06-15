@@ -4,7 +4,8 @@
 Game::Game() {
     //initalize varaibels for window
     this->window = nullptr;
-    this->window->setFramerateLimit(60);
+    //!this creates a seg fault
+    //this->window->setFramerateLimit(60); 
     this->resolution = sf::VideoMode(1920, 1080);
     this->curWindow();
 }
