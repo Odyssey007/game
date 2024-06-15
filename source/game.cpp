@@ -4,20 +4,19 @@
 Game::Game() {
     //initalize varaibels
     this->window = nullptr;
-    this->resolution.height = 1080;
-    this->resolution.width = 1920;
+    this->resolution = sf::VideoMode(1920, 1080);
 
     this->curWindow();
 }
 
 //sets up the window
 void Game::curWindow() {
-    this->resolution.getDesktopMode();
+    //this->resolution.getDesktopMode(); ?? not sure 
     this->window = new sf::RenderWindow(resolution, "Project-AA");
 }
 
 //check if window is open
-bool Game::winRunning() const {
+const bool Game::winRunning() const {
     return this->window->isOpen();
 }
 

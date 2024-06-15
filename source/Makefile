@@ -4,7 +4,6 @@ LFLAGS 	= -lm -lsfml-graphics -lsfml-window -lsfml-system
 OBJS   	= main.o game.o
 OUT    	= play_game
 INCLUDE = -I../header
-
 #SOURCE = main.cpp game.cpp
 #HEADER = game.h
 

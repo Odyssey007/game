@@ -1,15 +1,13 @@
 #include <iostream>
-#include "game.h"
+#include "../header/game.h"
 
 int main() {
-
     Game game;
 
     while(game.winRunning()) {
-        //update
+        //update frame
         game.update();
-
-        //render
+        //render the new update
         game.render();
     }
 
