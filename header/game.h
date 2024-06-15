@@ -10,7 +10,7 @@ private:
     sf::VideoMode resolution; //controls the resolution of screen
     sf::Event event;
 
-    void curWindow();
+    void curWindow(); //
 
 public:
     Game(); //constructor
