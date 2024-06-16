@@ -29,12 +29,13 @@ void Game::handleEvents() {
             case sf::Event::Closed:
                 this->window->close(); 
                 break;
-            //logic for key handling
+            //key handling
             case sf::Event::KeyPressed:
                 if(this->event.key.code == sf::Keyboard::Escape) {
                     this->window->close();
                 }
                 break; 
+
             case sf::Event::MouseButtonPressed:
                 if(event.mouseButton.button == sf::Mouse::Right) {
                     player.mousePosition = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
@@ -56,7 +57,7 @@ void Game::update(float deltaTime) {
         sf::Vector2f currentPosition = player.player_sprite.getPosition();
         sf::Vector2f direction = player.mousePosition - currentPosition; 
         float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
-        
+
         if(distance > 0) {
             direction /= distance; 
             sf::Vector2f movement = direction * player.moveSpeed * deltaTime; 
