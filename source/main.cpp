@@ -1,14 +1,21 @@
 #include "../header/game.h"
 
 int main() {
-    Game game;
-
-    while(game.winRunning()) {
-        //update frame
-        game.update();
-        //render the new update
-        game.render();
+    try {
+        Game game;
+        sf::Clock clock; 
+        while(game.winRunning()) {
+            //update frame
+            float deltaTime = clock.restart().asSeconds(); 
+            game.update(deltaTime);
+            //render the new update
+            game.render();
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Failed to initialize the game: " << e.what() << std::endl; 
+        return EXIT_FAILURE; 
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
