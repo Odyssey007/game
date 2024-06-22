@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 //game engine
 #include <../header/player.h>
+#include <../header/enemy.h>
 
 class Game {
 private:
@@ -14,6 +15,7 @@ private:
     sf::VideoMode resolution; //controls the resolution of screen
     sf::Event event;
     Player player;
+    Enemy slime;
 
     void currentWindow();
 public:

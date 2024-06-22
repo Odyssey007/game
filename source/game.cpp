@@ -75,11 +75,13 @@ void Game::update(float deltaTime) {
         }
     }
 
+    this->slime.movement(this->player.player_sprite.getPosition());
 }
 
 //render objects onto the screen || display frame on window
 void Game::render() {
     this->window->clear();
     this->window->draw(player.player_sprite);
+    this->window->draw(slime.slime_sprite);
     this->window->display();
 }
