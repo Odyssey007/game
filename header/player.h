@@ -5,13 +5,27 @@ class Player {
 private:
     sf::Texture player_texture;
 public:
-    sf::Vector2f mousePosition;
+    //variables for player rendering
     sf::Sprite player_sprite;
-    float moveSpeed = 300.0f; //pixels per second
-    bool isMoving; //flag to check movement
+    sf::IntRect frameRectangle;
+
+    //variables for player animation
+    sf::Clock animationClock; 
+    float frameDuration;
+    int frameNumber; 
+    const int totalFrames;
+
+    //variables for player movement
+    const float battleSpeed;
+    const float kingdomSpeed; 
+    bool isMoving;
+    bool facingRight;
+
     //constructor
     Player(); 
+
     //functions
-    void movement(sf::Vector2f targetPosition);
+    void battleMovement(float deltaTime);
+    void battleMovement_animation();
     float length(const sf::Vector2f& vector); 
 };
