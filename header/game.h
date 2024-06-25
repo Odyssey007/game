@@ -1,9 +1,4 @@
 #pragma once
-#include <cmath>
-#include <string>
-#include <memory>
-#include <iostream> 
-#include <SFML/Graphics.hpp>
 //game engine
 #include <../header/player.h>
 #include <../header/enemy.h>

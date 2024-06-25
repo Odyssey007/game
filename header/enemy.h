@@ -1,20 +1,26 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-//will delete
+#include <../header/utility.h>
 
 class Enemy {
 private:
     sf::Texture slime_texture;
-    float movementSpeed = 200.0f;
-
-    std::vector<sf::Vector2f> directions; 
-public:
-    sf::Sprite slime_sprite;
-
-    Enemy();
+    sf::FloatRect spriteBounds;
+    //for movement
+    float movementSpeed;
+    std::vector<sf::Vector2f> directions;
+    sf::Vector2f bestDirection;
+    //for attack
+    float attackBuffer ;
+    bool attacking;
+    bool recovering;
+    float attackDistance;
+    float totalDistanceAttack;
 
     void generateDirections(int numDirection=16);
-    void movement(const sf::Vector2f& target);
-    void basicAttack();
+    void doAttack(float deltaTime);
+public:
+    sf::Sprite slime_sprite;
+    //idle action || attack checker
+    void movement(const sf::Vector2f& target, float deltaTime);
+    Enemy();
 };
-

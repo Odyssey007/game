@@ -1,59 +1,96 @@
 #include <../header/enemy.h>
-#include <cmath>
 
-Enemy::Enemy() {
-    //loads the sime texture
+Enemy::Enemy() :
+    movementSpeed(220.0f), bestDirection(sf::Vector2f(1, 1)),
+    attackBuffer(0.5f), attacking(false), recovering(false), 
+    attackDistance(250.0f), totalDistanceAttack(0.0f)
+{
+    //load slime texture
     if (!this->slime_texture.loadFromFile("../assets/slime.png")) {
         throw std::runtime_error ("Failed to load player texture");
     }
     this->slime_sprite.setTexture(slime_texture);
-    //generates all the directions of movement
+    
     generateDirections();
-}
-#include <iostream>
 
-float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {
-    return one.x*two.x + one.y*two.y;
-}
-
-sf::Vector2f normalize(sf::Vector2f& one) {    
-    float normal = sqrt(one.x*one.x + one.y*one.y);
-    if (normal != 0) {
-        return one /= normal;
-    } else {
-        return one;
-    }
+    //makes the center the middle of the img
+    spriteBounds = slime_sprite.getLocalBounds();
+    slime_sprite.setOrigin(spriteBounds.width / 2.0f, spriteBounds.height / 2.0f);
 }
 
+//generates all the directions of possible movement
 void Enemy::generateDirections(int numDirections) {
     const float zeroTreshhold = 1e-6; //to stop floating point precission eeror
-    float startAngle = 2 * M_PI / numDirections;
+    directions.clear();
     for (int i = 0; i < numDirections; i++) {
-        float angle = startAngle * i;
+        float angle = 2 * M_PI * i / numDirections;
         float x = std::cos(angle);
-        float y =  std::sin(angle);
+        float y = std::sin(angle);
         if (std::abs(x) < zeroTreshhold) x = 0;
         if (std::abs(y) < zeroTreshhold) y = 0;
         directions.push_back(sf::Vector2f(x, y));
     }
 }
 
-void Enemy::movement(const sf::Vector2f& target) {
-    sf::Vector2f toTarget = target - slime_sprite.getPosition();
-    
-    if (toTarget.x >= 150 || toTarget.y >= 150 || toTarget.x <= -150 || toTarget.y <= -150) {
-        toTarget = normalize(toTarget);
 
-        float maxDot = -1.0f;
-        sf::Vector2f bestDirection;
-        for (int i = 0; i < 16; i++) {
-            float dot = dotProduct(directions[i], toTarget);
-            if (dot > maxDot) {
-                maxDot = dot;
-                bestDirection = directions[i];
-            }
+void Enemy::movement(const sf::Vector2f& target, float deltaTime) {
+    //check if can attack
+    if (attacking) {
+        doAttack(deltaTime);
+        return;
+    }
+    //check if needs to recover after attack
+    if (recovering) {
+        if (attackBuffer > 0) {
+            attackBuffer -= deltaTime;
+            return;
         }
+        recovering = false;
+    } else {
+        attackBuffer = 0.5f; //resets buffer
+    }
 
-        slime_sprite.move(bestDirection*movementSpeed*sf::seconds(1.0f / 60.0f).asSeconds());
+    //checks if in attack distance 
+    if (distance(target, slime_sprite.getPosition()) <= 100.0f) {
+        attacking = true;
+        return;
+    }
+
+    //idle movement ie. moves toward the player
+    sf::Vector2f toTarget = target - slime_sprite.getPosition();
+    toTarget = normalize(toTarget);
+
+          //finds the optimal direction toward target 
+    float maxDot = -1.0f;
+    for (int i = 0; i < 16; i++) {
+        float dot = dotProduct(directions[i], toTarget);
+        if (dot > maxDot) {
+            maxDot = dot;
+            bestDirection = directions[i];
+        }
+    }
+
+    sf::Vector2f move = bestDirection*movementSpeed*deltaTime;
+    slime_sprite.move(move);
+}
+
+
+void Enemy::doAttack(float deltaTime) {
+    //buffers attack
+    if (attackBuffer > 0) {
+        attackBuffer -= deltaTime;
+        return;
+    }
+    //attacks
+    if (totalDistanceAttack < attackDistance) {
+        float moveForFrame  = 3.5*movementSpeed*deltaTime;
+        sf::Vector2f move = bestDirection*moveForFrame;
+        slime_sprite.move(move);
+        totalDistanceAttack += sqrt(move.x*move.x + move.y*move.y);
+    } else if (totalDistanceAttack >= attackDistance) { //reset values after attack
+        attacking = false;
+        totalDistanceAttack = 0.0f;
+        recovering = true;
+        attackBuffer = 0.5f;
     }
 }
