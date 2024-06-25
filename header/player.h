@@ -5,15 +5,17 @@ class Player {
 private:
     sf::Texture player_texture;
 public:
-    //variables for player rendering
+    //variables for player movement rendering
     sf::Sprite player_sprite;
     sf::IntRect frameRectangle;
 
-    //variables for player animation
-    sf::Clock animationClock; 
-    float frameDuration;
-    int frameNumber; 
-    const int totalFrames;
+    //variables for player movement animation
+    sf::Clock movement_animationClock; 
+    float movement_frameDuration;
+    int movement_frameNumber; 
+    const int movement_totalFrames;
+
+    //variables for player standing animation
 
     //variables for player movement
     const float battleSpeed;
@@ -29,3 +31,4 @@ public:
     void battleMovement_animation();
     float length(const sf::Vector2f& vector); 
 };
+

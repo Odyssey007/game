@@ -3,9 +3,9 @@
 Player::Player()
     // Initializing all variables from player in the order they are declared
     : frameRectangle(0, 0, 120, 120), // Setting rectangle dimensions
-      frameDuration(0.2f), // Duration of each frame in seconds
-      frameNumber(0),
-      totalFrames(4), // Total number of frames in the animation
+      movement_frameDuration(0.2f), // Duration of each frame in seconds
+      movement_frameNumber(0),
+      movement_totalFrames(4), // Total number of frames in the animation
       battleSpeed(300.0f), // Pixels per second
       kingdomSpeed(300.0f), // Pixels per second
       isMoving(false), // Spawns the player without moving
@@ -29,6 +29,7 @@ void Player::battleMovement(float deltaTime) {
     isMoving = false; // Initially set to false
 
     sf::Vector2f movement(0.0f, 0.0f);
+    sf::Vector2f currentPosition = player_sprite.getPosition();
 
     // Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -60,6 +61,12 @@ void Player::battleMovement(float deltaTime) {
         movement /= std::sqrt(2.0f); // Divide by the square root of 2
     }
 
+     sf::Vector2f targetPosition = currentPosition + movement;
+
+    // Use lerp to smoothly move towards the target position
+    float lerpFactor = 0.1f; // Control how smooth the movement is (smaller values are smoother)
+    player_sprite.setPosition(currentPosition + lerpFactor * (targetPosition - currentPosition));
+
     // Update the player position if moving
     if (isMoving) {
         player_sprite.move(movement);
@@ -67,10 +74,10 @@ void Player::battleMovement(float deltaTime) {
 }
 
 void Player::battleMovement_animation() {
-    if (isMoving && animationClock.getElapsedTime().asSeconds() >= frameDuration) {
-        frameNumber = (frameNumber + 1) % totalFrames; // Cycle through frames
-        frameRectangle.left = frameNumber * 120; // Update the left position of the frame
+    if (isMoving && movement_animationClock.getElapsedTime().asSeconds() >= movement_frameDuration) {
+        movement_frameNumber = (movement_frameNumber + 1) % movement_totalFrames; // Cycle through frames
+        frameRectangle.left = movement_frameNumber * 120; // Update the left position of the frame
         player_sprite.setTextureRect(frameRectangle);
-        animationClock.restart(); // Reset the clock after updating the frame
+        movement_animationClock.restart(); // Reset the clock after updating the frame
     }
 }
