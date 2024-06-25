@@ -1,12 +1,12 @@
-#include <../header/enemy.h>
+#include "../header/enemy.h"
 
 Enemy::Enemy() :
     movementSpeed(220.0f), bestDirection(sf::Vector2f(1, 1)),
-    attackBuffer(0.5f), attacking(false), recovering(false), 
+    attackBuffer(0.25f), attacking(false), recovering(false), 
     attackDistance(250.0f), totalDistanceAttack(0.0f)
 {
     //load slime texture
-    if (!this->slime_texture.loadFromFile("../assets/slime.png")) {
+    if (!this->slime_texture.loadFromFile("assets/slime.png")) {
         throw std::runtime_error ("Failed to load player texture");
     }
     this->slime_sprite.setTexture(slime_texture);
@@ -47,7 +47,7 @@ void Enemy::movement(const sf::Vector2f& target, float deltaTime) {
         }
         recovering = false;
     } else {
-        attackBuffer = 0.5f; //resets buffer
+        attackBuffer = 0.25f; //resets buffer
     }
 
     //checks if in attack distance 
@@ -91,6 +91,6 @@ void Enemy::doAttack(float deltaTime) {
         attacking = false;
         totalDistanceAttack = 0.0f;
         recovering = true;
-        attackBuffer = 0.5f;
+        attackBuffer = 0.25f;
     }
 }

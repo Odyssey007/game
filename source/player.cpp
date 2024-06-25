@@ -11,7 +11,7 @@ Player::Player()
       isMoving(false), // Spawns the player without moving
       facingRight(true) // Initial direction
 {
-    if (!player_texture.loadFromFile("../assets/playerSheet.png")) {
+    if (!player_texture.loadFromFile("assets/playerSheet.png")) {
         throw std::runtime_error("Failed to load player texture");
     }
 

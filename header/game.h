@@ -1,7 +1,7 @@
 #pragma once
 //game engine
-#include <../header/player.h>
-#include <../header/enemy.h>
+#include "player.h"
+#include "enemy.h"
 
 class Game {
 private:
