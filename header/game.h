@@ -1,7 +1,7 @@
 #pragma once
 //game engine
 #include "player.h"
-#include "enemy.h"
+#include "slime.h"
 
 class Game {
 private:
@@ -10,7 +10,7 @@ private:
     sf::VideoMode resolution; //controls the resolution of screen
     sf::Event event;
     Player player;
-    Enemy slime;
+    Slime s1;
 
     void currentWindow();
 public:
@@ -21,7 +21,7 @@ public:
     bool winRunning() const;
     //functions
     void handleEvents();
-    void update(float deltaTime);
+    void update();
     void render();
 
 };

@@ -20,3 +20,20 @@ float distance(const sf::Vector2f& point1, const sf::Vector2f& point2) {
 float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {
     return one.x*two.x + one.y*two.y;
 }
+
+DeltaTime* DeltaTime::instance = nullptr;
+
+float DeltaTime::getDeltaTime() const {
+    return deltaTime;
+}
+
+void DeltaTime::restart() {
+    deltaTime = clock.restart().asSeconds();
+}
+
+DeltaTime* DeltaTime::getInstace() {
+    if (instance == nullptr)  {
+        instance = new DeltaTime();
+    }    
+    return instance;
+}

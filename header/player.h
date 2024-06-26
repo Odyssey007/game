@@ -25,6 +25,6 @@ public:
     Player(); 
 
     //functions
-    void battleMovement(float deltaTime);
+    void battleMovement();
     void battleMovement_animation();
 };

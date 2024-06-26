@@ -2,12 +2,12 @@
 
 int main() {
     Game game;
-    sf::Clock clock; 
     while(game.winRunning()) {
+        DeltaTime::getInstace()->restart();
         //update frame
-        float deltaTime = clock.restart().asSeconds(); 
-        game.update(deltaTime);
+        game.update();
         //render the new update
         game.render();
     }
+    delete DeltaTime::getInstace();
 }
