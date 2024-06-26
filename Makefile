@@ -1,11 +1,9 @@
 CC     	= g++
 FLAGS  	= -g -Wall
 LFLAGS 	= -lm -lsfml-graphics -lsfml-window -lsfml-system
-OBJS   	= main.o game.o player.o enemy.o utility.o
+OBJS   	= main.o game.o player.o enemy.o slime.o utility.o
 OUT    	= play_game
 INCLUDE = -I../header
-
-.PHONY: all clean
 
 all: $(OUT)
 

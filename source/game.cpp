@@ -42,18 +42,19 @@ void Game::handleEvents() {
 }
 
 //update game
-void Game::update(float deltaTime) {
+void Game::update() {
     this->handleEvents(); //handle all events
-    player.battleMovement(deltaTime);
+    player.battleMovement();
     player.battleMovement_animation();
 
-    slime.movement(player.player_sprite.getPosition(), deltaTime);
+    //slime.movement(player.player_sprite.getPosition(), deltaTime);
+    s1.action(player.player_sprite.getPosition(), 100.0f);
 }
 
 //render objects onto the screen || display frame on window
 void Game::render() {
     this->window->clear();
-    this->window->draw(slime.slime_sprite);
+    this->window->draw(s1.enemySprite);
     this->window->draw(player.player_sprite);
     this->window->display();
 }

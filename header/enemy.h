@@ -2,25 +2,23 @@
 #include "utility.h"
 
 class Enemy {
-private:
-    sf::Texture slime_texture;
+protected:
+    std::map<std::string, sf::Texture> enemyTextures;
+    //
     sf::FloatRect spriteBounds;
-    //for movement
+
     float movementSpeed;
     std::vector<sf::Vector2f> directions;
     sf::Vector2f bestDirection;
-    //for attack
-    float attackBuffer ;
-    bool attacking;
-    bool recovering;
-    float attackDistance;
-    float totalDistanceAttack;
-
-    void generateDirections(int numDirection=16);
-    void doAttack(float deltaTime);
+    
+    void loadTexture(const std::string& name, const std::string& filePath);
+    void generateDirections(int numDirections=16);
+    //
+    virtual void attacks(float attackRange) = 0;
 public:
-    sf::Sprite slime_sprite;
-    //idle action || attack checker
-    void movement(const sf::Vector2f& target, float deltaTime);
     Enemy();
+    virtual ~Enemy() {};
+
+    sf::Sprite enemySprite;
+    virtual void maleeMovement(const sf::Vector2f& target); 
 };

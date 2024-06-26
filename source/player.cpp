@@ -21,18 +21,18 @@ Player::Player()
     player_sprite.setPosition(650, 500);
 }
 
-void Player::battleMovement(float deltaTime) {
+void Player::battleMovement() {
     isMoving = false; // Initially set to false
 
     sf::Vector2f movement(0.0f, 0.0f);
 
     // Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        movement.y -= battleSpeed * deltaTime;
+        movement.y -= battleSpeed * DeltaTime::getInstace()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        movement.y += battleSpeed * deltaTime;
+        movement.y += battleSpeed * DeltaTime::getInstace()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -40,7 +40,7 @@ void Player::battleMovement(float deltaTime) {
             facingRight = false;
             player_sprite.setScale(-1.f, 1.f);
         }
-        movement.x -= battleSpeed * deltaTime;
+        movement.x -= battleSpeed * DeltaTime::getInstace()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -48,7 +48,7 @@ void Player::battleMovement(float deltaTime) {
             facingRight = true;
             player_sprite.setScale(1.f, 1.f);
         }
-        movement.x += battleSpeed * deltaTime;
+        movement.x += battleSpeed * DeltaTime::getInstace()->getDeltaTime();
         isMoving = true;
     }
     // Normalize the movement vector if moving diagonally
