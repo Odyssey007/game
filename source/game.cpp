@@ -1,6 +1,5 @@
 #include "../header/game.h"
 
-
 //preset values into setting up window
 Game::Game() {
     //initialize variables for window
@@ -46,12 +45,15 @@ void Game::handleEvents() {
 void Game::update(float deltaTime) {
     this->handleEvents(); //handle all events
     player.battleMovement(deltaTime);
-    player.battleMovement_animation(); 
+    player.battleMovement_animation();
+
+    slime.movement(player.player_sprite.getPosition(), deltaTime);
 }
 
 //render objects onto the screen || display frame on window
 void Game::render() {
     this->window->clear();
+    this->window->draw(slime.slime_sprite);
     this->window->draw(player.player_sprite);
     this->window->display();
 }
