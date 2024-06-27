@@ -11,12 +11,12 @@ private:
     //variables for player movement
     const float battleSpeed;
     const float kingdomSpeed; 
-    sf::Vector2f movement;
     bool isMoving;
     bool facingRight;
     
 public:
     sf::Sprite player_sprite;
+    sf::Vector2f movement;
 
     //constructor
     Player(); 
