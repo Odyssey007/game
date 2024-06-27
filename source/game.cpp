@@ -13,7 +13,7 @@ void Game::currentWindow() {
     //this->resolution.getDesktopMode(); ?? not sure 
     this->window = std::make_unique <sf::RenderWindow> (this->resolution, "Project-AA", sf::Style::Fullscreen);
     this->window->setVerticalSyncEnabled(true); 
-    //this->window->setFramerateLimit(144);
+    //this->window->setFramerateLimit(60);
 }
 
 //check if window is open
@@ -44,8 +44,7 @@ void Game::handleEvents() {
 //update game
 void Game::update() {
     this->handleEvents(); //handle all events
-    player.battleMovement();
-    player.battleMovement_animation();
+    player.playerMovement();
 
     //slime.movement(player.player_sprite.getPosition(), deltaTime);
     s1.action(player.player_sprite.getPosition(), 100.0f);

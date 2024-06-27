@@ -44,6 +44,6 @@ void Enemy::maleeMovement(const sf::Vector2f& target) {
             bestDirection = directions[i];
         }
     }
-    sf::Vector2f move = bestDirection*movementSpeed*DeltaTime::getInstace()->getDeltaTime();
+    sf::Vector2f move = bestDirection*movementSpeed*DeltaTime::getInstance()->getDeltaTime();
     enemySprite.move(move);
 }

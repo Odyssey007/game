@@ -1,7 +1,7 @@
 #include "../header/slime.h"
 
 Slime::Slime() {
-    movementSpeed = 210.0f;
+    movementSpeed = 270.0f;
     needRecovery = false; 
     recoveryTimer = 0.25f;
     enemySprite.setTexture(enemyTextures["slime"]);
@@ -14,7 +14,7 @@ void Slime::action(const sf::Vector2f& target, const float attackRange) {
     // Check if recovery buffer is needed for attack  
     if (needRecovery) {
         if (recoveryTimer > 0) {
-            recoveryTimer -= DeltaTime::getInstace()->getDeltaTime();
+            recoveryTimer -= DeltaTime::getInstance()->getDeltaTime();
             return;
         }
         needRecovery = false;
@@ -41,13 +41,13 @@ void Slime::normalAttack() {
 
 void Slime::leapAttack() {
     if (!isAttacking) {
-        leapStartBuffer -= DeltaTime::getInstace()->getDeltaTime();
+        leapStartBuffer -= DeltaTime::getInstance()->getDeltaTime();
         if (leapStartBuffer <= 0) {
             isAttacking = true;
         }
     }
     if (totalLeapDistance < leapDistance && isAttacking) {
-        float moveFrame = 3.5 * movementSpeed * DeltaTime::getInstace()->getDeltaTime();
+        float moveFrame = 5.5 * movementSpeed * DeltaTime::getInstance()->getDeltaTime();
         sf::Vector2f move = bestDirection * moveFrame;
         enemySprite.move(move);
         totalLeapDistance += magnitude(move);
@@ -55,9 +55,9 @@ void Slime::leapAttack() {
         totalLeapDistance = 0.0f;
         //start buffer
         isAttacking = false;
-        leapStartBuffer = 0.25f;
+        leapStartBuffer = 0.15f;
         //end buffer
         needRecovery = true;
-        recoveryTimer = 0.25f;
+        recoveryTimer = 0.15f;
     }
 }

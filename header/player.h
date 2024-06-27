@@ -3,7 +3,7 @@
 
 class Player {
 private:
-    sf::Texture player_texture;
+    sf::Texture player_texture; 
 public:
     //variables for player rendering
     sf::Sprite player_sprite;
@@ -13,11 +13,12 @@ public:
     sf::Clock animationClock; 
     float frameDuration;
     int frameNumber; 
-    const int totalFrames;
+    const int totalFrames; 
 
     //variables for player movement
     const float battleSpeed;
     const float kingdomSpeed; 
+    sf::Vector2f movement;
     bool isMoving;
     bool facingRight;
 
@@ -25,6 +26,12 @@ public:
     Player(); 
 
     //functions
-    void battleMovement();
-    void battleMovement_animation();
+    void playerMovement();
+    void playerMovement_animation();
+    void moveUp();
+    void moveDown();
+    void moveLeft();
+    void moveRight();
+    void idle();
+    void idleAnimation(); 
 };

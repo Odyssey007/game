@@ -63,6 +63,7 @@
         "ios": "cpp",
         "__functional_03": "cpp",
         "target": "cpp",
-        "__bit_reference": "cpp"
+        "__bit_reference": "cpp",
+        "cinttypes": "cpp"
     }
 }

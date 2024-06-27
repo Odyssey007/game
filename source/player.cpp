@@ -2,7 +2,7 @@
 
 Player::Player()
     // Initializing all variables from player in the order they are declared
-    : frameRectangle(0, 0, 120, 120), // Setting rectangle dimensions
+    :  // Setting rectangle dimensions
       frameDuration(0.18f), // Duration of each frame in seconds
       frameNumber(0), // makes sure starting with the first sprite frame
       totalFrames(4), // Total number of frames in the animation
@@ -21,59 +21,80 @@ Player::Player()
     player_sprite.setPosition(650, 500);
 }
 
-void Player::battleMovement() {
-    isMoving = false; // Initially set to false
+void Player::playerMovement() {
+    //initializing variables
+    isMoving = false;
+    movement = sf::Vector2f (0.0f, 0.0f); 
+    frameRectangle = sf::IntRect (0, 147, 120, 295); 
 
-    sf::Vector2f movement(0.0f, 0.0f);
-    sf::Vector2f currentPosition = player_sprite.getPosition();
+    //Capture keyboard input for movement
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) moveDown(); 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) moveLeft();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) moveRight();
 
-    // Capture keyboard input for movement
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        movement.y -= battleSpeed * DeltaTime::getInstace()->getDeltaTime();
-        isMoving = true;
+    //Update the player position if moving
+    if (isMoving) {
+        movement = normalize(movement); 
+        player_sprite.move(movement * battleSpeed * DeltaTime::getInstance()->getDeltaTime());
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        movement.y += battleSpeed * DeltaTime::getInstace()->getDeltaTime();
-        isMoving = true;
+    else{
+        idle(); 
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        if (facingRight) {
+
+    playerMovement_animation(); //update player animation
+}
+
+void Player::moveUp() {
+    movement.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    isMoving = true;
+}
+
+void Player::moveDown() {
+    movement.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
+    isMoving = true;
+}
+
+void Player::moveLeft() {
+    if (facingRight) {
             facingRight = false;
             player_sprite.setScale(-1.f, 1.f);
         }
-        movement.x -= battleSpeed * DeltaTime::getInstace()->getDeltaTime();
-        isMoving = true;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        if (!facingRight) {
+    movement.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    isMoving = true;
+}
+
+void Player::moveRight() {
+    if (!facingRight) {
             facingRight = true;
             player_sprite.setScale(1.f, 1.f);
         }
-        movement.x += battleSpeed * DeltaTime::getInstace()->getDeltaTime();
-        isMoving = true;
-    }
-    // Normalize the movement vector if moving diagonally
-    if (isMoving && movement.x != 0.0f && movement.y != 0.0f) {
-        movement /= std::sqrt(2.0f); // Divide by the square root of 2
-    }
+    movement.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    isMoving = true;
+}
 
-     sf::Vector2f targetPosition = currentPosition + movement;
-
-    // Use lerp to smoothly move towards the target position
-    float lerpFactor = 0.1f; // Control how smooth the movement is (smaller values are smoother)
-    player_sprite.setPosition(currentPosition + lerpFactor * (targetPosition - currentPosition));
-
-    // Update the player position if moving
-    if (isMoving) {
-        player_sprite.move(movement);
+void Player::idle() {
+    if(!isMoving) {
+        frameRectangle = sf::IntRect (0, 0, 75, 148); 
+        idleAnimation(); 
     }
 }
 
-void Player::battleMovement_animation() {
+void Player::playerMovement_animation() {
     if (isMoving && animationClock.getElapsedTime().asSeconds() >= frameDuration) {
         frameNumber = (frameNumber + 1) % totalFrames; // Cycle through frames
         frameRectangle.left = frameNumber * 120; // Update the left position of the frame
         player_sprite.setTextureRect(frameRectangle);
         animationClock.restart(); // Reset the clock after updating the frame
+    }
+}
+
+void Player::idleAnimation() {
+    if(!isMoving && animationClock.getElapsedTime().asSeconds() >= frameDuration) {
+        frameNumber = (frameNumber + 1) % 5;
+        frameRectangle.left = frameNumber * 86; 
+        player_sprite.setTextureRect(frameRectangle);
+        animationClock.restart(); 
+        frameNumber = frameNumber % 5;
     }
 }

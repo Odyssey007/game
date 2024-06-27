@@ -3,11 +3,11 @@
 int main() {
     Game game;
     while(game.winRunning()) {
-        DeltaTime::getInstace()->restart();
+        DeltaTime::getInstance()->restart();
         //update frame
         game.update();
         //render the new update
         game.render();
     }
-    delete DeltaTime::getInstace();
+    delete DeltaTime::getInstance();
 }
