@@ -3,6 +3,7 @@
 #include <cmath>
 #include <string>
 #include <memory>
+#include <vector> 
 #include "deltaTime.h"
 
 float magnitude(const sf::Vector2f& vector);
