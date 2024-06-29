@@ -13,6 +13,7 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u frameDimension, float fr
 }
 
 void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite){
+    this->row = row; 
     currentFrame.y = row; 
     totalTime += DeltaTime::getInstance()->getDeltaTime(); 
 
@@ -24,6 +25,15 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite){
     uvRect.left = currentFrame.x * uvRect.width; 
     uvRect.top = currentFrame.y * uvRect.height; 
 
+    if (faceRight) {
+        sprite.setScale(1.0f, 1.0f); 
+    } 
+    else {
+        sprite.setScale(-1.0f, 1.0f);
+    }
+
+
+/*
     if (row == 0) {
         if (faceRight) {
             sprite.setScale(0.95f, 0.95f); 
@@ -40,6 +50,8 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite){
             sprite.setScale(-1.0f, 1.0f);
         }
     }
+*/
+    void animati
 }
 
 

@@ -8,6 +8,7 @@ class Animation {
         float frameDuration; 
         float totalTime; 
     public: 
+        int row; 
         //default constructor
         Animation(){
             frameDimension = {0, 0};
