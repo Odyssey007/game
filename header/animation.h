@@ -9,12 +9,7 @@ class Animation {
         float totalTime; 
     public: 
         //default constructor
-        Animation(){
-            frameDimension = {0, 0};
-            currentFrame = {0, 0};
-            frameDuration = {0.0f}; 
-            totalTime = {0.0f};
-        }
+        Animation() {};
         //constructor with parameter 
         Animation(sf::Texture* texture, sf::Vector2u frameDimension, float frameDuration);
         sf::IntRect uvRect; 

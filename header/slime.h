@@ -15,9 +15,10 @@ private:
     float totalLeapDistance;
 
     virtual void attacks(float attackRange) override;
-    void leapAttack();
-    void normalAttack();
 public:
     Slime();
+
     void action(const sf::Vector2f& target, const float attackRange);
+    void leapAttack();
+    void normalAttack();
 };

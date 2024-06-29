@@ -41,5 +41,3 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite){
         }
     }
 }
-
-
