@@ -6,13 +6,15 @@ class Player {
 private:
     //variables for player rendering
     sf::Texture player_texture; 
+    Animation player_animation; 
+
     //variables for player movement
     const float battleSpeed;
     const float kingdomSpeed; 
     sf::Vector2f movement;
     bool isMoving;
     bool facingRight;
-    Animation player_animation; 
+    
 public:
     sf::Sprite player_sprite;
 

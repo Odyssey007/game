@@ -9,7 +9,7 @@ Player::Player()
     if (!player_texture.loadFromFile("assets/playerSheet.png")) {
         throw std::runtime_error("Failed to load player texture");
     }
-    player_animation = Animation(&player_texture, {6, 2}, 0.2f);
+    player_animation = Animation(&player_texture, {4, 2}, 0.18f);
     player_sprite.setTexture(player_texture);
     player_sprite.setTextureRect(player_animation.uvRect);
     player_sprite.setOrigin(player_animation.uvRect.width / 2.0f, player_animation.uvRect.height / 2.0f); // Set origin to bottom center
@@ -34,35 +34,33 @@ void Player::playerMovement() {
         player_sprite.move(movement * battleSpeed * DeltaTime::getInstance()->getDeltaTime());
     }
     else{
-        player_animation.animationUpdate(0);
+        player_animation.animationUpdate(0, facingRight, player_sprite);
     }
 }
 
 void Player::moveUp() {
     movement.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    player_animation.animationUpdate(1, facingRight, player_sprite);
     isMoving = true;
 }
 
 void Player::moveDown() {
     movement.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
+    player_animation.animationUpdate(1, facingRight, player_sprite);
     isMoving = true;
 }
 
 void Player::moveLeft() {
-    if (facingRight) {
-            facingRight = false;
-            player_sprite.setScale(-1.f, 1.f);
-        }
+    if (facingRight) facingRight = false;
+    player_animation.animationUpdate(1, facingRight, player_sprite);
     movement.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
     isMoving = true;
 }
 
 void Player::moveRight() {
-    if (!facingRight) {
-            facingRight = true;
-            player_sprite.setScale(1.f, 1.f);
-        }
+    if (!facingRight) facingRight = true;
     movement.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    player_animation.animationUpdate(1, facingRight, player_sprite);
     isMoving = true;
 }
 

@@ -18,6 +18,6 @@ class Animation {
         //constructor with parameter 
         Animation(sf::Texture* texture, sf::Vector2u frameDimension, float frameDuration);
         sf::IntRect uvRect; 
-        void animationUpdate(int row);
-        void check_facingRight(bool faceRight); 
+        void animationUpdate(int row, bool faceRight, sf::Sprite& sprite);
+
 };

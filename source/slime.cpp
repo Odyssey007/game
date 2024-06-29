@@ -1,7 +1,7 @@
 #include "../header/slime.h"
 
 Slime::Slime() {
-    movementSpeed = 270.0f;
+    movementSpeed = 150.0f;
     needRecovery = false; 
     recoveryTimer = 0.25f;
     enemySprite.setTexture(enemyTextures["slime"]);
