@@ -34,14 +34,8 @@ void Player::playerMovement() {
         player_sprite.move(movement * battleSpeed * DeltaTime::getInstance()->getDeltaTime());
     }
     else{
-        if(player_animation.row == 0) {
-            if(facingRight){
-                player_sprite.setScale(0.05f, 0.05f);
-            }
-            else {
-                player_sprite.setScale(-0.05f, 0.05f);
-            }
-        }
+        player_animation.editScale = true; 
+        player_animation.scaleNum = sf::Vector2f(0.93f, 0.93f);
         player_animation.animationUpdate(0, facingRight, player_sprite);
     }
 }

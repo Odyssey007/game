@@ -1,9 +1,12 @@
 #include "../header/slime.h"
 
-Slime::Slime() {
-    movementSpeed = 150.0f;
-    needRecovery = false; 
-    recoveryTimer = 0.25f;
+Slime::Slime() :
+    needToCharge(false), chargeTimer(0.15f),
+    needToRecover(false), recoveryTimer(0.15f),
+    leapDistance(250.0f), totalLeapDistance(0.0f)
+{
+    movementSpeed = 280.0f;
+
     enemySprite.setTexture(enemyTextures["slime"]);
     //sets origin at the center of the sprite
     spriteBounds = enemySprite.getLocalBounds();
@@ -12,16 +15,17 @@ Slime::Slime() {
 
 void Slime::action(const sf::Vector2f& target, const float attackRange) {
     // Check if recovery buffer is needed for attack  
-    if (needRecovery) {
+    if (needToRecover) {
         if (recoveryTimer > 0) {
+            recoveryTimer -= DeltaTime::getInstance()->getDeltaTime();
             recoveryTimer -= DeltaTime::getInstance()->getDeltaTime();
             return;
         }
-        needRecovery = false;
+        needToRecover = false;
     }
     //moves
-    if (distance(target, enemySprite.getPosition()) >= attackRange && !isAttacking) {
-        maleeMovement(target);
+    if (distance(target, enemySprite.getPosition()) >= attackRange && !needToCharge) {
+        meleeMovement(target);
     } else { //attacks
         attacks(attackRange);
     }
@@ -40,24 +44,24 @@ void Slime::normalAttack() {
 }
 
 void Slime::leapAttack() {
-    if (!isAttacking) {
-        leapStartBuffer -= DeltaTime::getInstance()->getDeltaTime();
-        if (leapStartBuffer <= 0) {
-            isAttacking = true;
+    if (!needToCharge) {
+        chargeTimer -= DeltaTime::getInstance()->getDeltaTime();
+        if (chargeTimer <= 0) {
+            needToCharge = true;
         }
     }
-    if (totalLeapDistance < leapDistance && isAttacking) {
+    if (totalLeapDistance < leapDistance && needToCharge) {
         float moveFrame = 5.5 * movementSpeed * DeltaTime::getInstance()->getDeltaTime();
         sf::Vector2f move = bestDirection * moveFrame;
         enemySprite.move(move);
         totalLeapDistance += magnitude(move);
-    } else if (isAttacking) {
+    } else if (needToCharge) {
         totalLeapDistance = 0.0f;
         //start buffer
-        isAttacking = false;
-        leapStartBuffer = 0.15f;
+        needToCharge = false;
+        chargeTimer = 0.15f;
         //end buffer
-        needRecovery = true;
+        needToRecover = true;
         recoveryTimer = 0.15f;
     }
 }

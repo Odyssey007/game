@@ -20,5 +20,5 @@ public:
     virtual ~Enemy() {};
 
     sf::Sprite enemySprite;
-    virtual void maleeMovement(const sf::Vector2f& target); 
+    virtual void meleeMovement(const sf::Vector2f& target); 
 };
