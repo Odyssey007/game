@@ -7,6 +7,7 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u frameDimension, float fr
     this->frameDuration = frameDuration;
     currentFrame.x = 0; 
     totalTime = 0.0f; 
+    editScale = false; 
     //calculating width and height for texture rectangle
     uvRect.width = texture->getSize().x / frameDimension.x; 
     uvRect.height = texture->getSize().y / frameDimension.y;
@@ -24,14 +25,16 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite){
     uvRect.left = currentFrame.x * uvRect.width; 
     uvRect.top = currentFrame.y * uvRect.height; 
 
-    if (row == 0) {
-        if (faceRight) {
-            sprite.setScale(0.95f, 0.95f); 
-        } 
-        else {
-            sprite.setScale(-0.95f, 0.95f);  
+    if(editScale) {
+        if(faceRight) {
+            sprite.setScale(scaleNum.x, scaleNum.y); 
+            
         }
-    } 
+        else {
+            sprite.setScale(-scaleNum.x, scaleNum.y); 
+        }
+        editScale = false; 
+    }
     else {
         if (faceRight) {
             sprite.setScale(1.0f, 1.0f); 
