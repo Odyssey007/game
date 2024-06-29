@@ -5,12 +5,21 @@ Slime::Slime() :
     needToRecover(false), recoveryTimer(0.15f),
     leapDistance(250.0f), totalLeapDistance(0.0f)
 {
+    //movement and sprite
     movementSpeed = 280.0f;
-
     enemySprite.setTexture(enemyTextures["slime"]);
-    //sets origin at the center of the sprite
-    spriteBounds = enemySprite.getLocalBounds();
-    enemySprite.setOrigin(spriteBounds.width / 2.0f, spriteBounds.height / 2.0f);
+
+    //set position
+    enemySprite.setPosition(1000, 1000);
+
+    sf::Image image = enemyTextures["slime"].copyToImage();
+    //sets the origin of slime and hitbox
+    spriteBounds = boxBoundsCalc(image);
+    hitbox.updateSize(spriteBounds);
+    sf::Vector2f origin;
+    origin.x = spriteBounds.left + spriteBounds.width/2.0f;
+    origin.y = spriteBounds.top + spriteBounds.height/2.0f;
+    enemySprite.setOrigin(origin);
 }
 
 void Slime::action(const sf::Vector2f& target, const float attackRange) {
@@ -18,12 +27,12 @@ void Slime::action(const sf::Vector2f& target, const float attackRange) {
     if (needToRecover) {
         if (recoveryTimer > 0) {
             recoveryTimer -= DeltaTime::getInstance()->getDeltaTime();
-            recoveryTimer -= DeltaTime::getInstance()->getDeltaTime();
             return;
         }
         needToRecover = false;
     }
     //moves
+    hitbox.followEntity(enemySprite.getPosition());
     if (distance(target, enemySprite.getPosition()) >= attackRange && !needToCharge) {
         meleeMovement(target);
     } else { //attacks

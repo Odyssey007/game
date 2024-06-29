@@ -16,5 +16,4 @@ class Animation {
         Animation(sf::Texture* texture, sf::Vector2u frameDimension, float frameDuration);
         sf::IntRect uvRect; 
         void animationUpdate(int row, bool faceRight, sf::Sprite& sprite);
-        void edit_flipScales(int editRow, bool faceRight, sf::Vector2f scaleNum); 
 };

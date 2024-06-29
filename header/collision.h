@@ -3,9 +3,13 @@
 
 class RecCollision {
 private:
+    
+public:
     sf::RectangleShape body;
 
-    void update(const sf::Vector2f& );
-public:
-    RecCollision(const sf::Vector2f& bodyDim);
+    RecCollision();
+    void updateSize(const sf::IntRect& bodyDim);
+
+    void followEntity(const sf::Vector2f& entityPosition);
+    void checkCollision();
 };
