@@ -16,15 +16,14 @@ Player::Player()
     player_sprite.setPosition(650, 500);
 
     sf::IntRect bounds;
-    hitbox.body.setPosition(650, 500);
-
+    hitBox.body.setPosition(650, 500);
     bounds.width = 32;
     bounds.left = 30;
 
     bounds.height = 75;
     bounds.top = 35;
     
-    hitbox.updateSize(bounds);
+    hitBox.updateSize(bounds);
     
     sf::Vector2f origin;
     origin.x = bounds.left + bounds.width/2.0f;
@@ -36,7 +35,6 @@ void Player::playerMovement() {
     //initializing variables
     isMoving = false;
     movement = sf::Vector2f (0.0f, 0.0f); 
-    player_sprite.setTextureRect(player_animation.uvRect);
     
     //Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
@@ -51,10 +49,10 @@ void Player::playerMovement() {
     }
     else{
         player_animation.editScale = true; 
-        player_animation.scaleNum = {.93f, .93f};
-        player_animation.animationUpdate(0, facingRight, player_sprite, {.93f, .93f});
+        //player_animation.scaleNum = {.93f, .93f};
+        player_animation.animationUpdate(0, facingRight, player_sprite, {0.93f, 0.93f});
     }
-    hitbox.followEntity(player_sprite.getPosition());
+    hitBox.followEntity(player_sprite.getPosition());
 }
 
 

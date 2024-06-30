@@ -30,6 +30,23 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf:
 
     uvRect.left = currentFrame.x * uvRect.width; 
     uvRect.top = currentFrame.y * uvRect.height; 
+
+    float originalBottom = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.0f;
+    if(editScale) {
+        sprite.setScale(faceRight ? scaleNum.x : -scaleNum.x, scaleNum.y);
+        editScale = false;  // Reset the editScale flag after applying the scale
+    }
+    else {
+        sprite.setScale(faceRight ? 1.0f : -1.0f, 1.0f);
+    }
+
+    sprite.setTextureRect(uvRect);
+    float newBottom = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.0f;
+    sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + (originalBottom - newBottom));
+
+}
+
+
 /*
     if (faceRight) {
         sprite.setScale(scaleNum.x, scaleNum.y); 
@@ -37,15 +54,17 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf:
     else {
         sprite.setScale(-scaleNum.x, scaleNum.y);
     }
-*/
+
+    float originalBottom = sprite.getPosition().y + sprite.getGlobalBounds().height;
 
     if(editScale) {
         if(faceRight) {
             sprite.setScale(scaleNum.x, scaleNum.y); 
-            
+            //sprite.setPosition(sprite.getPosition().x, bottom - bounds.height);
         }
         else {
             sprite.setScale(-scaleNum.x, scaleNum.y); 
+            //sprite.setPosition(sprite.getPosition().x, bottom - bounds.height);
         }
         editScale = false; 
     }
@@ -57,4 +76,7 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf:
             sprite.setScale(-1.0f, 1.0f);
         }
     }
-}
+    sprite.setTextureRect(uvRect);
+    float newBottom = sprite.getPosition().y + sprite.getGlobalBounds().height;
+    sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + (originalBottom - newBottom));
+    */

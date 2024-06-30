@@ -24,5 +24,6 @@ public:
     void leapAttack();
     void normalAttack();
 
-    RecCollision hitbox;
+    RecCollision hitBox;
+    CircleCollision hitBoxC;
 };

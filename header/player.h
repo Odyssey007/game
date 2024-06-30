@@ -29,5 +29,5 @@ public:
     void moveLeft();
     void moveRight();
 
-    RecCollision hitbox;
+    RecCollision hitBox;
 };

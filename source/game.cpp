@@ -54,11 +54,13 @@ void Game::render() {
     this->window->clear();
 
     this->window->draw(s1.enemySprite);
-    this->window->draw(s1.hitbox.body);
+    //this->window->draw(s1.hitBox.body);
+    this->window->draw(s1.hitBoxC.dot);
 
 
     this->window->draw(player.player_sprite);
-    this->window->draw(player.hitbox.body);
+    this->window->draw(player.hitBox.body);
+    //this->window->draw(player.hitBoxC.dot);
 
     this->window->display();
 }
