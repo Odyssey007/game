@@ -30,14 +30,15 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf:
 
     uvRect.left = currentFrame.x * uvRect.width; 
     uvRect.top = currentFrame.y * uvRect.height; 
-
+/*
     if (faceRight) {
         sprite.setScale(scaleNum.x, scaleNum.y); 
     } 
     else {
         sprite.setScale(-scaleNum.x, scaleNum.y);
     }
-/*
+*/
+
     if(editScale) {
         if(faceRight) {
             sprite.setScale(scaleNum.x, scaleNum.y); 
@@ -56,5 +57,4 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf:
             sprite.setScale(-1.0f, 1.0f);
         }
     }
-*/
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "utility.h"
 #include "animation.h"
+#include "collision.h"
 
 class Player {
 private:
@@ -27,4 +28,6 @@ public:
     void moveDown();
     void moveLeft();
     void moveRight();
+
+    RecCollision hitbox;
 };

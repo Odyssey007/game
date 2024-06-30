@@ -5,7 +5,7 @@ class Enemy {
 protected:
     std::map<std::string, sf::Texture> enemyTextures;
     //
-    sf::FloatRect spriteBounds;
+    sf::IntRect spriteBounds;
 
     float movementSpeed;
     std::vector<sf::Vector2f> directions;

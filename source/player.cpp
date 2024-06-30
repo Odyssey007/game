@@ -20,8 +20,8 @@ void Player::playerMovement() {
     //initializing variables
     isMoving = false;
     movement = sf::Vector2f (0.0f, 0.0f); 
-    player_sprite.setTextureRect(player_animation.uvRect);  
-
+    player_sprite.setTextureRect(player_animation.uvRect);
+    
     //Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) moveDown(); 

@@ -1,7 +1,7 @@
 CC     	= g++
 FLAGS  	= -g -Wall
 LFLAGS 	= -lm -lsfml-graphics -lsfml-window -lsfml-system
-OBJS   	= main.o game.o player.o enemy.o slime.o utility.o deltaTime.o animation.o
+OBJS   	= main.o game.o player.o enemy.o slime.o utility.o deltaTime.o animation.o collision.o
 OUT    	= play_game
 INCLUDE = -I../header
 

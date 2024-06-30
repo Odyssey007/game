@@ -1,8 +1,15 @@
 #pragma once
 #include "utility.h"
 
-class Hit_box {
-    private: 
+class RecCollision {
+private:
     
-    public:
+public:
+    sf::RectangleShape body;
+
+    RecCollision();
+    void updateSize(const sf::IntRect& bodyDim);
+
+    void followEntity(const sf::Vector2f& entityPosition);
+    void checkCollision();
 };

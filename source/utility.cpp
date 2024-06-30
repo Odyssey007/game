@@ -21,3 +21,20 @@ float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {
     return one.x*two.x + one.y*two.y;
 }
 
+sf::IntRect boxBoundsCalc(const sf::Image& image) {
+    unsigned int left = image.getSize().x, right = 0;
+    unsigned int top = image.getSize().y, bottom = 0;
+
+    for (unsigned int x = 0; x < image.getSize().x; ++x) {
+        for (unsigned int y = 0; y < image.getSize().y; ++y) {
+            if (image.getPixel(x, y).a != 0) {
+                if (x <= left) left = x;
+                if (x >= right) right = x;
+                if (y <= top) top = y;
+                if (y >= bottom) bottom = y;
+            }
+        }
+    }
+
+    return sf::IntRect(left, top, right-left, bottom-top);
+}
