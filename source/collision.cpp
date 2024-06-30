@@ -3,7 +3,7 @@
 
 RecCollision::RecCollision() {
     body.setOutlineColor(sf::Color::Red);
-    body.setOutlineThickness(3.0f);
+    body.setOutlineThickness(1.0f);
     body.setFillColor(sf::Color::Transparent);
 }
 
