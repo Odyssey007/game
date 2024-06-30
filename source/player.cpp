@@ -35,26 +35,26 @@ void Player::playerMovement() {
     }
     else{
         player_animation.editScale = true; 
-        player_animation.scaleNum = sf::Vector2f(0.93f, 0.93f);
-        player_animation.animationUpdate(0, facingRight, player_sprite);
+        player_animation.scaleNum = {.93f, .93f};
+        player_animation.animationUpdate(0, facingRight, player_sprite, {.93f, .93f});
     }
 }
 
 void Player::moveUp() {
     movement.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    player_animation.animationUpdate(1, facingRight, player_sprite);
+    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveDown() {
     movement.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
-    player_animation.animationUpdate(1, facingRight, player_sprite);
+    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveLeft() {
     if (facingRight) facingRight = false;
-    player_animation.animationUpdate(1, facingRight, player_sprite);
+    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
     movement.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
     isMoving = true;
 }
@@ -62,7 +62,7 @@ void Player::moveLeft() {
 void Player::moveRight() {
     if (!facingRight) facingRight = true;
     movement.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    player_animation.animationUpdate(1, facingRight, player_sprite);
+    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
