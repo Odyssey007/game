@@ -1,12 +1,12 @@
 #include "../header/slime.h"
 
 Slime::Slime() :
-    needToCharge(false), chargeTimer(0.15f),
-    needToRecover(false), recoveryTimer(0.15f),
+    needToCharge(false), chargeTimer(0.35f),
+    needToRecover(false), recoveryTimer(0.35f),
     leapDistance(250.0f), totalLeapDistance(0.0f)
 {
     //movement and sprite
-    movementSpeed = 280.0f;
+    movementSpeed = 200.0f;
     enemySprite.setTexture(enemyTextures["slime"]);
 
     //set position
@@ -68,9 +68,9 @@ void Slime::leapAttack() {
         totalLeapDistance = 0.0f;
         //start buffer
         needToCharge = false;
-        chargeTimer = 0.15f;
+        chargeTimer = 0.35f;
         //end buffer
         needToRecover = true;
-        recoveryTimer = 0.15f;
+        recoveryTimer = 0.35f;
     }
 }

@@ -12,8 +12,24 @@ Player::Player()
     player_animation = Animation(&player_texture, {4, 2}, 0.18f);
     player_sprite.setTexture(player_texture);
     player_sprite.setTextureRect(player_animation.uvRect);
-    player_sprite.setOrigin(player_animation.uvRect.width / 2.0f, player_animation.uvRect.height / 2.0f); // Set origin to bottom center
+    //player_sprite.setOrigin(player_animation.uvRect.width / 2.0f, player_animation.uvRect.height / 2.0f); // Set origin to bottom center
     player_sprite.setPosition(650, 500);
+
+    sf::IntRect bounds;
+    hitbox.body.setPosition(650, 500);
+
+    bounds.width = 32;
+    bounds.left = 30;
+
+    bounds.height = 75;
+    bounds.top = 35;
+    
+    hitbox.updateSize(bounds);
+    
+    sf::Vector2f origin;
+    origin.x = bounds.left + bounds.width/2.0f;
+    origin.y = bounds.top + bounds.height/2.0f;
+    player_sprite.setOrigin(origin);
 }
 
 void Player::playerMovement() {
@@ -38,7 +54,9 @@ void Player::playerMovement() {
         player_animation.scaleNum = {.93f, .93f};
         player_animation.animationUpdate(0, facingRight, player_sprite, {.93f, .93f});
     }
+    hitbox.followEntity(player_sprite.getPosition());
 }
+
 
 void Player::moveUp() {
     movement.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();

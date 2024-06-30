@@ -52,10 +52,13 @@ void Game::update() {
 //render objects onto the screen || display frame on window
 void Game::render() {
     this->window->clear();
+
     this->window->draw(s1.enemySprite);
-    this->window->draw(player.player_sprite);
-    
     this->window->draw(s1.hitbox.body);
+
+
+    this->window->draw(player.player_sprite);
+    this->window->draw(player.hitbox.body);
 
     this->window->display();
 }
