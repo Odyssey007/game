@@ -1,9 +1,6 @@
 #pragma once
 #include "utility.h"
 
-class CollisionManager {
-    
-};
 
 class RecCollision {
 private:
@@ -23,9 +20,17 @@ class CircleCollision {
     private:
 
     public:
-        sf::CircleShape dot; 
+    sf::CircleShape dot; 
 
-        CircleCollision();
-        void updateCircle(const sf::IntRect& dotDimension);
-        void followEntity(const sf::Vector2f& entityPosition);
+    CircleCollision();
+    void updateCircle(const sf::IntRect& dotDimension);
+    void followEntity(const sf::Vector2f& entityPosition);
+};
+
+class CollisionManager {
+private:
+
+public:
+    std::vector <RecCollision> entityRecHitBox;
+    std::vector <CircleCollision> entityCirHitBox;
 };

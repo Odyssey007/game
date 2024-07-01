@@ -1,17 +1,11 @@
 #include "../header/collision.h"
 
-
 RecCollision::RecCollision() {
     body.setOutlineColor(sf::Color::Red);
     body.setOutlineThickness(1.0f);
     body.setFillColor(sf::Color::Transparent);
 }
 
-CircleCollision::CircleCollision() {
-    dot.setOutlineThickness(1.0f);
-    dot.setOutlineColor(sf::Color::Red);
-    dot.setFillColor(sf::Color::Transparent); 
-}
 
 void RecCollision::updateSize(const sf::IntRect& bodyDim) {
     body.setSize(sf::Vector2f(bodyDim.width, bodyDim.height));
@@ -30,19 +24,33 @@ bool RecCollision::checkCollision(const sf::RectangleShape& other) const {
 bool RecCollision::checkCollision(const sf::CircleShape& other) const {
     sf::Vector2f boxPosition = body.getPosition();
     sf::Vector2f circlePosition = other.getPosition();
-    float xPosition, yPosition, distance;
+    sf::Vector2f boxSize = body.getSize();
 
-    xPosition = std::max(boxPosition.x, std::min(circlePosition.x, boxPosition.x + body.getSize().x));
-    yPosition = std::max(boxPosition.y, std::min(circlePosition.y, boxPosition.y + body.getSize().y));
+    // Adjust the box position to account for its origin
+    boxPosition.x -= body.getOrigin().x;
+    boxPosition.y -= body.getOrigin().y;
 
-    distance = std::sqrt(std::pow(xPosition - circlePosition.x, 2) + std::pow(yPosition - circlePosition.y, 2));
+    // Calculate the closest point on the rectangle to the center of the circle
+    float closestX = std::max(boxPosition.x, std::min(circlePosition.x, boxPosition.x + boxSize.x));
+    float closestY = std::max(boxPosition.y, std::min(circlePosition.y, boxPosition.y + boxSize.y));
 
-    if (distance <= other.getRadius()) {
-        return true;
-    }
-    return false;
+    // Calculate the distance between the circle's center and this closest point
+    float distanceX = closestX - circlePosition.x;
+    float distanceY = closestY - circlePosition.y;
+
+    // Calculate the squared distance and compare it to the squared radius to avoid computing the square root
+    float distanceSquared = distanceX * distanceX + distanceY * distanceY;
+    float radiusSquared = other.getRadius() * other.getRadius();
+
+    // If the squared distance is less than the squared radius, there is a collision
+    return distanceSquared <= radiusSquared;
 }
 
+CircleCollision::CircleCollision() {
+    dot.setOutlineThickness(1.0f);
+    dot.setOutlineColor(sf::Color::Red);
+    dot.setFillColor(sf::Color::Transparent); 
+}
 
 // class CircleCollision functions
 void CircleCollision::updateCircle(const sf::IntRect & dotDimension) {
