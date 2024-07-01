@@ -25,4 +25,6 @@ class CircleCollision {
         CircleCollision();
         void updateCircle(const sf::IntRect& dotDimension);
         void followEntity(const sf::Vector2f& entityPosition);
+        //bool collisionCheckC(const sf::IntRect& first, const sf::IntRect& second);
+        bool collisionCheckC(const sf::CircleShape& circle);
 };

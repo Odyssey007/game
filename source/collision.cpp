@@ -37,3 +37,21 @@ void CircleCollision::updateCircle(const sf::IntRect & dotDimension) {
 void CircleCollision::followEntity(const sf::Vector2f& entityPosition) {
     dot.setPosition(entityPosition);
 }
+
+// bool CircleCollision::collisionCheckC(const sf::IntRect& first, const sf::IntRect& second){
+//     sf::Vector2f firstOrigin (first.width/2.0f, first.width/2.0f); 
+//     sf::Vector2f secondOrigin (second.width/2.0f, second.width/2.0f); 
+//     float diameter = (first.width/2.0f) + (second.width/2.0f); 
+
+//     float length = distance({firstOrigin.x, firstOrigin.y}, {secondOrigin.x, secondOrigin.y}); 
+//     if(length <= diameter){
+//         return false; 
+//     }
+//     else {
+//         return true; 
+//     }
+// }
+
+bool CircleCollision::collisionCheckC(const sf::CircleShape& circle) {
+    return dot.getGlobalBounds().intersects(circle.getGlobalBounds());
+}
