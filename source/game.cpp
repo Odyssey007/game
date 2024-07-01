@@ -42,7 +42,7 @@ void Game::handleEvents() {
 }
 
 void Game::checkCollision() {
-    if (player.hitBox.checkCollision(s1.hitBoxC.dot)) {
+    if (player.hitBoxC.collisionCheckC(s1.hitBoxC.dot)) {
         player.handleCollision(s1);
     }
 }
@@ -68,8 +68,8 @@ void Game::render() {
 
 
     this->window->draw(player.player_sprite);
-    this->window->draw(player.hitBox.body);
-    //this->window->draw(player.hitBoxC.dot);
+    //this->window->draw(player.hitBox.body);
+    this->window->draw(player.hitBoxC.dot);
 
 
     this->window->display();

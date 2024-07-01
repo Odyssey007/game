@@ -68,6 +68,6 @@ void CircleCollision::followEntity(const sf::Vector2f& entityPosition) {
 //     }
 // }
 
-bool CircleCollision::collisionCheckC(const sf::CircleShape& circle) {
-    return dot.getGlobalBounds().intersects(circle.getGlobalBounds());
-}
+ bool CircleCollision::collisionCheckC(const sf::CircleShape& circle) {
+     return dot.getGlobalBounds().intersects(circle.getGlobalBounds());
+ }

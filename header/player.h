@@ -31,7 +31,7 @@ public:
     void moveRight();
 
     RecCollision hitBox;
-
+    CircleCollision hitBoxC;
 
     float player_health = 100.0f;
     void handleCollision(Slime& s1);
