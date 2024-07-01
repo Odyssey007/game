@@ -42,7 +42,8 @@ void Game::handleEvents() {
 }
 
 void Game::checkCollision() {
-    if (player.hitBox.checkCollision(s1.hitBoxC.dot)) {
+    
+    if (Collision::checkCollision(player.hitBox.body, s1.hitBox.body)) {
         player.handleCollision(s1);
     }
 }
@@ -63,13 +64,12 @@ void Game::render() {
 
     this->window->draw(s1.enemySprite);
     //this->window->draw(s1.hitBox.body);
-    this->window->draw(s1.hitBoxC.dot);
+    this->window->draw(s1.hitBox.body);
 
 
 
     this->window->draw(player.player_sprite);
     this->window->draw(player.hitBox.body);
-    //this->window->draw(player.hitBoxC.dot);
 
 
     this->window->display();

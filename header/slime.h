@@ -4,7 +4,7 @@
 
 #include "collision.h"
 
-class Slime : public Enemy{
+class Slime : public Enemy {
 private:
     bool firstAttack;
     //buffer for leap
@@ -25,8 +25,8 @@ public:
     void leapAttack();
     void normalAttack();
 
-    RecCollision hitBox;
-    CircleCollision hitBoxC;
+
+    CircleCollision hitBox;
 
 
     float dmg = 5.0f;

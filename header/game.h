@@ -25,4 +25,6 @@ public:
     void render();
 
     void checkCollision();
+
+    //CollisionManager collisions;
 };

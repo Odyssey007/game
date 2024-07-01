@@ -12,4 +12,3 @@ sf::Vector2f normalize(const sf::Vector2f& one);
 float distance(const sf::Vector2f& point1, const sf::Vector2f& point2);
 float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two);
 sf::IntRect boxBoundsCalc(const sf::Image& image);
-sf::Vector2u randomGenerator(const std::pair <int, int>& range);

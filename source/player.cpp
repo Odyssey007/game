@@ -15,16 +15,14 @@ Player::Player()
     //player_sprite.setOrigin(player_animation.uvRect.width / 2.0f, player_animation.uvRect.height / 2.0f); // Set origin to bottom center
     player_sprite.setPosition(650, 500);
 
+    hitBox = BoxCollision(PLAYER);
     sf::IntRect bounds;
     hitBox.body.setPosition(650, 500);
     bounds.width = 32;
     bounds.left = 30;
-
     bounds.height = 75;
     bounds.top = 35;
-    
     hitBox.updateSize(bounds);
-    //hitbox.circleUpdate(bounds);
     
     sf::Vector2f origin;
     origin.x = bounds.left + bounds.width/2.0f;
