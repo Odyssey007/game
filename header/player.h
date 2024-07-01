@@ -30,7 +30,7 @@ public:
     void moveLeft();
     void moveRight();
 
-    RecCollision hitbox;
+    RecCollision hitBox;
 
 
     float player_health = 100.0f;

@@ -38,3 +38,14 @@ sf::IntRect boxBoundsCalc(const sf::Image& image) {
 
     return sf::IntRect(left, top, right-left, bottom-top);
 }
+
+sf::Vector2u randomGenerator(const std::pair <int, int>& range) {
+    //static std::random_device rand;
+    static std::mt19937 gen(std::random_device{}());
+
+    std::uniform_int_distribution <> distribute (range.first, range.second); 
+    unsigned int x = static_cast<unsigned int>(distribute(gen));
+    unsigned int y = static_cast<unsigned int>(distribute(gen));
+
+    return {x, y}; 
+}

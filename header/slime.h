@@ -25,7 +25,8 @@ public:
     void leapAttack();
     void normalAttack();
 
-    RecCollision hitbox;
+    RecCollision hitBox;
+    CircleCollision hitBoxC;
 
 
     float dmg = 5.0f;
