@@ -28,6 +28,19 @@ class CircleCollision {
         CircleCollision();
         void updateCircle(const sf::IntRect& dotDimension);
         void followEntity(const sf::Vector2f& entityPosition);
-        //bool collisionCheckC(const sf::IntRect& first, const sf::IntRect& second);
         bool collisionCheckC(const sf::CircleShape& circle);
+};
+
+class SlashShape {
+    private:
+        float theta; 
+        
+    public:
+        sf::VertexArray slash; 
+        SlashShape();  
+
+        sf::VertexArray createSlashShape(float centerX, float centerY, float outerRadius, float arcAngle);
+        sf::FloatRect getBounds(const sf::VertexArray& vertexArray);  
+        bool slashRectangleCheck(const sf::VertexArray& slashShape, const sf::RectangleShape& other);
+        bool slashCircleCheck(const sf::VertexArray& slashShape, const sf::CircleShape& circle);
 };

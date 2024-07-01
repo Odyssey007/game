@@ -17,19 +17,21 @@ Player::Player()
 
     sf::IntRect bounds;
     hitBox.body.setPosition(650, 500);
-    bounds.width = 50; //32
+    bounds.width = 32;
     bounds.left = 30;
 
     bounds.height = 75;
     bounds.top = 35;
     
-    //hitBox.updateSize(bounds);
-    hitBoxC.updateCircle(bounds);
+    hitBox.updateSize(bounds);
+    //hitBoxC.updateCircle(bounds);
     
     sf::Vector2f origin;
     origin.x = bounds.left + bounds.width/2.0f;
     origin.y = bounds.top + bounds.height/2.0f;
     player_sprite.setOrigin(origin);
+    
+    hitBoxSlash.createSlashShape(player_sprite.getPosition().x + bounds.width/2.0f, player_sprite.getPosition().y, 75.0f, 5.2f); 
 }
 
 void Player::playerMovement() {
@@ -53,7 +55,7 @@ void Player::playerMovement() {
         //player_animation.scaleNum = {.93f, .93f};
         player_animation.animationUpdate(0, facingRight, player_sprite, {0.93f, 0.93f});
     }
-    hitBoxC.followEntity(player_sprite.getPosition());
+    hitBox.followEntity(player_sprite.getPosition());
 }
 
 

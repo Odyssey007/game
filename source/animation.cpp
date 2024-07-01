@@ -32,13 +32,23 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf:
     uvRect.top = currentFrame.y * uvRect.height; 
 
     float originalBottom = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.0f;
-    if(editScale) {
-        sprite.setScale(faceRight ? scaleNum.x : -scaleNum.x, scaleNum.y);
-        editScale = false;  // Reset the editScale flag after applying the scale
+     if(editScale) {
+        if(faceRight) {
+            sprite.setScale(scaleNum.x, scaleNum.y); 
+        }
+        else {
+            sprite.setScale(-scaleNum.x, scaleNum.y); 
+        }
+        editScale = false; 
     }
     else {
-        sprite.setScale(faceRight ? 1.0f : -1.0f, 1.0f);
-    }
+        if (faceRight) {
+            sprite.setScale(1.0f, 1.0f); 
+        } 
+        else {
+            sprite.setScale(-1.0f, 1.0f);
+        }
+    }   
 
     sprite.setTextureRect(uvRect);
     float newBottom = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.0f;

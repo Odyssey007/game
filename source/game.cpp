@@ -68,8 +68,9 @@ void Game::render() {
 
 
     this->window->draw(player.player_sprite);
-    //this->window->draw(player.hitBox.body);
-    this->window->draw(player.hitBoxC.dot);
+    this->window->draw(player.hitBox.body);
+    //this->window->draw(player.hitBoxC.dot);
+    this->window->draw(player.hitBoxSlash.slash); 
 
 
     this->window->display();
