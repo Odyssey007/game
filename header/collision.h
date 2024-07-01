@@ -1,6 +1,10 @@
 #pragma once
 #include "utility.h"
 
+class CollisionManager {
+    
+};
+
 class RecCollision {
 private:
     
@@ -10,10 +14,9 @@ public:
 
     RecCollision();
     void updateSize(const sf::IntRect& bodyDim);
-
     void followEntity(const sf::Vector2f& entityPosition);
-    void checkCollision();
-    void circleSize(const sf:: IntRect& dotDimension);
+    bool checkCollision(const sf::RectangleShape& other) const;
+    bool checkCollision(const sf::CircleShape& other) const;
 };
 
 class CircleCollision {

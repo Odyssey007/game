@@ -41,12 +41,20 @@ void Game::handleEvents() {
     }
 }
 
+void Game::checkCollision() {
+    if (player.hitBox.checkCollision(s1.hitBoxC.dot)) {
+        player.handleCollision(s1);
+    }
+}
+
 //update game
 void Game::update() {
     this->handleEvents(); //handle all events
     player.playerMovement();
 
     s1.action(player.player_sprite.getPosition(), 100.0f);
+
+    checkCollision();
 }
 
 //render objects onto the screen || display frame on window
@@ -58,9 +66,11 @@ void Game::render() {
     this->window->draw(s1.hitBoxC.dot);
 
 
+
     this->window->draw(player.player_sprite);
     this->window->draw(player.hitBox.body);
     //this->window->draw(player.hitBoxC.dot);
+
 
     this->window->display();
 }
