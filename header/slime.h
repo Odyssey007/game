@@ -6,8 +6,9 @@
 
 class Slime : public Enemy{
 private:
+    bool firstAttack;
     //buffer for leap
-    bool needToCharge;
+    bool leaping;
     float chargeTimer;
     //recovery
     bool needToRecover;
@@ -16,7 +17,7 @@ private:
     float leapDistance;
     float totalLeapDistance;
 
-    virtual void attacks(float attackRange) override;
+    virtual void attacks() override;
 public:
     Slime();
 
@@ -25,4 +26,7 @@ public:
     void normalAttack();
 
     RecCollision hitbox;
+
+
+    float dmg = 5.0f;
 };

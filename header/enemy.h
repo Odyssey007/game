@@ -14,7 +14,7 @@ protected:
     void loadTexture(const std::string& name, const std::string& filePath);
     void generateDirections(int numDirections=16);
     //
-    virtual void attacks(float attackRange) = 0;
+    virtual void attacks() = 0;
 public:
     Enemy();
     virtual ~Enemy() {};

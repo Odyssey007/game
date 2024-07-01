@@ -25,6 +25,7 @@ Player::Player()
     bounds.top = 35;
     
     hitbox.updateSize(bounds);
+    //hitbox.circleUpdate(bounds);
     
     sf::Vector2f origin;
     origin.x = bounds.left + bounds.width/2.0f;
@@ -84,3 +85,7 @@ void Player::moveRight() {
     isMoving = true;
 }
 
+void Player::handleCollision(Slime& s1) {
+    player_health = player_health - s1.dmg;
+    std::cout << player_health << std::endl;
+}

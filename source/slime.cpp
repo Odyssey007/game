@@ -1,10 +1,11 @@
 #include "../header/slime.h"
 
 Slime::Slime() :
-    needToCharge(false), chargeTimer(0.35f),
+    leaping(false), chargeTimer(0.35f),
     needToRecover(false), recoveryTimer(0.35f),
     leapDistance(250.0f), totalLeapDistance(0.0f)
 {
+    firstAttack = true;
     //movement and sprite
     movementSpeed = 200.0f;
     enemySprite.setTexture(enemyTextures["slime"]);
@@ -22,7 +23,7 @@ Slime::Slime() :
     enemySprite.setOrigin(origin);
 }
 
-void Slime::action(const sf::Vector2f& target, const float attackRange) {
+void Slime::action(const sf::Vector2f& target, const float canLeap) {
     // Check if recovery buffer is needed for attack  
     if (needToRecover) {
         if (recoveryTimer > 0) {
@@ -33,41 +34,47 @@ void Slime::action(const sf::Vector2f& target, const float attackRange) {
     }
     //moves
     hitbox.followEntity(enemySprite.getPosition());
-    if (distance(target, enemySprite.getPosition()) >= attackRange && !needToCharge) {
+    if (distance(target, enemySprite.getPosition()) >= canLeap && !leaping) {
         meleeMovement(target);
     } else { //attacks
-        attacks(attackRange);
+        attacks();
     }
 }
+/*
+normal attacks takes time to charge 
 
-void Slime::attacks(float attackRange) {
-    if (attackRange >= 100) {
+initially the charge time is 0 however if the slime attacks and not move then charge time is X
+*/
+
+void Slime::attacks() {
+    if (firstAttack) {
+        dmg = 10.0f;
         leapAttack();
-    } else if (attackRange >= 50) {
-        normalAttack();
     }
+    dmg = 5.0f;
+    normalAttack();
 }
 
 void Slime::normalAttack() {
-
+    
 }
 
 void Slime::leapAttack() {
-    if (!needToCharge) {
+    if (!leaping) {
         chargeTimer -= DeltaTime::getInstance()->getDeltaTime();
         if (chargeTimer <= 0) {
-            needToCharge = true;
+            leaping = true;
         }
     }
-    if (totalLeapDistance < leapDistance && needToCharge) {
+    if (totalLeapDistance < leapDistance && leaping) {
         float moveFrame = 5.5 * movementSpeed * DeltaTime::getInstance()->getDeltaTime();
         sf::Vector2f move = bestDirection * moveFrame;
         enemySprite.move(move);
         totalLeapDistance += magnitude(move);
-    } else if (needToCharge) {
+    } else if (leaping) {
         totalLeapDistance = 0.0f;
         //start buffer
-        needToCharge = false;
+        leaping = false;
         chargeTimer = 0.35f;
         //end buffer
         needToRecover = true;

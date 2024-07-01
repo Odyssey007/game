@@ -17,6 +17,22 @@ void RecCollision::followEntity(const sf::Vector2f& entityPosition) {
     body.setPosition(entityPosition);
 }
 
-void RecCollision::checkCollision() {
-    
+bool RecCollision::checkCollision(const sf::RectangleShape& other) const {
+    return body.getGlobalBounds().intersects(other.getGlobalBounds()); 
+}
+
+bool RecCollision::checkCollision(const sf::CircleShape& other) const {
+    sf::Vector2f boxPosition = body.getPosition();
+    sf::Vector2f circlePosition = other.getPosition();
+    float xPosition, yPosition, distance;
+
+    xPosition = std::max(boxPosition.x, std::min(circlePosition.x, boxPosition.x + body.getSize().x));
+    yPosition = std::max(boxPosition.y, std::min(circlePosition.y, boxPosition.y + body.getSize().y));
+
+    distance = std::sqrt(std::pow(xPosition - circlePosition.x, 2) + std::pow(yPosition - circlePosition.y, 2));
+
+    if (distance <= other.getRadius()) {
+        return true;
+    }
+    return false;
 }

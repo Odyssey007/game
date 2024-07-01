@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "animation.h"
 #include "collision.h"
+#include "slime.h"
 
 class Player {
 private:
@@ -30,4 +31,8 @@ public:
     void moveRight();
 
     RecCollision hitbox;
+
+
+    float player_health = 100.0f;
+    void handleCollision(Slime& s1);
 };
