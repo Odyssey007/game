@@ -13,11 +13,12 @@ Slime::Slime() :
     //set position
     enemySprite.setPosition(1000, 1000);
 
+    hitBox = CircleCollision(SLIME);
     sf::Image image = enemyTextures["slime"].copyToImage();
     //sets the origin of slime and hitBox
     spriteBounds = boxBoundsCalc(image);
     //hitBox.updateSize(spriteBounds);
-    hitBoxC.updateCircle(spriteBounds);
+    hitBox.updateSize(spriteBounds);
     sf::Vector2f origin;
     origin.x = spriteBounds.left + spriteBounds.width/2.0f;
     origin.y = spriteBounds.top + spriteBounds.height/2.0f;
@@ -34,7 +35,7 @@ void Slime::action(const sf::Vector2f& target, const float canLeap) {
         needToRecover = false;
     }
     //moves
-    hitBoxC.followEntity(enemySprite.getPosition());
+    hitBox.followEntity(enemySprite.getPosition());
     if (distance(target, enemySprite.getPosition()) >= canLeap && !leaping) {
         meleeMovement(target);
     } else { //attacks

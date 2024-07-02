@@ -42,8 +42,13 @@ void Game::handleEvents() {
 }
 
 void Game::checkCollision() {
-    if (player.hitBoxC.collisionCheckC(s1.hitBoxC.dot)) {
+    
+    if (Collision::checkCollision(player.hitBox.body, s1.hitBox.body)) {
         player.handleCollision(s1);
+    }
+
+    if (ability.hitBoxSlash.slashCircleCheck(ability.hitBoxSlash.slash, s1.hitBox.body)) {
+        player.handleCollision(s1); 
     }
 }
 
@@ -51,10 +56,14 @@ void Game::checkCollision() {
 void Game::update() {
     this->handleEvents(); //handle all events
     player.playerMovement();
+    sword.updateSword(player.player_sprite.getPosition()); 
+
+    ability.mouseClick(sf::Mouse::getPosition(*this->window), player.player_sprite.getPosition());
+
+    //ability.slashUpdate(); 
 
     s1.action(player.player_sprite.getPosition(), 100.0f);
-
-    checkCollision();
+    //checkCollision();
 }
 
 //render objects onto the screen || display frame on window
@@ -63,14 +72,21 @@ void Game::render() {
 
     this->window->draw(s1.enemySprite);
     //this->window->draw(s1.hitBox.body);
-    this->window->draw(s1.hitBoxC.dot);
+    this->window->draw(s1.hitBox.body);
 
 
 
     this->window->draw(player.player_sprite);
     this->window->draw(player.hitBox.body);
     //this->window->draw(player.hitBoxC.dot);
-    this->window->draw(player.hitBoxSlash.slash); 
+
+    //this->window->draw(sword.swordSprite);
+
+    if(ability.slashVisible){
+        this->window->draw(ability.hitBoxSlash.slash); 
+        this->window->draw(ability.slashSprite);
+    }
+
 
 
     this->window->display();

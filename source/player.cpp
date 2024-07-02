@@ -3,23 +3,25 @@
 Player::Player() 
     :battleSpeed(300.0f),
      kingdomSpeed(300.0f),
-     isMoving(false),
-     facingRight(true)
+     facingRight(true),
+     isMoving(false)
 {
     if (!player_texture.loadFromFile("assets/playerSheet.png")) {
         throw std::runtime_error("Failed to load player texture");
     }
+
     player_animation = Animation(&player_texture, {4, 2}, 0.18f);
     player_sprite.setTexture(player_texture);
     player_sprite.setTextureRect(player_animation.uvRect);
     //player_sprite.setOrigin(player_animation.uvRect.width / 2.0f, player_animation.uvRect.height / 2.0f); // Set origin to bottom center
     player_sprite.setPosition(650, 500);
 
+
+    hitBox = BoxCollision(PLAYER);
     sf::IntRect bounds;
     hitBox.body.setPosition(650, 500);
     bounds.width = 32;
     bounds.left = 30;
-
     bounds.height = 75;
     bounds.top = 35;
     
@@ -29,16 +31,13 @@ Player::Player()
     sf::Vector2f origin;
     origin.x = bounds.left + bounds.width/2.0f;
     origin.y = bounds.top + bounds.height/2.0f;
-    player_sprite.setOrigin(origin);
-    
-    hitBoxSlash.createSlashShape(player_sprite.getPosition().x + bounds.width/2.0f, player_sprite.getPosition().y, 75.0f, 5.2f); 
+    player_sprite.setOrigin(origin); 
 }
 
 void Player::playerMovement() {
     //initializing variables
     isMoving = false;
     movement = sf::Vector2f (0.0f, 0.0f); 
-    
     //Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) moveDown(); 
@@ -56,6 +55,7 @@ void Player::playerMovement() {
         player_animation.animationUpdate(0, facingRight, player_sprite, {0.93f, 0.93f});
     }
     hitBox.followEntity(player_sprite.getPosition());
+    //hitBox.followEntity(player_sprite.getPosition());
 }
 
 
@@ -85,8 +85,30 @@ void Player::moveRight() {
     isMoving = true;
 }
 
+
 void Player::handleCollision(Slime& s1) {
     throw std::runtime_error(":DD");
     // player_health = player_health - s1.dmg;
     // std::cout << player_health << std::endl;
+}
+
+
+
+//funtion for Sword class
+Sword::Sword()
+    :facingRight(true) 
+{
+    if(!swordTexture.loadFromFile("assets/sword.png")) {
+        throw std::runtime_error("Failed to load player texture");
+    }
+
+    swordAnimation = Animation(&swordTexture, {1, 1}, 0.18f);
+    swordSprite.setTexture(swordTexture); 
+    swordSprite.setTextureRect(swordAnimation.uvRect);
+    swordSprite.setOrigin(swordSprite.getLocalBounds().width / 2, swordSprite.getLocalBounds().height / 2);
+}
+
+void Sword::updateSword(sf::Vector2f playerPosition) {
+    swordAnimation.animationUpdate(0, facingRight, swordSprite, {1.0f, 1.0f}); 
+    swordSprite.setPosition(playerPosition.x + 20, playerPosition.y); 
 }

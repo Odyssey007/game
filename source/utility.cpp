@@ -49,3 +49,11 @@ sf::Vector2u randomGenerator(const std::pair <int, int>& range) {
 
     return {x, y}; 
 }
+
+float rotationAngle(float centerX, float centerY, float mouseX, float mouseY) {
+    return atan2(mouseY - centerY, mouseX - centerX); 
+}
+
+float radianToDegrees(float radians) {
+    return radians * 180 / M_PI; 
+}

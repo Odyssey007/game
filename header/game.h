@@ -2,6 +2,7 @@
 //game engine
 #include "player.h"
 #include "slime.h"
+#include "ability.h"
 
 class Game {
 private:
@@ -10,7 +11,9 @@ private:
     sf::VideoMode resolution; //controls the resolution of screen
     sf::Event event;
     Player player;
+    Sword sword; 
     Slime s1;
+    Ability ability; 
 
     void currentWindow();
 public:
@@ -25,4 +28,6 @@ public:
     void render();
 
     void checkCollision();
+
+    //CollisionManager collisions;
 };
