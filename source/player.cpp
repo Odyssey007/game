@@ -9,11 +9,10 @@ Player::Player() :
     bounds(sf::IntRect(30.0f, 35.0f, 32.0f, 75.0f)),
     //movement
     moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
-
 {
     //preliminaries
     entityType = PLAYER; collisionType = AABB;
-    texture.loadFromFile("assets/playerSheet.png");
+    texture.loadFromFile("assets/playerSheet1.png");
     sprite.setTexture(texture);
     animation = Animation(&texture, animationSheetDim, frameDuration);
     sprite.setTextureRect(animation.uvRect);
@@ -138,4 +137,22 @@ bool Player::canAttack(Entity& enemy) {
         return true;
     }
     return it->second.getElapsedTime() >= sf::seconds(1);
+}
+
+//--------------------------------------------------
+
+//function for Sword class
+Sword::Sword() {
+    //preliminaries
+    texture.loadFromFile("assets/sword.png");
+    sprite.setTexture(texture);
+    animation = Animation(&texture, {1, 1}, 0.18f);
+    sprite.setTextureRect(animation.uvRect);
+    sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+    facingRight = true;
+}
+
+void Sword::updateSword(sf::Vector2f playerPosition) {
+    animation.animationUpdate(0, facingRight, sprite, {1.0f, 1.0f}); 
+    sprite.setPosition(playerPosition.x + 20, playerPosition.y); 
 }

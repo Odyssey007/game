@@ -36,3 +36,17 @@ public:
     virtual void followEntity(const sf::Vector2f& entityPosition) override;
     static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
 };
+
+class SlashShape {
+private:
+    float theta; 
+    
+public:
+    sf::VertexArray slash; 
+    SlashShape();  
+
+    sf::VertexArray createSlashShape(float centerX, float centerY, float outerRadius, float arcAngle, float rotationAngle);
+    sf::FloatRect getBounds(const sf::VertexArray& vertexArray);  
+    bool slashRectangleCheck(const sf::VertexArray& slashShape, const sf::RectangleShape& other);
+    bool slashCircleCheck(const sf::VertexArray& slashShape, const sf::CircleShape& circle);
+};

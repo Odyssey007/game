@@ -50,3 +50,19 @@ public:
     virtual size_t getState() override;
     float getHealth();
 };
+
+//---------------------------------
+
+class Sword {
+    private: 
+        sf::Texture texture;
+        sf::Sprite sprite;
+        Animation animation;
+
+        bool facingRight;
+    public: 
+        //constructor
+        Sword();
+        //function
+        void updateSword(sf::Vector2f playerPosition);
+};

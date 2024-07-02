@@ -4,6 +4,7 @@
 #include "collisionManager.h"
 #include "player.h"
 #include "slime.h"
+#include "ability.h"
 
 class Game {
 private:

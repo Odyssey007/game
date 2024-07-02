@@ -11,3 +11,5 @@ sf::Vector2f normalize(const sf::Vector2f& one);
 float distance(const sf::Vector2f& point1, const sf::Vector2f& point2);
 float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two);
 sf::IntRect calcImageBounds(const sf::Image& image);
+float rotationAngle(float centerX, float centerY, float mouseX, float mouseY);
+float radianToDegrees(float radians);
