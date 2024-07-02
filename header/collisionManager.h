@@ -1,14 +1,17 @@
+#pragma once
+#include "utility.h"
+#include "entity.h"
 #include "collision.h"
 
 class CollisionManager {
 private:
-    std::vector<RecCollision> entityRecHitBox;
-    std::vector<CircleCollision> entityCirHitBox;
+    std::vector<std::shared_ptr<Entity>> entities;
+    void handleCollision(Entity& entity1, Entity& entity2);
 public:
-
-    template <typename T>
-    void addEntity(T entity);
+    //constructor
+    CollisionManager();
+    ~CollisionManager();
+    //functions 
+    void addEntity(std::shared_ptr<Entity> entity);
     void checkCollisions();
-    void checkCollisionType(EntityType type1, EntityType type2);
-    void handleCollision();
 };

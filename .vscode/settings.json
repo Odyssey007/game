@@ -65,6 +65,7 @@
         "target": "cpp",
         "__bit_reference": "cpp",
         "cinttypes": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "__string": "cpp"
     }
 }

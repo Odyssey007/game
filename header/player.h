@@ -1,37 +1,52 @@
 #pragma once
 #include "utility.h"
+#include "entity.h"
 #include "animation.h"
-#include "collision.h"
 #include "slime.h"
 
-class Player {
-private:
-    //variables for player rendering
-    sf::Texture player_texture; 
-    Animation player_animation; 
+enum PlayerAbilities {  };
 
-    //variables for player movement
-    const float battleSpeed;
-    const float kingdomSpeed; 
+class Player : public Entity {
+private:
+    //rendering
+    sf::Texture texture;
+    sf::Sprite sprite;
+    //animation
+    Animation animation;
+    sf::Vector2u animationSheetDim;
+    float frameDuration;
+    //stats
+    float health;
+    float battleSpeed;
+    const float kingdomSpeed;
+    //hit box
+    BoxCollision hitBox;
+    sf::IntRect bounds;
+    //player movement
+    sf::Vector2f moveDistance;
     bool isMoving;
     bool facingRight;
-    
-public:
-    sf::Sprite player_sprite;
-    sf::Vector2f movement;
-
-    //constructor
-    Player(); 
-
-    //functions
-    void playerMovement();
     void moveUp();
     void moveDown();
     void moveLeft();
     void moveRight();
-
-    BoxCollision hitBox;
-
-    float player_health = 100.0f;
-    void handleCollision(Slime& s1);
+    //enemy cooldown
+    std::unordered_map<Entity*, sf::Clock> enemyCooldown;
+    bool canAttack(Entity& entity);
+    //collision handling
+    void handleEnemyCollisions(Entity& other);
+    void handleObjectCollisions(Entity& other);
+public:
+    //constructor
+    Player(); 
+    //functions
+    void update();
+    void takeDebuffs(float hpHit, float speedHit);
+    virtual void initialPosition() override;
+    virtual void handleCollisions(Entity& other) override;
+    virtual void render(sf::RenderWindow& window) override;
+    //fetcher functions
+    virtual sf::Shape& getShape() override;
+    virtual size_t getState() override;
+    float getHealth();
 };

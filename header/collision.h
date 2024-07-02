@@ -1,49 +1,38 @@
 #pragma once
 #include "utility.h"
 
-enum EntityType { PLAYER, SLIME, PILLAR };
-
-enum CollisionType { AABB, CIRCLE };
-
 class Collision {
 protected:
 
 public:
-    EntityType entityType;
-    CollisionType collisionType;
-
     virtual ~Collision() = default;
-    //virtual const CollisionType* getType() const = 0;
     virtual void updateSize(const sf::IntRect& bodyDim) = 0;
     virtual void followEntity(const sf::Vector2f& entityPosition) = 0;
-
-    static bool checkCollision(const sf::RectangleShape& b1, const sf::CircleShape& b2);
+    //collision check AABB-CIRCLE
+    static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
 };
 
+//AABB
 class BoxCollision : public Collision {
 private:
-    
 public:
     sf::RectangleShape body;
-
-    BoxCollision() = default;
-    BoxCollision(EntityType type);
-
+    //constructor
+    BoxCollision();
+    //functions
     virtual void updateSize(const sf::IntRect& bodyDim) override;
     virtual void followEntity(const sf::Vector2f& entityPosition) override;
-    bool checkCollision(const sf::RectangleShape& other) const;
+    static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
 };
 
 class CircleCollision : public Collision {
-    private:
-
-    public:
-    sf::CircleShape body; 
-
-    CircleCollision() = default;
-    CircleCollision(EntityType type);
-
+private:
+public:
+    sf::CircleShape body;
+    //constructor
+    CircleCollision();
+    //functions
     virtual void updateSize(const sf::IntRect& bodyDim) override;
     virtual void followEntity(const sf::Vector2f& entityPosition) override;
-    bool checkCollision(const sf::CircleShape& other) const;
+    static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
 };

@@ -1,30 +1,31 @@
 #pragma once
 //game engine
+#include "utility.h"
+#include "collisionManager.h"
 #include "player.h"
 #include "slime.h"
 
 class Game {
 private:
-    //window set up
-    std::unique_ptr <sf::RenderWindow> window; //the current window the game is in
-    sf::VideoMode resolution; //controls the resolution of screen
+    //window reset up
+    std::unique_ptr <sf::RenderWindow> window; 
+    sf::VideoMode resolution;
     sf::Event event;
-    Player player;
-    Slime s1;
-
-    void currentWindow();
-public:
-    Game(); //constructor
-
-
-    //checks
-    bool winRunning() const;
+    //collision big papa
+    CollisionManager collisionManager;
+    //entities
+    std::shared_ptr<Player> player;
+    size_t slimeNum;
+    std::shared_ptr<std::vector<std::shared_ptr<Slime>>> slimes;
     //functions
+    void currentWindow();
     void handleEvents();
+    void checkGameEnd();
+public:
+    //constructor
+    Game();
+    //functions
     void update();
     void render();
-
-    void checkCollision();
-
-    //CollisionManager collisions;
+    bool winRunning() const;
 };

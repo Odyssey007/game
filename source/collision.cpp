@@ -1,11 +1,11 @@
 #include "../header/collision.h"
 
 //COLLISION CHECK BETWEEN BOX-CIRCLE || CIRCLE-BOX
-bool Collision::checkCollision(const sf::RectangleShape& b1, const sf::CircleShape& b2) {
-    sf::Vector2f boxPosition = b1.getPosition() - b1.getOrigin();
-    sf::Vector2f circlePosition = b2.getPosition();
-    sf::Vector2f bodySize = b1.getSize();
-    float radius = b2.getRadius();
+bool Collision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
+    sf::Vector2f boxPosition = body1.getPosition() - body1.getOrigin();
+    sf::Vector2f circlePosition = body2.getPosition();
+    sf::Vector2f bodySize = sf::Vector2f(body1.getGlobalBounds().width, body1.getGlobalBounds().height);
+    float radius = body2.getGlobalBounds().width/2.0f;
     float closetX, closetY, distance;
 
     closetX = std::max(boxPosition.x, std::min(circlePosition.x, boxPosition.x + bodySize.x));
@@ -21,13 +21,11 @@ bool Collision::checkCollision(const sf::RectangleShape& b1, const sf::CircleSha
 }
 
 //AABB HITBOX
-BoxCollision::BoxCollision(EntityType type) {
+BoxCollision::BoxCollision() {
+    //visual
     body.setOutlineColor(sf::Color::Red);
     body.setOutlineThickness(1.0f);
     body.setFillColor(sf::Color::Transparent);
-
-    entityType = type;
-    collisionType = AABB;
 }
 
 void BoxCollision::updateSize(const sf::IntRect& bodyDim) {
@@ -39,20 +37,18 @@ void BoxCollision::followEntity(const sf::Vector2f& entityPosition) {
     body.setPosition(entityPosition);
 }
 
-//COLLISION CHECK BETWEEN BOX-BOX
-bool BoxCollision::checkCollision(const sf::RectangleShape& other) const {
-    return body.getGlobalBounds().intersects(other.getGlobalBounds()); 
+//collision check BOX-BOX
+bool BoxCollision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
+    return body1.getGlobalBounds().intersects(body2.getGlobalBounds());
 }
 
 //CIRCLE HITBOX
-CircleCollision::CircleCollision(EntityType type) {
+CircleCollision::CircleCollision() {
     //visual
     body.setOutlineThickness(1.0f);
     body.setOutlineColor(sf::Color::Red);
     body.setFillColor(sf::Color::Transparent); 
 
-    entityType = type;
-    collisionType = CIRCLE;
 }
 
 void CircleCollision::updateSize(const sf::IntRect & bodyDim) {
@@ -64,7 +60,7 @@ void CircleCollision::followEntity(const sf::Vector2f& entityPosition) {
     body.setPosition(entityPosition);
 }
 
-//COLLISION CHECK BETWEEN CIRCLE-CIRCLE
-bool CircleCollision::checkCollision(const sf::CircleShape& other) const {
-    return body.getGlobalBounds().intersects(other.getGlobalBounds());
+//collision check CIRCLE-CIRCLE
+bool CircleCollision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
+    return body1.getGlobalBounds().intersects(body2.getGlobalBounds());
 }

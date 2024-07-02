@@ -4,6 +4,7 @@ float magnitude(const sf::Vector2f& vector) {
     return sqrt(vector.x*vector.x + vector.y*vector.y);
 }
 
+//unit vec
 sf::Vector2f normalize(const sf::Vector2f& one) {    
     float normal = magnitude(one);
     sf::Vector2f normalized;
@@ -21,7 +22,8 @@ float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {
     return one.x*two.x + one.y*two.y;
 }
 
-sf::IntRect boxBoundsCalc(const sf::Image& image) {
+//creates a box around the furthest pixels in x && y directions
+sf::IntRect calcImageBounds(const sf::Image& image) {
     unsigned int left = image.getSize().x, right = 0;
     unsigned int top = image.getSize().y, bottom = 0;
 
@@ -39,6 +41,7 @@ sf::IntRect boxBoundsCalc(const sf::Image& image) {
     return sf::IntRect(left, top, right-left, bottom-top);
 }
 
+//returns an signed int between range
 sf::Vector2u randomGenerator(const std::pair <int, int>& range) {
     //static std::random_device rand;
     static std::mt19937 gen(std::random_device{}());

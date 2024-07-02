@@ -1,18 +1,19 @@
 #include "../header/enemy.h"
 
-Enemy::Enemy() : 
-    movementSpeed(220.0f), bestDirection(sf::Vector2f(0.0f, 0.0f))
-{
-    //generate 16 directions
+Enemy::Enemy() {
+    //preliminaries
+    entityType = ENEMY;
+    loadTexture("slime", "assets/slime.png"); //load up slime into textures
+    //movement set up
+    movementSpeed = 200.0f; baseDamage = 5.0f;
+    bestDirection = sf::Vector2f(0.0f, 0.0f);
     generateDirections();
-    //load up all enemy texture
-    loadTexture("slime", "assets/slime.png");
 }
 
 void Enemy::loadTexture(const std::string& name, const std::string& filePath) {
     sf::Texture texture;
     if (texture.loadFromFile(filePath)) {
-        enemyTextures[name] = texture;
+        textures[name] = texture;
     } else {
         throw std::runtime_error ("Failed to load enemy texture");
     }
@@ -33,7 +34,7 @@ void Enemy::generateDirections(int numDirections) {
 }
 
 void Enemy::meleeMovement(const sf::Vector2f& target) {
-    sf::Vector2f toTarget = target - enemySprite.getPosition();
+    sf::Vector2f toTarget = target - sprite.getPosition();
     toTarget = normalize(toTarget);
     //finds the optimal direction toward target 
     float maxDot = -1.0f;
@@ -45,5 +46,13 @@ void Enemy::meleeMovement(const sf::Vector2f& target) {
         }
     }
     sf::Vector2f move = bestDirection*movementSpeed*DeltaTime::getInstance()->getDeltaTime();
-    enemySprite.move(move);
+    sprite.move(move);
+}
+
+void Enemy::initialPosition() {
+    //!
+}
+
+void Enemy::handleCollisions(Entity& other) {
+    //!
 }

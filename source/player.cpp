@@ -1,39 +1,33 @@
 #include "../header/player.h"
 
-Player::Player() 
-    :battleSpeed(300.0f),
-     kingdomSpeed(300.0f),
-     isMoving(false),
-     facingRight(true)
-{
-    if (!player_texture.loadFromFile("assets/playerSheet.png")) {
-        throw std::runtime_error("Failed to load player texture");
-    }
-    player_animation = Animation(&player_texture, {4, 2}, 0.18f);
-    player_sprite.setTexture(player_texture);
-    player_sprite.setTextureRect(player_animation.uvRect);
-    //player_sprite.setOrigin(player_animation.uvRect.width / 2.0f, player_animation.uvRect.height / 2.0f); // Set origin to bottom center
-    player_sprite.setPosition(650, 500);
+Player::Player() :
+    //animation
+    animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
+    //player stats
+    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f),
+    //player bounds
+    bounds(sf::IntRect(30.0f, 35.0f, 32.0f, 75.0f)),
+    //movement
+    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
 
-    hitBox = BoxCollision(PLAYER);
-    sf::IntRect bounds;
-    hitBox.body.setPosition(650, 500);
-    bounds.width = 32;
-    bounds.left = 30;
-    bounds.height = 75;
-    bounds.top = 35;
+{
+    //preliminaries
+    entityType = PLAYER; collisionType = AABB;
+    texture.loadFromFile("assets/playerSheet.png");
+    sprite.setTexture(texture);
+    animation = Animation(&texture, animationSheetDim, frameDuration);
+    sprite.setTextureRect(animation.uvRect);
+    //hit box and bounds for player sprite
     hitBox.updateSize(bounds);
-    
-    sf::Vector2f origin;
-    origin.x = bounds.left + bounds.width/2.0f;
-    origin.y = bounds.top + bounds.height/2.0f;
-    player_sprite.setOrigin(origin);
+    //set origin and position
+    initialPosition();
+    sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 }
 
-void Player::playerMovement() {
-    //initializing variables
+void Player::update() {
+    //reset each after each movement
     isMoving = false;
-    movement = sf::Vector2f (0.0f, 0.0f); 
+    moveDistance = sf::Vector2f (0.0f, 0.0f); 
     
     //Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
@@ -43,46 +37,105 @@ void Player::playerMovement() {
 
     //Update the player position if moving
     if (isMoving) {
-        movement = normalize(movement);        
-        player_sprite.move(movement * battleSpeed * DeltaTime::getInstance()->getDeltaTime());
+        moveDistance = normalize(moveDistance);        
+        sprite.move(moveDistance * battleSpeed * DeltaTime::getInstance()->getDeltaTime());
     }
     else{
-        player_animation.editScale = true; 
-        //player_animation.scaleNum = {.93f, .93f};
-        player_animation.animationUpdate(0, facingRight, player_sprite, {0.93f, 0.93f});
+        //player idle animation
+        animation.editScale = true; 
+        animation.animationUpdate(0, facingRight, sprite, {0.93f, 0.93f});
     }
-    hitBox.followEntity(player_sprite.getPosition());
+    //follow the player position as the hit box
+    hitBox.followEntity(sprite.getPosition());
 }
 
-
+//cases for each movement type
 void Player::moveUp() {
-    movement.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
+    moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveDown() {
-    movement.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
-    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
+    moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
+    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveLeft() {
     if (facingRight) facingRight = false;
-    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
-    movement.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveRight() {
     if (!facingRight) facingRight = true;
-    movement.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    player_animation.animationUpdate(1, facingRight, player_sprite, {1.0f, 1.0f});
+    moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
-void Player::handleCollision(Slime& s1) {
-    throw std::runtime_error(":DD");
-    // player_health = player_health - s1.dmg;
-    // std::cout << player_health << std::endl;
+//sets the inital positions
+void Player::initialPosition() {
+    sf::Vector2f startPos = sf::Vector2f(650.0f, 500.0f); 
+    sprite.setPosition(startPos);
+}
+
+//returns hit box body 
+sf::Shape& Player::getShape() {
+    return hitBox.body;
+}
+
+float Player::getHealth() {
+    return health;
+}
+
+void Player::takeDebuffs(float hpHit, float speedHit) {
+    health -= hpHit;
+    battleSpeed -= speedHit;  
+}
+
+//renders player && player-related render
+void Player::render(sf::RenderWindow& window) {
+    window.draw(sprite);
+    window.draw(hitBox.body);
+}
+
+size_t Player::getState() {
+    return 1;
+}
+
+//handles what should player do if they collide with other entity in the game
+void Player::handleCollisions(Entity& other) {
+    EntityType otherEntity = other.entityType;
+    if (otherEntity == ENEMY) {
+        handleEnemyCollisions(other);
+    } else if (otherEntity == OBSTACLE) {
+        handleObjectCollisions(other);
+    }
+}
+
+void Player::handleObjectCollisions(Entity& object) {
+    return;
+}
+
+void Player::handleEnemyCollisions(Entity& enemy) {
+    if (canAttack(enemy)) {
+        switch (enemy.enemyType) {
+            case SLIME:
+                Slime::playerContact(*this, enemy);
+        }
+        enemyCooldown[&enemy].restart();
+    }
+}
+
+//stores each enemy cooldown for attacking buffer
+bool Player::canAttack(Entity& enemy) {
+    auto it = enemyCooldown.find(&enemy);
+    if (it == enemyCooldown.end()) {
+        enemyCooldown[&enemy].restart();
+        return true;
+    }
+    return it->second.getElapsedTime() >= sf::seconds(1);
 }

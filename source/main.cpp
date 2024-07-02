@@ -4,10 +4,8 @@ int main() {
     Game game;
     while(game.winRunning()) {
         DeltaTime::getInstance()->restart();
-        //update frame
-        game.update();
-        //render the new update
-        game.render();
+        game.update(); //update frame
+        game.render(); //render the new update
     }
     delete DeltaTime::getInstance();
 }

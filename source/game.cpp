@@ -1,76 +1,71 @@
 #include "../header/game.h"
 
 //preset values into setting up window
-Game::Game() {
-    //initialize variables for window
-    this->window = nullptr;
-    this->resolution = sf::VideoMode::getDesktopMode();
-    this->currentWindow();
+Game::Game() : 
+    //window setup
+    window(nullptr), resolution(sf::VideoMode::getDesktopMode()),
+    //entities
+    player(std::make_shared<Player>()), slimeNum(1),
+    slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>())
+{
+    //preliminaries
+    currentWindow();
+    //entities
+    player->initialPosition(); //player
+    collisionManager.addEntity(player); 
+    for (size_t i = 0; i < slimeNum; i++) { //slimes
+        std::shared_ptr<Slime> slime = std::make_shared<Slime>();
+        slimes->push_back(slime);
+        collisionManager.addEntity(slime);
+    }
 }
 
 //sets up the window
 void Game::currentWindow() {
-    //this->resolution.getDesktopMode(); ?? not sure 
-    this->window = std::make_unique <sf::RenderWindow> (this->resolution, "Project-AA", sf::Style::Fullscreen);
-    //this->window->setVerticalSyncEnabled(true); 
-    //this->window->setFramerateLimit(60);
+    window = std::make_unique<sf::RenderWindow>(resolution, "Project-AA", sf::Style::Fullscreen);
+    window->setFramerateLimit(120);
 }
 
-//check if window is open
 bool Game::winRunning() const {
-    return this->window->isOpen();
+    return window->isOpen();
 }
 
-//event loop
-void Game::handleEvents() {
-    while(this->window->pollEvent(this->event)) {
-        switch(this->event.type) {
-            case sf::Event::Closed:
-                this->window->close(); 
-                break;
-            //key handling
-            case sf::Event::KeyPressed:
-                if(this->event.key.code == sf::Keyboard::Escape) {
-                    this->window->close();
-                }
-                break;
-            default:
-                break;
-        }
-        //handle more events if needed. 
-    }
-}
-
-void Game::checkCollision() {
-    
-    if (Collision::checkCollision(player.hitBox.body, s1.hitBox.body)) {
-        player.handleCollision(s1);
-    }
-}
-
-//update game
 void Game::update() {
-    this->handleEvents(); //handle all events
-    player.playerMovement();
-
-    s1.action(player.player_sprite.getPosition(), 100.0f);
-
-    checkCollision();
+    handleEvents();
+    //update entities
+    
+    player->update();
+    for (auto& slime : *slimes) {
+        slime->update((player->getShape()).getPosition(), 100.0f);
+    }
+    //collision check
+    collisionManager.checkCollisions();
+    //is game over?
+    checkGameEnd();
 }
 
-//render objects onto the screen || display frame on window
+void Game::handleEvents() {
+    while(window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed) window->close();
+        else if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Escape) window->close();
+        }
+    }
+}
+
+void Game::checkGameEnd() {
+    std::cout << player->getHealth() << std::endl;
+    if (player->getHealth() == 0) {
+        throw std::runtime_error("Game Over\n");
+    }
+}
+
 void Game::render() {
-    this->window->clear();
-
-    this->window->draw(s1.enemySprite);
-    //this->window->draw(s1.hitBox.body);
-    this->window->draw(s1.hitBox.body);
-
-
-
-    this->window->draw(player.player_sprite);
-    this->window->draw(player.hitBox.body);
-
-
-    this->window->display();
+    window->clear();
+    //entities
+    for (const auto& slime : *slimes) { //slimes
+        slime->render(*window);
+    }
+    player->render(*window); //player
+    window->display();
 }
