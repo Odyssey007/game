@@ -22,7 +22,7 @@ protected:
     //hitbox
     sf::IntRect bounds;
     //functions
-    void loadTexture(const std::string& name, const std::string& filePath); //rendering
+    void loadTexture(const std::string& name, const std::string& filePath); //load textures
     void generateDirections(int numDirections=16); //movement
     virtual void meleeMovement(const sf::Vector2f& target); //melee movement
     //!virtual void spawn() = 0;

@@ -5,6 +5,7 @@ class Collision {
 protected:
 
 public:
+    Collision() = default;
     virtual ~Collision() = default;
     virtual void updateSize(const sf::IntRect& bodyDim) = 0;
     virtual void followEntity(const sf::Vector2f& entityPosition) = 0;

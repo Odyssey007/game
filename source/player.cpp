@@ -6,13 +6,13 @@ Player::Player() :
     //player stats
     health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f),
     //player bounds
-    bounds(sf::IntRect(30.0f, 35.0f, 32.0f, 75.0f)),
+    bounds(sf::IntRect(50, 30, 30, 80)),
     //movement
     moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
 {
     //preliminaries
     entityType = PLAYER; collisionType = AABB;
-    texture.loadFromFile("assets/playerSheet1.png");
+    texture.loadFromFile("assets/playerSheet.png");
     sprite.setTexture(texture);
     animation = Animation(&texture, animationSheetDim, frameDuration);
     sprite.setTextureRect(animation.uvRect);
@@ -27,13 +27,11 @@ void Player::update() {
     //reset each after each movement
     isMoving = false;
     moveDistance = sf::Vector2f (0.0f, 0.0f); 
-    
     //Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) moveDown(); 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) moveLeft();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) moveRight();
-
     //Update the player position if moving
     if (isMoving) {
         moveDistance = normalize(moveDistance);        
@@ -75,10 +73,10 @@ void Player::moveRight() {
     isMoving = true;
 }
 
-//sets the inital positions
-void Player::initialPosition() {
-    sf::Vector2f startPos = sf::Vector2f(650.0f, 500.0f); 
-    sprite.setPosition(startPos);
+//renders player && player-related render
+void Player::render(sf::RenderWindow& window) {
+    window.draw(sprite);
+    window.draw(hitBox.body);
 }
 
 //returns hit box body 
@@ -90,19 +88,19 @@ float Player::getHealth() {
     return health;
 }
 
+size_t Player::getState() {
+    return 1;
+}
+
+//sets the inital positions
+void Player::initialPosition() {
+    sf::Vector2f startPos = sf::Vector2f(650.0f, 500.0f); 
+    sprite.setPosition(startPos);
+}
+
 void Player::takeDebuffs(float hpHit, float speedHit) {
     health -= hpHit;
     battleSpeed -= speedHit;  
-}
-
-//renders player && player-related render
-void Player::render(sf::RenderWindow& window) {
-    window.draw(sprite);
-    window.draw(hitBox.body);
-}
-
-size_t Player::getState() {
-    return 1;
 }
 
 //handles what should player do if they collide with other entity in the game

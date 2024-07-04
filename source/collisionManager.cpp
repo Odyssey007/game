@@ -37,7 +37,6 @@ void CollisionManager::checkCollisions() {
             }
         }
     }
-
 }
 
 //handles what to do once entity1 collides with entity2

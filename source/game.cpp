@@ -54,7 +54,7 @@ void Game::handleEvents() {
 }
 
 void Game::checkGameEnd() {
-    std::cout << player->getHealth() << std::endl;
+    //std::cout << player->getHealth() << std::endl;
     if (player->getHealth() == 0) {
         throw std::runtime_error("Game Over\n");
     }
