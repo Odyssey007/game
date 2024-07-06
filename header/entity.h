@@ -8,9 +8,9 @@ enum CollisionType { AABB, CIRCLE };
 class Entity {
 protected:
 public:
-    EnemyType enemyType;
     EntityType entityType;
     CollisionType collisionType;
+    EnemyType enemyType;
     //functions
     virtual void initialPosition() = 0;
     virtual void handleCollisions(Entity& other) = 0;

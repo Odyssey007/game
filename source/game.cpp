@@ -5,9 +5,12 @@ Game::Game() :
     //window setup
     window(nullptr), resolution(sf::VideoMode::getDesktopMode()),
     //entities
-    player(std::make_shared<Player>()), slimeNum(1),
-    slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>())
+    player(std::make_shared<Player>()), 
+    slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>()),
+    staticObstacles(std::make_shared<std::vector<std::shared_ptr<StaticObstacle>>>())
 {
+    //?temp
+    slimeNum = 1; staticObstacleNum = 1; 
     //preliminaries
     currentWindow();
     //entities
@@ -17,6 +20,11 @@ Game::Game() :
         std::shared_ptr<Slime> slime = std::make_shared<Slime>();
         slimes->push_back(slime);
         collisionManager.addEntity(slime);
+    }
+    for (size_t i = 0; i < staticObstacleNum; i++) { //static obstacles
+        std::shared_ptr<StaticObstacle> obstacle = std::make_shared<StaticObstacle>();
+        staticObstacles->push_back(obstacle);
+        collisionManager.addEntity(obstacle);
     }
 }
 
@@ -65,6 +73,9 @@ void Game::render() {
     //entities
     for (const auto& slime : *slimes) { //slimes
         slime->render(*window);
+    }
+    for (const auto& obstacle : *staticObstacles) { //static obstacles
+        obstacle->render(*window);
     }
     player->render(*window); //player
     window->display();

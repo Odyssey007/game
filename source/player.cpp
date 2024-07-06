@@ -34,7 +34,8 @@ void Player::update() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) moveRight();
     //Update the player position if moving
     if (isMoving) {
-        moveDistance = normalize(moveDistance);        
+        moveDistance = normalize(moveDistance);
+        velocity = moveDistance;
         sprite.move(moveDistance * battleSpeed * DeltaTime::getInstance()->getDeltaTime());
     }
     else{
@@ -114,8 +115,41 @@ void Player::handleCollisions(Entity& other) {
 }
 
 void Player::handleObjectCollisions(Entity& object) {
-    return;
+    sf::FloatRect pBounds = this->sprite.getGlobalBounds();
+    sf::FloatRect oBounds = object.getShape().getGlobalBounds();
+    
+    float penetrationX = 0, penetrationY = 0;
+
+    // Calculate the penetration depth in the X direction
+    if (pBounds.left < oBounds.left) {
+        penetrationX = (pBounds.left + pBounds.width) - oBounds.left;
+    } else {
+        penetrationX = pBounds.left - (oBounds.left + oBounds.width);
+    }
+
+    // Calculate the penetration depth in the Y direction
+    if (pBounds.top < oBounds.top) {
+        penetrationY = (pBounds.top + pBounds.height) - oBounds.top;
+    } else {
+        penetrationY = pBounds.top - (oBounds.top + oBounds.height);
+    }
+
+    // Adjust the player's position based on the smallest penetration depth
+    if (std::abs(penetrationX) < std::abs(penetrationY)) {
+        if (penetrationX > 0) {
+            this->sprite.move(-penetrationX, 0); // Move left
+        } else {
+            this->sprite.move(-penetrationX, 0); // Move right
+        }
+    } else {
+        if (penetrationY > 0) {
+            this->sprite.move(0, -penetrationY); // Move up
+        } else {
+            this->sprite.move(0, -penetrationY); // Move down
+        }
+    }
 }
+
 
 void Player::handleEnemyCollisions(Entity& enemy) {
     if (canAttack(enemy)) {

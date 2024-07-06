@@ -32,7 +32,7 @@ void Slime::update(const sf::Vector2f& target, const float canLeap) {
     //moves
     hitBox.followEntity(sprite.getPosition());
     if (distance(target, sprite.getPosition()) >= canLeap && !leaping) {
-        meleeMovement(target);
+        //meleeMovement(target);
     } else { //attacks
         attacks();
     }

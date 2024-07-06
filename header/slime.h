@@ -4,7 +4,7 @@
 #include "collision.h"
 #include "player.h"
 
-//currentAbility: 0 - NONE, 1 - NORMAL, 2 - LEAP
+//currentAbility: 0 - NONE | 1 - NORMAL | 2 - LEAP
 class Player;
 
 class Slime : public Enemy {

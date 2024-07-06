@@ -8,7 +8,7 @@ enum PlayerAbilities {  };
 
 class Player : public Entity {
 private:
-    //rendering
+    //texture
     sf::Texture texture;
     sf::Sprite sprite;
     //animation
@@ -49,6 +49,8 @@ public:
     virtual sf::Shape& getShape() override;
     virtual size_t getState() override;
     float getHealth();
+
+    sf::Vector2f velocity;
 };
 
 //---------------------------------

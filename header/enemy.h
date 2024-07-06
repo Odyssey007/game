@@ -5,7 +5,7 @@
 
 class Enemy : public Entity {
 protected:
-    //rendering
+    //texture
     std::map<std::string, sf::Texture> textures;
     sf::Sprite sprite;
     //animation
