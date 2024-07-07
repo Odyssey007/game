@@ -20,7 +20,7 @@ private:
 public:
     StaticObstacle();
     //functions
-    virtual void initialPosition() override;
+    virtual void initialPosition(const sf::Vector2u& position) override;
     virtual void handleCollisions(Entity& other) override;
     virtual void render(sf::RenderWindow& window) override;
     //fetchers
@@ -42,7 +42,7 @@ private:
 public:
     DynamicObstacle();
     //functions
-    virtual void initialPosition() override;
+    virtual void initialPosition(const sf::Vector2u& position) override;
     virtual void handleCollisions(Entity& other) override;
     virtual void render(sf::RenderWindow& window) override;
     //fetchers

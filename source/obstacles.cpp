@@ -11,7 +11,7 @@ StaticObstacle::StaticObstacle() {
     bounds = sf::IntRect(0, 0, 25, 100);
     hitBox.updateSize(bounds);
     //set initial position
-    initialPosition();
+    initialPosition(sf::Vector2u(400, 400));
 }
 
 void StaticObstacle::render(sf::RenderWindow& window) {
@@ -19,9 +19,9 @@ void StaticObstacle::render(sf::RenderWindow& window) {
     window.draw(hitBox.body);
 }
 
-void StaticObstacle::initialPosition() {
-    obstacle.setPosition(400, 400);
-    hitBox.body.setPosition(400, 400);
+void StaticObstacle::initialPosition(const sf::Vector2u& position) {
+    obstacle.setPosition(position.x, position.y);
+    hitBox.body.setPosition(position.x, position.y);
 }
 
 size_t StaticObstacle::getState() {

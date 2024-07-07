@@ -13,3 +13,5 @@ float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two);
 sf::IntRect calcImageBounds(const sf::Image& image);
 float rotationAngle(float centerX, float centerY, float mouseX, float mouseY);
 float radianToDegrees(float radians);
+
+sf::Vector2i randomGenerator(const std::pair<int, int>& xRange, const std::pair<int, int>& yRange);

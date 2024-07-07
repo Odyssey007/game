@@ -32,6 +32,6 @@ public:
     virtual ~Enemy() {};
     //functions
     virtual void attacks() = 0;
-    virtual void initialPosition() override;
+    virtual void initialPosition(const sf::Vector2u& resolution) override;
     virtual void handleCollisions(Entity& other) override;
 };

@@ -42,14 +42,16 @@ sf::IntRect calcImageBounds(const sf::Image& image) {
 }
 
 //returns an signed int between range
-sf::Vector2u randomGenerator(const std::pair <int, int>& range) {
+sf::Vector2i randomGenerator(const std::pair<int, int>& xRange, const std::pair<int, int>& yRange) {
     //static std::random_device rand;
     static std::mt19937 gen(std::random_device{}());
 
-    std::uniform_int_distribution <> distribute (range.first, range.second); 
-    unsigned int x = static_cast<unsigned int>(distribute(gen));
-    unsigned int y = static_cast<unsigned int>(distribute(gen));
+    std::uniform_int_distribution<> distributeX(xRange.first, xRange.second);
+    std::uniform_int_distribution<> distributeY(yRange.first, yRange.second);
 
+    int x = distributeX(gen);
+    int y = distributeY(gen);
+    
     return {x, y}; 
 }
 

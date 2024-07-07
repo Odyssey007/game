@@ -42,7 +42,7 @@ public:
     //functions
     void update();
     void takeDebuffs(float hpHit, float speedHit);
-    virtual void initialPosition() override;
+    virtual void initialPosition(const sf::Vector2u& position) override;
     virtual void handleCollisions(Entity& other) override;
     virtual void render(sf::RenderWindow& window) override;
     //fetcher functions

@@ -6,7 +6,7 @@ Slime::Slime() :
     //leap buffers
     leaping(false), chargeTimer(0.35f), needToRecover(false), recoveryTimer(0.35f),
     //leap distance
-    leapDistance(250.0f), totalLeapDistance(0.0f)
+    leapDistance(150.0f), totalLeapDistance(0.0f)
 {
     //preliminaries
     enemyType = SLIME; collisionType = CIRCLE;
@@ -17,7 +17,6 @@ Slime::Slime() :
     hitBox.updateSize(bounds);
     //set origin and position
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
-    sprite.setPosition(1000, 1000);
 }
 
 void Slime::update(const sf::Vector2f& target, const float canLeap) {
@@ -32,7 +31,7 @@ void Slime::update(const sf::Vector2f& target, const float canLeap) {
     //moves
     hitBox.followEntity(sprite.getPosition());
     if (distance(target, sprite.getPosition()) >= canLeap && !leaping) {
-        //meleeMovement(target);
+        meleeMovement(target);
     } else { //attacks
         attacks();
     }
@@ -71,7 +70,7 @@ void Slime::leapAttack() {
         needToRecover = true;
         recoveryTimer = 0.35f;
         //
-        //firstAttack = false;
+        firstAttack = false;
     }
 }
 

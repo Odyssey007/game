@@ -1,5 +1,4 @@
 #include "../header/player.h"
-
 Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
@@ -18,8 +17,7 @@ Player::Player() :
     sprite.setTextureRect(animation.uvRect);
     //hit box and bounds for player sprite
     hitBox.updateSize(bounds);
-    //set origin and position
-    initialPosition();
+    //set origin
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 }
 
@@ -94,9 +92,9 @@ size_t Player::getState() {
 }
 
 //sets the inital positions
-void Player::initialPosition() {
-    sf::Vector2f startPos = sf::Vector2f(650.0f, 500.0f); 
-    sprite.setPosition(startPos);
+void Player::initialPosition(const sf::Vector2u& position) { 
+    sprite.setPosition(position.x, position.y);
+    hitBox.body.setPosition(position.x, position.y);
 }
 
 void Player::takeDebuffs(float hpHit, float speedHit) {

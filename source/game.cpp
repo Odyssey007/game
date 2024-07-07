@@ -3,21 +3,22 @@
 //preset values into setting up window
 Game::Game() : 
     //window setup
-    window(nullptr), resolution(sf::VideoMode::getDesktopMode()),
+    window(nullptr), resolution(sf::Vector2u(0, 0)),
     //entities
     player(std::make_shared<Player>()), 
     slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>()),
     staticObstacles(std::make_shared<std::vector<std::shared_ptr<StaticObstacle>>>())
 {
     //?temp
-    slimeNum = 1; staticObstacleNum = 1; 
+    slimeNum = 10; staticObstacleNum = 1; 
     //preliminaries
     currentWindow();
     //entities
-    player->initialPosition(); //player
+    player->initialPosition(sf::Vector2u(650, 500)); //player
     collisionManager.addEntity(player); 
     for (size_t i = 0; i < slimeNum; i++) { //slimes
         std::shared_ptr<Slime> slime = std::make_shared<Slime>();
+        slime->initialPosition(resolution);
         slimes->push_back(slime);
         collisionManager.addEntity(slime);
     }
@@ -30,7 +31,11 @@ Game::Game() :
 
 //sets up the window
 void Game::currentWindow() {
-    window = std::make_unique<sf::RenderWindow>(resolution, "Project-AA", sf::Style::Fullscreen);
+    //resolution
+    sf::VideoMode screen = sf::VideoMode::getDesktopMode();
+    resolution.x = screen.width; resolution.y = screen.height;
+    //window
+    window = std::make_unique<sf::RenderWindow>(screen, "Project-AA", sf::Style::Fullscreen);
     window->setFramerateLimit(120);
 }
 

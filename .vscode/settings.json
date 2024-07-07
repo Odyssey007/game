@@ -66,6 +66,11 @@
         "__bit_reference": "cpp",
         "cinttypes": "cpp",
         "queue": "cpp",
-        "__string": "cpp"
+        "__string": "cpp",
+        "codecvt": "cpp",
+        "charconv": "cpp",
+        "span": "cpp",
+        "variant": "cpp",
+        "format": "cpp"
     }
 }

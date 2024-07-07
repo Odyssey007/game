@@ -11,7 +11,7 @@ class Game {
 private:
     //window reset up
     std::unique_ptr <sf::RenderWindow> window; 
-    sf::VideoMode resolution;
+    sf::Vector2u resolution;
     sf::Event event;
     //collision big papa
     CollisionManager collisionManager;
