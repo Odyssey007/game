@@ -19,19 +19,27 @@ protected:
     //movement 
     std::vector<sf::Vector2f> directions;
     sf::Vector2f bestDirection;
+    sf::Vector2f moveDistance;
     //hitbox
-    sf::IntRect bounds;
+    sf::FloatRect bounds;
     //functions
     void loadTexture(const std::string& name, const std::string& filePath); //load textures
-    void generateDirections(int numDirections=16); //movement
+    void generateDirections(int numDirections=32); //movement
     virtual void meleeMovement(const sf::Vector2f& target); //melee movement
-    //!virtual void spawn() = 0;
+    virtual void attacks() = 0; //
 public:
     //constructor
     Enemy();
-    virtual ~Enemy() {};
-    //functions
-    virtual void attacks() = 0;
-    virtual void initialPosition(const sf::Vector2u& resolution) override;
-    virtual void handleCollisions(Entity& other) override;
+    virtual ~Enemy() = default;
+    //ENTITY fetchers
+    virtual const sf::Vector2f& getVelocity() override;
+    //ENTITY setters
+    virtual void setInitialPosition(const sf::Vector2u& resolution) override;
+    virtual void setVelocity(const sf::Vector2f& velocity) override;
+    //ENTITY functions 
+    virtual void handleCollision(Entity& entity) override;
+
+
+
+    virtual void applyMovement() override;
 };

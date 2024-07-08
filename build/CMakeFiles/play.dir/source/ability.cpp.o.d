@@ -319,4 +319,5 @@ CMakeFiles/play.dir/source/ability.cpp.o: \
  /home/ol/personal/project-AA/source/../header/entity.h \
  /home/ol/personal/project-AA/source/../header/slime.h \
  /home/ol/personal/project-AA/source/../header/enemy.h \
- /home/ol/personal/project-AA/source/../header/collision.h
+ /home/ol/personal/project-AA/source/../header/collision.h \
+ /home/ol/personal/project-AA/source/../header/obstacles.h

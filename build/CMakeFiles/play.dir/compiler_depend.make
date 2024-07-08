@@ -391,7 +391,8 @@ CMakeFiles/play.dir/source/ability.cpp.o: ../source/ability.cpp \
   ../header/entity.h \
   ../header/slime.h \
   ../header/enemy.h \
-  ../header/collision.h
+  ../header/collision.h \
+  ../header/obstacles.h
 
 CMakeFiles/play.dir/source/animation.cpp.o: ../source/animation.cpp \
   /usr/include/stdc-predef.h \
@@ -1551,7 +1552,8 @@ CMakeFiles/play.dir/source/collisionManager.cpp.o: ../source/collisionManager.cp
   /usr/include/c++/11/pstl/glue_numeric_defs.h \
   ../header/deltaTime.h \
   ../header/entity.h \
-  ../header/collision.h
+  ../header/collision.h \
+  ../header/obstacles.h
 
 CMakeFiles/play.dir/source/deltaTime.cpp.o: ../source/deltaTime.cpp \
   /usr/include/stdc-predef.h \
@@ -3024,11 +3026,11 @@ CMakeFiles/play.dir/source/game.cpp.o: ../source/game.cpp \
   ../header/collisionManager.h \
   ../header/entity.h \
   ../header/collision.h \
+  ../header/obstacles.h \
   ../header/player.h \
   ../header/animation.h \
   ../header/slime.h \
   ../header/enemy.h \
-  ../header/obstacles.h \
   ../header/ability.h
 
 CMakeFiles/play.dir/source/main.cpp.o: ../source/main.cpp \
@@ -3419,11 +3421,11 @@ CMakeFiles/play.dir/source/main.cpp.o: ../source/main.cpp \
   ../header/collisionManager.h \
   ../header/entity.h \
   ../header/collision.h \
+  ../header/obstacles.h \
   ../header/player.h \
   ../header/animation.h \
   ../header/slime.h \
   ../header/enemy.h \
-  ../header/obstacles.h \
   ../header/ability.h
 
 CMakeFiles/play.dir/source/obstacles.cpp.o: ../source/obstacles.cpp \
@@ -4203,7 +4205,8 @@ CMakeFiles/play.dir/source/player.cpp.o: ../source/player.cpp \
   ../header/animation.h \
   ../header/slime.h \
   ../header/enemy.h \
-  ../header/collision.h
+  ../header/collision.h \
+  ../header/obstacles.h
 
 CMakeFiles/play.dir/source/slime.cpp.o: ../source/slime.cpp \
   /usr/include/stdc-predef.h \
@@ -4594,7 +4597,8 @@ CMakeFiles/play.dir/source/slime.cpp.o: ../source/slime.cpp \
   ../header/entity.h \
   ../header/animation.h \
   ../header/collision.h \
-  ../header/player.h
+  ../header/player.h \
+  ../header/obstacles.h
 
 CMakeFiles/play.dir/source/utility.cpp.o: ../source/utility.cpp \
   /usr/include/stdc-predef.h \
@@ -4986,13 +4990,13 @@ CMakeFiles/play.dir/source/utility.cpp.o: ../source/utility.cpp \
 
 ../source/player.cpp:
 
-../header/obstacles.h:
-
 ../header/game.h:
 
 ../source/entity.cpp:
 
 ../header/collisionManager.h:
+
+../header/obstacles.h:
 
 ../header/collision.h:
 

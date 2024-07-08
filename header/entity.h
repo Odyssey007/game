@@ -13,11 +13,17 @@ public:
     EntityType entityType;
     CollisionType collisionType;
     EnemyType enemyType;
+    //fetchers
+    virtual size_t getState() = 0; //gets enemy move -- as of now
+    virtual const sf::Shape& getShape() = 0; //gets hitbox body
+    virtual const sf::Vector2f& getVelocity() = 0; //gets entity movement speed
+    //setters
+    virtual void setVelocity(const sf::Vector2f& velocity) = 0; //changes entity movement speed
+    virtual void setInitialPosition(const sf::Vector2u& position) = 0; //sets inital position of entities
     //functions
-    virtual void initialPosition(const sf::Vector2u& position) = 0;
-    virtual void handleCollisions(Entity& other) = 0;
+    virtual void handleCollision(Entity& entity) = 0; 
     virtual void render(sf::RenderWindow& window) = 0;
-    //fetches
-    virtual size_t getState() = 0;
-    virtual sf::Shape& getShape() = 0;
+
+
+    virtual void applyMovement() = 0;
 };

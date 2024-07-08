@@ -317,4 +317,5 @@ CMakeFiles/play.dir/source/slime.cpp.o: \
  /home/ol/personal/project-AA/source/../header/entity.h \
  /home/ol/personal/project-AA/source/../header/animation.h \
  /home/ol/personal/project-AA/source/../header/collision.h \
- /home/ol/personal/project-AA/source/../header/player.h
+ /home/ol/personal/project-AA/source/../header/player.h \
+ /home/ol/personal/project-AA/source/../header/obstacles.h

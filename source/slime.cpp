@@ -13,7 +13,7 @@ Slime::Slime() :
     sprite.setTexture(textures["slime"]);
     //hit box
     hitBox = CircleCollision();
-    bounds = sf::IntRect(45, 70, 59, 49);
+    bounds = sf::FloatRect(45, 70, 59, 49);
     hitBox.updateSize(bounds);
     //set origin and position
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
@@ -29,18 +29,19 @@ void Slime::update(const sf::Vector2f& target, const float canLeap) {
         needToRecover = false;
     }
     //moves
-    hitBox.followEntity(sprite.getPosition());
     if (distance(target, sprite.getPosition()) >= canLeap && !leaping) {
         meleeMovement(target);
     } else { //attacks
         attacks();
     }
+    //!problem with hitbox when leap attack it doesn't track for a sec
+    hitBox.followEntity(sprite.getPosition());
 }
 
 void Slime::attacks() {
-    if (firstAttack) {
-        leapAttack();
-    }
+    // if (firstAttack) {
+    //     leapAttack();
+    // }
     normalAttack();
 }
 
@@ -74,21 +75,7 @@ void Slime::leapAttack() {
     }
 }
 
-size_t Slime::getState() {
-    return currentAbility; 
-}
-
-//returns hit box body
-sf::Shape& Slime::getShape() {
-    return hitBox.body;
-}
-
-//renders player && player-related render
-void Slime::render(sf::RenderWindow& window) {
-    window.draw(sprite);
-    window.draw(hitBox.body);
-}
-
+//static function
 void Slime::playerContact(Player& player, Entity& slime) {
     size_t ability = slime.getState();
     if (ability == 1) {
@@ -96,4 +83,19 @@ void Slime::playerContact(Player& player, Entity& slime) {
     } else if (ability == 2) {
         player.takeDebuffs(10.0f, 50.0f);
     }
+}
+
+//ENTITY FUNCTIONS
+
+size_t Slime::getState() {
+    return currentAbility; 
+}
+
+const sf::Shape& Slime::getShape() {
+    return hitBox.body;
+}
+
+void Slime::render(sf::RenderWindow& window) {
+    window.draw(sprite);
+    window.draw(hitBox.body);
 }

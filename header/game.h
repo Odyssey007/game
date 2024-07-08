@@ -19,8 +19,8 @@ private:
     std::shared_ptr<Player> player;
     size_t slimeNum;
     std::shared_ptr<std::vector<std::shared_ptr<Slime>>> slimes;
-    size_t staticObstacleNum;
-    std::shared_ptr<std::vector<std::shared_ptr<StaticObstacle>>> staticObstacles;
+    size_t objectNum;
+    std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects;
     //functions
     void currentWindow();
     void handleEvents();

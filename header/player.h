@@ -4,6 +4,8 @@
 #include "animation.h"
 #include "slime.h"
 
+#include "obstacles.h"
+
 enum PlayerAbilities {  };
 
 class Player : public Entity {
@@ -21,7 +23,7 @@ private:
     const float kingdomSpeed;
     //hit box
     BoxCollision hitBox;
-    sf::IntRect bounds;
+    sf::FloatRect bounds;
     //player movement
     sf::Vector2f moveDistance;
     bool isMoving;
@@ -39,18 +41,24 @@ private:
 public:
     //constructor
     Player(); 
+    //fetchers
+    float getHealth();
     //functions
     void update();
     void takeDebuffs(float hpHit, float speedHit);
-    virtual void initialPosition(const sf::Vector2u& position) override;
-    virtual void handleCollisions(Entity& other) override;
-    virtual void render(sf::RenderWindow& window) override;
-    //fetcher functions
-    virtual sf::Shape& getShape() override;
+    
+    //ENTITY fetchers
     virtual size_t getState() override;
-    float getHealth();
+    virtual const sf::Shape& getShape() override;
+    virtual const sf::Vector2f& getVelocity() override;
+    //ENTITY setters
+    virtual void setVelocity(const sf::Vector2f& velocity) override;
+    virtual void setInitialPosition(const sf::Vector2u& position) override;
+    //ENTITY functions
+    virtual void handleCollision(Entity& other) override;
+    virtual void render(sf::RenderWindow& window) override;
 
-    sf::Vector2f velocity;
+    virtual void applyMovement() override;
 };
 
 //---------------------------------

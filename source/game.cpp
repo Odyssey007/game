@@ -7,25 +7,25 @@ Game::Game() :
     //entities
     player(std::make_shared<Player>()), 
     slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>()),
-    staticObstacles(std::make_shared<std::vector<std::shared_ptr<StaticObstacle>>>())
+    objects(std::make_shared<std::vector<std::shared_ptr<Object>>>())
 {
     //?temp
-    slimeNum = 10; staticObstacleNum = 1; 
+    slimeNum = 10; objectNum = 1; 
     //preliminaries
     currentWindow();
     //entities
-    player->initialPosition(sf::Vector2u(650, 500)); //player
+    player->setInitialPosition(sf::Vector2u(650, 500)); //player
     collisionManager.addEntity(player); 
     for (size_t i = 0; i < slimeNum; i++) { //slimes
         std::shared_ptr<Slime> slime = std::make_shared<Slime>();
-        slime->initialPosition(resolution);
+        slime->setInitialPosition(resolution);
         slimes->push_back(slime);
         collisionManager.addEntity(slime);
     }
-    for (size_t i = 0; i < staticObstacleNum; i++) { //static obstacles
-        std::shared_ptr<StaticObstacle> obstacle = std::make_shared<StaticObstacle>();
-        staticObstacles->push_back(obstacle);
-        collisionManager.addEntity(obstacle);
+    for (size_t i = 0; i < objectNum; i++) { //static obstacles
+        std::shared_ptr<Object> object = std::make_shared<Object>();
+        objects->push_back(object);
+        collisionManager.addObject(object);
     }
 }
 
@@ -46,14 +46,17 @@ bool Game::winRunning() const {
 void Game::update() {
     handleEvents();
     //update entities
-    
     player->update();
     for (auto& slime : *slimes) {
         slime->update((player->getShape()).getPosition(), 100.0f);
     }
     //collision check
     collisionManager.checkCollisions();
-    //is game over?
+    player->applyMovement();
+    for (auto& slime : *slimes) {
+        slime->applyMovement();
+    }
+
     checkGameEnd();
 }
 
@@ -68,19 +71,19 @@ void Game::handleEvents() {
 
 void Game::checkGameEnd() {
     //std::cout << player->getHealth() << std::endl;
-    if (player->getHealth() == 0) {
-        throw std::runtime_error("Game Over\n");
-    }
+    // if (player->getHealth() == 0) {
+    //     throw std::runtime_error("Game Over\n");
+    // }
 }
 
 void Game::render() {
     window->clear();
     //entities
+    for (const auto& obstacle : *objects) { //static obstacles
+        obstacle->render(*window);
+    }
     for (const auto& slime : *slimes) { //slimes
         slime->render(*window);
-    }
-    for (const auto& obstacle : *staticObstacles) { //static obstacles
-        obstacle->render(*window);
     }
     player->render(*window); //player
     window->display();

@@ -315,4 +315,5 @@ CMakeFiles/play.dir/source/collisionManager.cpp.o: \
  /usr/include/c++/11/pstl/glue_numeric_defs.h \
  /home/ol/personal/project-AA/source/../header/deltaTime.h \
  /home/ol/personal/project-AA/source/../header/entity.h \
- /home/ol/personal/project-AA/source/../header/collision.h
+ /home/ol/personal/project-AA/source/../header/collision.h \
+ /home/ol/personal/project-AA/source/../header/obstacles.h

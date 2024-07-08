@@ -71,6 +71,8 @@
         "charconv": "cpp",
         "span": "cpp",
         "variant": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "stack": "cpp",
+        "__node_handle": "cpp"
     }
 }

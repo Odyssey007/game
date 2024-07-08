@@ -38,18 +38,23 @@ void Enemy::meleeMovement(const sf::Vector2f& target) {
     toTarget = normalize(toTarget);
     //finds the optimal direction toward target 
     float maxDot = -1.0f;
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 32; i++) {
         float dot = dotProduct(directions[i], toTarget);
         if (dot > maxDot) {
             maxDot = dot;
             bestDirection = directions[i];
         }
     }
-    sf::Vector2f move = bestDirection*movementSpeed*DeltaTime::getInstance()->getDeltaTime();
-    sprite.move(move);
+    //separation force from neighbors
+    
+    //move
+    moveDistance = bestDirection*movementSpeed*DeltaTime::getInstance()->getDeltaTime();
+    //sprite.move(moveDistance);
 }
 
-void Enemy::initialPosition(const sf::Vector2u& resolution) {
+//ENTITY FUNCTIONS
+
+void Enemy::setInitialPosition(const sf::Vector2u& resolution) {
     //pick the side of the screen to spawn in
     static std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> distribute(1, 4);
@@ -77,6 +82,34 @@ void Enemy::initialPosition(const sf::Vector2u& resolution) {
     sprite.setPosition(spawnPosition.x, spawnPosition.y);
 }
 
-void Enemy::handleCollisions(Entity& other) {
+const sf::Vector2f& Enemy::getVelocity() {
+    return moveDistance;
+}
 
+void Enemy::setVelocity(const sf::Vector2f& velocity) {
+    moveDistance = velocity;
+}
+
+
+void Enemy::applyMovement() {
+    sprite.move(moveDistance);
+    moveDistance = sf::Vector2f(0.0f, 0.0f);
+}
+
+void Enemy::handleCollision(Entity& entity) {
+    sf::Vector2f delta = this->getShape().getPosition() - entity.getShape().getPosition();
+    float distance = magnitude(delta);
+    float radius1 = this->getShape().getGlobalBounds().width / 2.0f;
+    float radius2 = entity.getShape().getGlobalBounds().width / 2.0f;
+    float minDistance =  radius1+radius2;
+
+
+    if (distance < minDistance) {
+        float overlap = minDistance - distance;
+        delta /= distance;
+        delta *= overlap;
+
+        this->moveDistance += delta;
+        entity.setVelocity(entity.getVelocity()-delta);
+    }
 }

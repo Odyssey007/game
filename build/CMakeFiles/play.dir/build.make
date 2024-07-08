@@ -73,183 +73,183 @@ CMakeFiles/play.dir/source/ability.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/ability.cpp.o: ../source/ability.cpp
 CMakeFiles/play.dir/source/ability.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/play.dir/source/ability.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/ability.cpp.o -MF CMakeFiles/play.dir/source/ability.cpp.o.d -o CMakeFiles/play.dir/source/ability.cpp.o -c /home/ol/personal/project-AA/source/ability.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/ability.cpp.o -MF CMakeFiles/play.dir/source/ability.cpp.o.d -o CMakeFiles/play.dir/source/ability.cpp.o -c /home/ol/personal/project-AA/source/ability.cpp
 
 CMakeFiles/play.dir/source/ability.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/ability.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/ability.cpp > CMakeFiles/play.dir/source/ability.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/ability.cpp > CMakeFiles/play.dir/source/ability.cpp.i
 
 CMakeFiles/play.dir/source/ability.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/ability.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/ability.cpp -o CMakeFiles/play.dir/source/ability.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/ability.cpp -o CMakeFiles/play.dir/source/ability.cpp.s
 
 CMakeFiles/play.dir/source/animation.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/animation.cpp.o: ../source/animation.cpp
 CMakeFiles/play.dir/source/animation.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/play.dir/source/animation.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/animation.cpp.o -MF CMakeFiles/play.dir/source/animation.cpp.o.d -o CMakeFiles/play.dir/source/animation.cpp.o -c /home/ol/personal/project-AA/source/animation.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/animation.cpp.o -MF CMakeFiles/play.dir/source/animation.cpp.o.d -o CMakeFiles/play.dir/source/animation.cpp.o -c /home/ol/personal/project-AA/source/animation.cpp
 
 CMakeFiles/play.dir/source/animation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/animation.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/animation.cpp > CMakeFiles/play.dir/source/animation.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/animation.cpp > CMakeFiles/play.dir/source/animation.cpp.i
 
 CMakeFiles/play.dir/source/animation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/animation.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/animation.cpp -o CMakeFiles/play.dir/source/animation.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/animation.cpp -o CMakeFiles/play.dir/source/animation.cpp.s
 
 CMakeFiles/play.dir/source/collision.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/collision.cpp.o: ../source/collision.cpp
 CMakeFiles/play.dir/source/collision.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/play.dir/source/collision.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/collision.cpp.o -MF CMakeFiles/play.dir/source/collision.cpp.o.d -o CMakeFiles/play.dir/source/collision.cpp.o -c /home/ol/personal/project-AA/source/collision.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/collision.cpp.o -MF CMakeFiles/play.dir/source/collision.cpp.o.d -o CMakeFiles/play.dir/source/collision.cpp.o -c /home/ol/personal/project-AA/source/collision.cpp
 
 CMakeFiles/play.dir/source/collision.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/collision.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/collision.cpp > CMakeFiles/play.dir/source/collision.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/collision.cpp > CMakeFiles/play.dir/source/collision.cpp.i
 
 CMakeFiles/play.dir/source/collision.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/collision.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/collision.cpp -o CMakeFiles/play.dir/source/collision.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/collision.cpp -o CMakeFiles/play.dir/source/collision.cpp.s
 
 CMakeFiles/play.dir/source/collisionManager.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/collisionManager.cpp.o: ../source/collisionManager.cpp
 CMakeFiles/play.dir/source/collisionManager.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/play.dir/source/collisionManager.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/collisionManager.cpp.o -MF CMakeFiles/play.dir/source/collisionManager.cpp.o.d -o CMakeFiles/play.dir/source/collisionManager.cpp.o -c /home/ol/personal/project-AA/source/collisionManager.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/collisionManager.cpp.o -MF CMakeFiles/play.dir/source/collisionManager.cpp.o.d -o CMakeFiles/play.dir/source/collisionManager.cpp.o -c /home/ol/personal/project-AA/source/collisionManager.cpp
 
 CMakeFiles/play.dir/source/collisionManager.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/collisionManager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/collisionManager.cpp > CMakeFiles/play.dir/source/collisionManager.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/collisionManager.cpp > CMakeFiles/play.dir/source/collisionManager.cpp.i
 
 CMakeFiles/play.dir/source/collisionManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/collisionManager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/collisionManager.cpp -o CMakeFiles/play.dir/source/collisionManager.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/collisionManager.cpp -o CMakeFiles/play.dir/source/collisionManager.cpp.s
 
 CMakeFiles/play.dir/source/deltaTime.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/deltaTime.cpp.o: ../source/deltaTime.cpp
 CMakeFiles/play.dir/source/deltaTime.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/play.dir/source/deltaTime.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/deltaTime.cpp.o -MF CMakeFiles/play.dir/source/deltaTime.cpp.o.d -o CMakeFiles/play.dir/source/deltaTime.cpp.o -c /home/ol/personal/project-AA/source/deltaTime.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/deltaTime.cpp.o -MF CMakeFiles/play.dir/source/deltaTime.cpp.o.d -o CMakeFiles/play.dir/source/deltaTime.cpp.o -c /home/ol/personal/project-AA/source/deltaTime.cpp
 
 CMakeFiles/play.dir/source/deltaTime.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/deltaTime.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/deltaTime.cpp > CMakeFiles/play.dir/source/deltaTime.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/deltaTime.cpp > CMakeFiles/play.dir/source/deltaTime.cpp.i
 
 CMakeFiles/play.dir/source/deltaTime.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/deltaTime.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/deltaTime.cpp -o CMakeFiles/play.dir/source/deltaTime.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/deltaTime.cpp -o CMakeFiles/play.dir/source/deltaTime.cpp.s
 
 CMakeFiles/play.dir/source/enemy.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/enemy.cpp.o: ../source/enemy.cpp
 CMakeFiles/play.dir/source/enemy.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/play.dir/source/enemy.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/enemy.cpp.o -MF CMakeFiles/play.dir/source/enemy.cpp.o.d -o CMakeFiles/play.dir/source/enemy.cpp.o -c /home/ol/personal/project-AA/source/enemy.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/enemy.cpp.o -MF CMakeFiles/play.dir/source/enemy.cpp.o.d -o CMakeFiles/play.dir/source/enemy.cpp.o -c /home/ol/personal/project-AA/source/enemy.cpp
 
 CMakeFiles/play.dir/source/enemy.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/enemy.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/enemy.cpp > CMakeFiles/play.dir/source/enemy.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/enemy.cpp > CMakeFiles/play.dir/source/enemy.cpp.i
 
 CMakeFiles/play.dir/source/enemy.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/enemy.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/enemy.cpp -o CMakeFiles/play.dir/source/enemy.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/enemy.cpp -o CMakeFiles/play.dir/source/enemy.cpp.s
 
 CMakeFiles/play.dir/source/entity.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/entity.cpp.o: ../source/entity.cpp
 CMakeFiles/play.dir/source/entity.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/play.dir/source/entity.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/entity.cpp.o -MF CMakeFiles/play.dir/source/entity.cpp.o.d -o CMakeFiles/play.dir/source/entity.cpp.o -c /home/ol/personal/project-AA/source/entity.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/entity.cpp.o -MF CMakeFiles/play.dir/source/entity.cpp.o.d -o CMakeFiles/play.dir/source/entity.cpp.o -c /home/ol/personal/project-AA/source/entity.cpp
 
 CMakeFiles/play.dir/source/entity.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/entity.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/entity.cpp > CMakeFiles/play.dir/source/entity.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/entity.cpp > CMakeFiles/play.dir/source/entity.cpp.i
 
 CMakeFiles/play.dir/source/entity.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/entity.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/entity.cpp -o CMakeFiles/play.dir/source/entity.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/entity.cpp -o CMakeFiles/play.dir/source/entity.cpp.s
 
 CMakeFiles/play.dir/source/game.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/game.cpp.o: ../source/game.cpp
 CMakeFiles/play.dir/source/game.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/play.dir/source/game.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/game.cpp.o -MF CMakeFiles/play.dir/source/game.cpp.o.d -o CMakeFiles/play.dir/source/game.cpp.o -c /home/ol/personal/project-AA/source/game.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/game.cpp.o -MF CMakeFiles/play.dir/source/game.cpp.o.d -o CMakeFiles/play.dir/source/game.cpp.o -c /home/ol/personal/project-AA/source/game.cpp
 
 CMakeFiles/play.dir/source/game.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/game.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/game.cpp > CMakeFiles/play.dir/source/game.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/game.cpp > CMakeFiles/play.dir/source/game.cpp.i
 
 CMakeFiles/play.dir/source/game.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/game.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/game.cpp -o CMakeFiles/play.dir/source/game.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/game.cpp -o CMakeFiles/play.dir/source/game.cpp.s
 
 CMakeFiles/play.dir/source/main.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/main.cpp.o: ../source/main.cpp
 CMakeFiles/play.dir/source/main.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/play.dir/source/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/main.cpp.o -MF CMakeFiles/play.dir/source/main.cpp.o.d -o CMakeFiles/play.dir/source/main.cpp.o -c /home/ol/personal/project-AA/source/main.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/main.cpp.o -MF CMakeFiles/play.dir/source/main.cpp.o.d -o CMakeFiles/play.dir/source/main.cpp.o -c /home/ol/personal/project-AA/source/main.cpp
 
 CMakeFiles/play.dir/source/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/main.cpp > CMakeFiles/play.dir/source/main.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/main.cpp > CMakeFiles/play.dir/source/main.cpp.i
 
 CMakeFiles/play.dir/source/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/main.cpp -o CMakeFiles/play.dir/source/main.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/main.cpp -o CMakeFiles/play.dir/source/main.cpp.s
 
 CMakeFiles/play.dir/source/obstacles.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/obstacles.cpp.o: ../source/obstacles.cpp
 CMakeFiles/play.dir/source/obstacles.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/play.dir/source/obstacles.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/obstacles.cpp.o -MF CMakeFiles/play.dir/source/obstacles.cpp.o.d -o CMakeFiles/play.dir/source/obstacles.cpp.o -c /home/ol/personal/project-AA/source/obstacles.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/obstacles.cpp.o -MF CMakeFiles/play.dir/source/obstacles.cpp.o.d -o CMakeFiles/play.dir/source/obstacles.cpp.o -c /home/ol/personal/project-AA/source/obstacles.cpp
 
 CMakeFiles/play.dir/source/obstacles.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/obstacles.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/obstacles.cpp > CMakeFiles/play.dir/source/obstacles.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/obstacles.cpp > CMakeFiles/play.dir/source/obstacles.cpp.i
 
 CMakeFiles/play.dir/source/obstacles.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/obstacles.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/obstacles.cpp -o CMakeFiles/play.dir/source/obstacles.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/obstacles.cpp -o CMakeFiles/play.dir/source/obstacles.cpp.s
 
 CMakeFiles/play.dir/source/player.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/player.cpp.o: ../source/player.cpp
 CMakeFiles/play.dir/source/player.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/play.dir/source/player.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/player.cpp.o -MF CMakeFiles/play.dir/source/player.cpp.o.d -o CMakeFiles/play.dir/source/player.cpp.o -c /home/ol/personal/project-AA/source/player.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/player.cpp.o -MF CMakeFiles/play.dir/source/player.cpp.o.d -o CMakeFiles/play.dir/source/player.cpp.o -c /home/ol/personal/project-AA/source/player.cpp
 
 CMakeFiles/play.dir/source/player.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/player.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/player.cpp > CMakeFiles/play.dir/source/player.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/player.cpp > CMakeFiles/play.dir/source/player.cpp.i
 
 CMakeFiles/play.dir/source/player.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/player.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/player.cpp -o CMakeFiles/play.dir/source/player.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/player.cpp -o CMakeFiles/play.dir/source/player.cpp.s
 
 CMakeFiles/play.dir/source/slime.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/slime.cpp.o: ../source/slime.cpp
 CMakeFiles/play.dir/source/slime.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/play.dir/source/slime.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/slime.cpp.o -MF CMakeFiles/play.dir/source/slime.cpp.o.d -o CMakeFiles/play.dir/source/slime.cpp.o -c /home/ol/personal/project-AA/source/slime.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/slime.cpp.o -MF CMakeFiles/play.dir/source/slime.cpp.o.d -o CMakeFiles/play.dir/source/slime.cpp.o -c /home/ol/personal/project-AA/source/slime.cpp
 
 CMakeFiles/play.dir/source/slime.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/slime.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/slime.cpp > CMakeFiles/play.dir/source/slime.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/slime.cpp > CMakeFiles/play.dir/source/slime.cpp.i
 
 CMakeFiles/play.dir/source/slime.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/slime.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/slime.cpp -o CMakeFiles/play.dir/source/slime.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/slime.cpp -o CMakeFiles/play.dir/source/slime.cpp.s
 
 CMakeFiles/play.dir/source/utility.cpp.o: CMakeFiles/play.dir/flags.make
 CMakeFiles/play.dir/source/utility.cpp.o: ../source/utility.cpp
 CMakeFiles/play.dir/source/utility.cpp.o: CMakeFiles/play.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ol/personal/project-AA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/play.dir/source/utility.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/utility.cpp.o -MF CMakeFiles/play.dir/source/utility.cpp.o.d -o CMakeFiles/play.dir/source/utility.cpp.o -c /home/ol/personal/project-AA/source/utility.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/play.dir/source/utility.cpp.o -MF CMakeFiles/play.dir/source/utility.cpp.o.d -o CMakeFiles/play.dir/source/utility.cpp.o -c /home/ol/personal/project-AA/source/utility.cpp
 
 CMakeFiles/play.dir/source/utility.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/play.dir/source/utility.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/utility.cpp > CMakeFiles/play.dir/source/utility.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ol/personal/project-AA/source/utility.cpp > CMakeFiles/play.dir/source/utility.cpp.i
 
 CMakeFiles/play.dir/source/utility.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/play.dir/source/utility.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/utility.cpp -o CMakeFiles/play.dir/source/utility.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ol/personal/project-AA/source/utility.cpp -o CMakeFiles/play.dir/source/utility.cpp.s
 
 # Object files for target play
 play_OBJECTS = \

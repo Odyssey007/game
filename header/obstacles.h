@@ -2,50 +2,31 @@
 #include "utility.h"
 #include "entity.h"
 #include "collision.h"
+#include "entity.h"
 
 //obstacleType: 0 - non-dmg | 1 - dmg
 
-class StaticObstacle : public Entity {
+class Object {
 private:
     //texture
-    sf::RectangleShape obstacle; //?temporary
+    
     sf::Texture texture;
     sf::Sprite sprite;
     //hitbox
     BoxCollision hitBox;
-    sf::IntRect bounds;
+    sf::FloatRect bounds;
     //functions
-    void handleCollisionBox(Entity& entity);
+    void handleCollisionBox(Entity& other);
     void handleCollisionCircle(Entity& other);
 public:
-    StaticObstacle();
+    sf::RectangleShape obstacle; //?temporary
+
+    Object();
     //functions
-    virtual void initialPosition(const sf::Vector2u& position) override;
-    virtual void handleCollisions(Entity& other) override;
-    virtual void render(sf::RenderWindow& window) override;
-    //fetchers
-    virtual size_t getState() override;
-    virtual sf::Shape& getShape() override;
-};
+    void initialPosition(const sf::Vector2u& position);
+    void render(sf::RenderWindow& window);
 
+    sf::FloatRect getGlobalBounds();
 
-
-
-
-
-class DynamicObstacle : public Entity {
-private:
-    //texture
-    sf::Texture texture;
-    sf::Sprite sprite;
-
-public:
-    DynamicObstacle();
-    //functions
-    virtual void initialPosition(const sf::Vector2u& position) override;
-    virtual void handleCollisions(Entity& other) override;
-    virtual void render(sf::RenderWindow& window) override;
-    //fetchers
-    virtual size_t getState() override;
-    virtual sf::Shape& getShape() override;
+    void handleCollision(Entity& entity);
 };

@@ -30,9 +30,13 @@ public:
     Slime();
     //functions
     void update(const sf::Vector2f& target, const float attackRange);
-    virtual void render(sf::RenderWindow& window) override;
+    
     static void playerContact(Player& player, Entity& slime);
-    //fetcher functions
+    
+
+    //ENTITY fetcher functions
     virtual size_t getState() override;
-    virtual sf::Shape& getShape() override;
+    virtual const sf::Shape& getShape() override;
+    //ENTITY functions
+    virtual void render(sf::RenderWindow& window) override;
 };

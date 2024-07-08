@@ -2,22 +2,26 @@
 
 //COLLISION CHECK BETWEEN BOX-CIRCLE || CIRCLE-BOX
 bool Collision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
-    sf::Vector2f boxPosition = body1.getPosition() - body1.getOrigin();
-    sf::Vector2f circlePosition = body2.getPosition();
-    sf::Vector2f bodySize = sf::Vector2f(body1.getGlobalBounds().width, body1.getGlobalBounds().height);
-    float radius = body2.getGlobalBounds().width/2.0f;
-    float closetX, closetY, distance;
+    sf::FloatRect circleBounds = body2.getGlobalBounds();
+    float radius = circleBounds.width / 2.0f;
+    sf::Vector2f circleCenter(circleBounds.left + radius, circleBounds.top + radius);
+    sf::FloatRect boxBounds = body1.getGlobalBounds();
 
-    closetX = std::max(boxPosition.x, std::min(circlePosition.x, boxPosition.x + bodySize.x));
-    closetY = std::max(boxPosition.y, std::min(circlePosition.y, boxPosition.y + bodySize.y));
-
-    closetX = (closetX - circlePosition.x)*(closetX - circlePosition.x);
-    closetY = (closetY - circlePosition.y)*(closetY - circlePosition.y);
-
-    distance = closetX + closetY;
-    radius = radius*radius;
+    float distance = calcDistance(boxBounds, circleCenter, radius);
 
     return distance <= radius;
+}
+
+float Collision::calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius) {
+    float closetX, closetY, distance;
+
+    closetX = std::max(boxBounds.left, std::min(circleCenter.x, boxBounds.left + boxBounds.width));
+    closetY = std::max(boxBounds.top, std::min(circleCenter.y, boxBounds.top + boxBounds.height));
+
+    sf::Vector2f delta = circleCenter - sf::Vector2f(closetX, closetY);
+    distance = magnitude(delta);
+    
+    return distance;
 }
 
 //AABB HITBOX
@@ -28,7 +32,7 @@ BoxCollision::BoxCollision() {
     body.setFillColor(sf::Color::Transparent);
 }
 
-void BoxCollision::updateSize(const sf::IntRect& bodyDim) {
+void BoxCollision::updateSize(const sf::FloatRect& bodyDim) {
     body.setSize(sf::Vector2f(bodyDim.width, bodyDim.height));
     body.setOrigin(sf::Vector2f(bodyDim.width/2.0f, bodyDim.height/2.0f));
 }
@@ -51,7 +55,7 @@ CircleCollision::CircleCollision() {
 
 }
 
-void CircleCollision::updateSize(const sf::IntRect & bodyDim) {
+void CircleCollision::updateSize(const sf::FloatRect & bodyDim) {
     body.setRadius(bodyDim.width/2.0f);
     body.setOrigin(sf::Vector2f(bodyDim.width/2.0f, bodyDim.width/2.0f));
 }
