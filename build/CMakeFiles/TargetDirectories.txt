@@ -1,3 +1,0 @@
-/home/ol/personal/project-AA/build/CMakeFiles/play.dir
-/home/ol/personal/project-AA/build/CMakeFiles/edit_cache.dir
-/home/ol/personal/project-AA/build/CMakeFiles/rebuild_cache.dir
