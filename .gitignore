@@ -1,0 +1,9 @@
+#ignore build artifacts && directories
+/build
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.exe
+play
