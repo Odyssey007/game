@@ -10,8 +10,9 @@
 class Game {
 private:
     //window reset up
-    std::unique_ptr <sf::RenderWindow> window; 
+    std::unique_ptr<sf::RenderWindow> window; 
     sf::Vector2u resolution;
+    sf::View view;
     sf::Event event;
     //collision big papa
     CollisionManager collisionManager;
