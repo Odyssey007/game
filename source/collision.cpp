@@ -39,6 +39,7 @@ void BoxCollision::updateSize(const sf::FloatRect& bodyDim) {
 
 void BoxCollision::followEntity(const sf::Vector2f& entityPosition) {
     body.setPosition(entityPosition);
+    std::cout << body.getGlobalBounds().width << ", " << body.getGlobalBounds().height << std::endl; 
 }
 
 //collision check BOX-BOX

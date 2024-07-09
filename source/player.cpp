@@ -1,6 +1,5 @@
 #include "../header/player.h"
 
-
 Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
