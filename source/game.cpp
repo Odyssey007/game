@@ -37,6 +37,7 @@ void Game::currentWindow() {
     //window
     window = std::make_unique<sf::RenderWindow>(screen, "Project-AA", sf::Style::Fullscreen);
     window->setFramerateLimit(120);
+    view = window->getDefaultView();
 }
 
 bool Game::winRunning() const {
@@ -47,6 +48,8 @@ void Game::update() {
     handleEvents();
     //update entities
     player->update();
+    view.setCenter(player->getShape().getGlobalBounds().left, player->getShape().getGlobalBounds().top);
+
     for (auto& slime : *slimes) {
         slime->update((player->getShape()).getPosition(), 100.0f);
     }
@@ -77,6 +80,7 @@ void Game::checkGameEnd() {
 }
 
 void Game::render() {
+    window->setView(view);
     window->clear();
     //entities
     for (const auto& obstacle : *objects) { //static obstacles
