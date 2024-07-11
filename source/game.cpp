@@ -7,7 +7,8 @@ Game::Game() :
     //entities
     player(std::make_shared<Player>()), 
     slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>()),
-    objects(std::make_shared<std::vector<std::shared_ptr<Object>>>())
+    objects(std::make_shared<std::vector<std::shared_ptr<Object>>>()),
+    quadTree(sf::FloatRect(0, 0, 1920, 1080), 3)
 {
     //?temp
     slimeNum = 10; objectNum = 1; 
@@ -16,12 +17,11 @@ Game::Game() :
     //entities
     player->setInitialPosition(sf::Vector2u(650, 500)); //player
     collisionManager.addEntity(player); 
-    for (size_t i = 0; i < slimeNum; i++) { //slimes
-        std::shared_ptr<Slime> slime = std::make_shared<Slime>();
-        slime->setInitialPosition(resolution);
-        slimes->push_back(slime);
-        collisionManager.addEntity(slime);
+    slimePool.getSlimes(resolution);
+    for(auto& slime: slimePool.activeSlimes) {
+        collisionManager.addEntity(slime); 
     }
+
     for (size_t i = 0; i < objectNum; i++) { //static obstacles
         std::shared_ptr<Object> object = std::make_shared<Object>();
         objects->push_back(object);
@@ -50,14 +50,27 @@ void Game::update() {
     player->update();
     view.setCenter(player->getShape().getGlobalBounds().left, player->getShape().getGlobalBounds().top);
 
-    for (auto& slime : *slimes) {
+    if(slimePool.activeSlimes.size() == 0) {
+        slimePool.getSlimes(resolution); 
+    }
+
+    for (auto& slime : slimePool.activeSlimes) {
         slime->update((player->getShape()).getPosition(), 100.0f);
     }
+
+
     //collision check
     collisionManager.checkCollisions();
     player->applyMovement();
-    for (auto& slime : *slimes) {
+
+    for (auto& slime : slimePool.activeSlimes) {
         slime->applyMovement();
+    }
+
+    quadTree.clear(); 
+    quadTree.insertObject(player->getShape().getGlobalBounds()); 
+    for(auto& slime : slimePool.activeSlimes) {
+        quadTree.insertObject(slime->getShape().getGlobalBounds()); 
     }
 
     checkGameEnd();
@@ -86,9 +99,16 @@ void Game::render() {
     for (const auto& obstacle : *objects) { //static obstacles
         obstacle->render(*window);
     }
-    for (const auto& slime : *slimes) { //slimes
+
+    // for (const auto& slime : *slimes) { //slimes
+    //     slime->render(*window);
+    // }
+
+    for(const auto& slime: slimePool.activeSlimes) {
         slime->render(*window);
     }
+
     player->render(*window); //player
+    quadTree.draw(*window); 
     window->display();
 }

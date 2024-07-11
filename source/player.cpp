@@ -32,9 +32,12 @@ void Player::update() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) moveLeft();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) moveRight();
     //Update the player position if moving
-    if (!isMoving) {
+    if (isMoving) {
+        //player moving animation
+        animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
+    }
+    else {
         //player idle animation
-        animation.editScale = true; 
         animation.animationUpdate(0, facingRight, sprite, {0.93f, 0.93f});
     }
 }
@@ -52,27 +55,23 @@ void Player::applyMovement() {
 
 void Player::moveUp() {
     moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveDown() {
     moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
-    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveLeft() {
     if (facingRight) facingRight = false;
     moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 
 void Player::moveRight() {
     if (!facingRight) facingRight = true;
     moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     isMoving = true;
 }
 

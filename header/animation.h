@@ -9,8 +9,6 @@ private:
     float totalTime; 
 public:
     sf::IntRect uvRect;
-    bool editScale; 
-    sf::Vector2f scaleNum;
     
     //constructors
     Animation();

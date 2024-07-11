@@ -99,3 +99,31 @@ void Slime::render(sf::RenderWindow& window) {
     window.draw(sprite);
     window.draw(hitBox.body);
 }
+
+
+//SlimePool class
+SlimePool::SlimePool():
+    totalSlime(100), currentSlime(10)
+{
+    for(int i = 0; i < totalSlime; i++){
+        auto slime = std::make_shared<Slime>();
+        pool.push_back(slime); 
+    }
+}
+
+std::vector<std::shared_ptr<Slime>> SlimePool::getSlimes(sf::Vector2u& resolution) {
+    for(int i = 0; i < currentSlime; i++) {
+        if(!pool.empty()) {
+            auto slime = pool.back(); 
+            pool.pop_back(); 
+            slime->setInitialPosition(resolution); 
+            activeSlimes.push_back(slime); 
+            //? if new wave comes before finishing the last wave then this needs to be changed.
+        }
+        else {
+            break;
+        }
+    }
+    return activeSlimes; 
+    //can put logic to expand slime code if needed. (for safety)
+}

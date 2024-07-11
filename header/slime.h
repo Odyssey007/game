@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "enemy.h"
 #include "collision.h"
+#include "collisionManager.h"
 #include "player.h"
 
 //currentAbility: 0 - NONE | 1 - NORMAL | 2 - LEAP
@@ -39,4 +40,17 @@ public:
     virtual const sf::Shape& getShape() override;
     //ENTITY functions
     virtual void render(sf::RenderWindow& window) override;
+};
+
+class SlimePool {
+private: 
+    int totalSlime; 
+    int currentSlime; 
+    std::vector<std::shared_ptr<Slime>> pool; 
+
+public:
+    std::vector<std::shared_ptr<Slime>> activeSlimes;
+
+    SlimePool(); 
+    std::vector<std::shared_ptr<Slime>> getSlimes(sf::Vector2u& resolution); 
 };

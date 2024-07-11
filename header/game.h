@@ -6,6 +6,7 @@
 #include "slime.h"
 #include "obstacles.h"
 #include "ability.h"
+#include "quadtree.h"
 
 class Game {
 private:
@@ -22,6 +23,10 @@ private:
     std::shared_ptr<std::vector<std::shared_ptr<Slime>>> slimes;
     size_t objectNum;
     std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects;
+
+    SlimePool slimePool; 
+
+    QuadTree quadTree; 
     //functions
     void currentWindow();
     void handleEvents();

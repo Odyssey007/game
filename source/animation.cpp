@@ -4,7 +4,7 @@ Animation::Animation() :
     //animation
     frameDimension(0, 0), currentFrame(0, 0), frameDuration(0.0f),
     //scale
-    totalTime(0.0f), editScale(false)
+    totalTime(0.0f)
 {}
 
 Animation::Animation(sf::Texture* texture, sf::Vector2u frameDimension, float frameDuration) {
@@ -30,23 +30,13 @@ void Animation::animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf:
     uvRect.top = currentFrame.y * uvRect.height; 
 
     float originalBottom = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.0f;
-     if(editScale) {
-        if(faceRight) {
-            sprite.setScale(scaleNum.x, scaleNum.y); 
-        }
-        else {
-            sprite.setScale(-scaleNum.x, scaleNum.y); 
-        }
-        editScale = false; 
-    }
+
+    if (faceRight) {
+        sprite.setScale(scaleNum.x, scaleNum.y); 
+    } 
     else {
-        if (faceRight) {
-            sprite.setScale(1.0f, 1.0f); 
-        } 
-        else {
-            sprite.setScale(-1.0f, 1.0f);
-        }
-    }   
+        sprite.setScale(-scaleNum.x, scaleNum.y);
+    }  
 
     sprite.setTextureRect(uvRect);
     float newBottom = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.0f;
