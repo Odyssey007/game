@@ -10,7 +10,7 @@ Game::Game() :
     objects(std::make_shared<std::vector<std::shared_ptr<Object>>>())
 {
     //?temp
-    slimeNum = 10; objectNum = 1; 
+    slimeNum = 2; objectNum = 1; 
     //preliminaries
     currentWindow();
     //entities
@@ -59,6 +59,7 @@ void Game::update() {
     for (auto& slime : *slimes) {
         slime->applyMovement();
     }
+
 
     checkGameEnd();
 }

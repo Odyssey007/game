@@ -11,7 +11,7 @@ public:
     virtual void followEntity(const sf::Vector2f& entityPosition) = 0;
     //collision check AABB-CIRCLE
     static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
-    static float calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius);
+    static sf::Vector2f calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius);
 };
 
 //AABB

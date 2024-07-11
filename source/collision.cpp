@@ -7,21 +7,21 @@ bool Collision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
     sf::Vector2f circleCenter(circleBounds.left + radius, circleBounds.top + radius);
     sf::FloatRect boxBounds = body1.getGlobalBounds();
 
-    float distance = calcDistance(boxBounds, circleCenter, radius);
+    sf::Vector2f distanceVector = calcDistance(boxBounds, circleCenter, radius);
+    float distance = magnitude(distanceVector);
 
     return distance <= radius;
 }
 
-float Collision::calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius) {
+sf::Vector2f Collision::calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius) {
     float closetX, closetY, distance;
 
     closetX = std::max(boxBounds.left, std::min(circleCenter.x, boxBounds.left + boxBounds.width));
     closetY = std::max(boxBounds.top, std::min(circleCenter.y, boxBounds.top + boxBounds.height));
 
-    sf::Vector2f delta = circleCenter - sf::Vector2f(closetX, closetY);
-    distance = magnitude(delta);
-    
-    return distance;
+    sf::Vector2f distanceVector = circleCenter - sf::Vector2f(closetX, closetY);
+
+    return distanceVector;
 }
 
 //AABB HITBOX

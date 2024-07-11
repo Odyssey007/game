@@ -97,19 +97,24 @@ void Enemy::applyMovement() {
 }
 
 void Enemy::handleCollision(Entity& entity) {
-    sf::Vector2f delta = this->getShape().getPosition() - entity.getShape().getPosition();
-    float distance = magnitude(delta);
+    //set up
+    sf::Vector2f position1 = this->getShape().getPosition();
+    sf::Vector2f position2 = entity.getShape().getPosition();
     float radius1 = this->getShape().getGlobalBounds().width / 2.0f;
     float radius2 = entity.getShape().getGlobalBounds().width / 2.0f;
-    float minDistance =  radius1+radius2;
+    //
+    float minDistance = radius1 + radius2;
+    float dist = distance(position1, position2);
 
+    if (dist < minDistance) {
+        float overlap = minDistance - dist;
 
-    if (distance < minDistance) {
-        float overlap = minDistance - distance;
-        delta /= distance;
-        delta *= overlap;
+        sf::Vector2f direction = position2 - position1;
+        direction = normalize(direction);
+        
+        sf::Vector2f correction = direction * (overlap / 2.0f);
 
-        this->moveDistance += delta;
-        entity.setVelocity(entity.getVelocity()-delta);
+        this->setVelocity(this->getVelocity() - correction);
+        entity.setVelocity(entity.getVelocity() + correction);
     }
 }

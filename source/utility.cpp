@@ -14,8 +14,8 @@ sf::Vector2f normalize(const sf::Vector2f& one) {
     return normalized;
 }
 
-float distance(const sf::Vector2f& point1, const sf::Vector2f& point2) {
-    return std::sqrt(std::pow(point1.x - point2.x, 2) + std::pow(point1.y - point2.y, 2));
+float distance(const sf::Vector2f& p1, const sf::Vector2f& p2) {
+    return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
 float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {

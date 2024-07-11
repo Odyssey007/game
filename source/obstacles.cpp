@@ -80,10 +80,17 @@ void Object::handleCollision(Entity& entity) {
         sf::Vector2f moveDistance = entity.getVelocity();
         sf::Vector2f nextCenter = currentCenter + moveDistance;
 
-        float distance = Collision::calcDistance(ObjectBounds, nextCenter, radius);
+        sf::Vector2f distanceVector = Collision::calcDistance(ObjectBounds, nextCenter, radius);
+        float distance = magnitude(distanceVector);
 
         if (distance < radius) {
-            moveDistance.x = 0.0f; moveDistance.y = 0.0f;
+            if (distance != 0) {
+                distanceVector /= distance;
+            }
+
+            float dot = dotProduct(moveDistance, distanceVector);
+            moveDistance -= dot*distanceVector;
+
             entity.setVelocity(moveDistance);
         }
     }
