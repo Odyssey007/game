@@ -75,7 +75,9 @@
         "stack": "cpp",
         "__node_handle": "cpp",
         "__split_buffer": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__hash_table": "cpp",
+        "__tree": "cpp"
     },
     "cSpell.words": [
         "AABB",

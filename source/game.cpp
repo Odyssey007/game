@@ -4,25 +4,19 @@
 Game::Game() : 
     //window setup
     window(nullptr), resolution(sf::Vector2u(0, 0)),
+    quadTree(sf::FloatRect(0, 0, 1920, 1080), 5),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(10)),
-    objects(std::make_shared<std::vector<std::shared_ptr<Object>>>())
+    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(50)),
+    objectPool(50)
 {
-    //?temp
-    objectNum = 1; 
     //preliminaries
     currentWindow();
     //entities
-    player->setInitialPosition(sf::Vector2u(650, 500)); //player
+    player->setInitialPosition(sf::Vector2u(960, 540)); //player
     collisionManager.addEntity(player); 
     enemyPool.currentEnemies(currentWave, resolution, collisionManager);
-
-    for (size_t i = 0; i < objectNum; i++) { //static obstacles
-        std::shared_ptr<Object> object = std::make_shared<Object>();
-        objects->push_back(object);
-        collisionManager.addObject(object);
-    }
+    objectPool.currentObjects(1, collisionManager);
 }
 
 //sets up the window
@@ -53,7 +47,17 @@ void Game::update() {
     enemyPool.applyMovement();
     //
     checkWave();
-    //
+
+
+    if(!quadTree.windowBounds.intersects(player->getShape().getGlobalBounds())) {
+        quadTree.updateBounds(player->getShape().getPosition()); 
+    }
+    quadTree.clear(); 
+    quadTree.insertObject(player->getShape().getGlobalBounds()); 
+    for(auto& slime : enemyPool.activeEnemies) {
+        quadTree.insertObject(slime->getShape().getGlobalBounds()); 
+    }
+    
     checkGameEnd();
 }
 
@@ -87,11 +91,11 @@ void Game::render() {
     window->setView(view);
     window->clear();
     //entities
-    for (const auto& obstacle : *objects) { //static obstacles
-        obstacle->render(*window);
-    }
-    enemyPool.render(*window);
-    player->render(*window); //player
+    objectPool.render(*window);//objects
+    enemyPool.render(*window);//enemies
+    player->render(*window);//player
+    
+    quadTree.draw(*window);
     
     window->display();
 }

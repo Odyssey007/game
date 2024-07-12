@@ -96,7 +96,7 @@ const sf::Shape& Slime::getShape() const {
 }
 
 
-void Slime::render(sf::RenderWindow& window) {
+void Slime::render(sf::RenderWindow& window) const {
     window.draw(sprite);
     window.draw(hitBox.body);
 }

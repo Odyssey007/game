@@ -8,13 +8,13 @@ private:
     size_t totalEnemies; 
     size_t currentNumEnemies; 
     std::vector<std::shared_ptr<Enemy>> pool;
-    std::vector<std::shared_ptr<Enemy>> activeEnemies;
 public:
+    std::vector<std::shared_ptr<Enemy>> activeEnemies;
     EnemyPool(EnemyType type, size_t totalEnemies); 
-    void currentEnemies(size_t numEnemies, sf::Vector2u& resolution, CollisionManager& manager);
+    void currentEnemies(size_t numEnemies, const sf::Vector2u& resolution, CollisionManager& manager);
     void update(const sf::Vector2f& target);
     void applyMovement();
-    void render(sf::RenderWindow& window);
+    void render(sf::RenderWindow& window) const;
     void resetEnemies(CollisionManager& manager);
     bool allDead() const;
 };
@@ -23,12 +23,12 @@ class ObjectPool {
 private: 
     size_t totalObjects; 
     size_t currentNumObjects; 
-    std::vector<std::shared_ptr<Enemy>> pool;
-    std::vector<std::shared_ptr<Enemy>> activeObjects;
+    std::vector<std::shared_ptr<Object>> pool;
+    std::vector<std::shared_ptr<Object>> activeObjects;
 public:
     ObjectPool(size_t totalObjects); 
-    void currentObjects(size_t numObjects, sf::Vector2u& resolution, CollisionManager& manager);
+    void currentObjects(size_t numObjects, CollisionManager& manager);
     void update();
-    void render(sf::RenderWindow& window);
+    void render(sf::RenderWindow& window) const;
     void resetObjects(CollisionManager& manager);
 };

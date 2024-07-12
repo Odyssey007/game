@@ -18,6 +18,7 @@ private:
     // std::__shared_ptr<Object> obstacles; 
     void splitRoot(); 
 public:
+    sf::FloatRect windowBounds; 
 
     //constructor
     //QuadTree() = default; 
@@ -25,5 +26,6 @@ public:
     void insertObject(sf::FloatRect object); 
     //std::vector <sf::FloatRect> query(sf::FloatRect range);
     void draw(sf::RenderWindow& window); 
+    void updateBounds(sf::Vector2f center);
     void clear(); 
 };

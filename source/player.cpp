@@ -112,7 +112,7 @@ void Player::handleCollision(Entity& other) {
     }
 }
 
-void Player::render(sf::RenderWindow& window) {
+void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
     window.draw(hitBox.body);
 }

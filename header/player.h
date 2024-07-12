@@ -59,7 +59,7 @@ public:
     //ENTITY functions
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
-    virtual void render(sf::RenderWindow& window) override;
+    virtual void render(sf::RenderWindow& window) const override;
 };
 
 //---------------------------------

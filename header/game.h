@@ -7,7 +7,7 @@
 #include "obstacles.h"
 #include "ability.h"
 #include "quadtree.h"
-#include "enemyPool.h"
+#include "pool.h"
 
 class Game {
 private:
@@ -18,6 +18,7 @@ private:
     sf::Event event;
     //collision
     CollisionManager collisionManager;
+    QuadTree quadTree;
     //PLAYER
     std::shared_ptr<Player> player;
     //ENEMY
@@ -26,8 +27,7 @@ private:
     sf::Clock waveClock;
     sf::Time waveTimer;
     //OBJECTS
-    size_t objectNum;
-    std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects;
+    ObjectPool objectPool;
     //functions
     void currentWindow();
     void handleEvents();

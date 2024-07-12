@@ -40,8 +40,6 @@ void QuadTree::insertObject(sf::FloatRect object) {
 void QuadTree::splitRoot() {
     if (split) return; // Already split
 
-    std::cout << "Splitting root node." << std::endl;
-
     float x = bounds.left;
     float y = bounds.top;
     float subWidth = bounds.width / 2;
@@ -66,7 +64,7 @@ void QuadTree::splitRoot() {
 }
 
 void QuadTree::draw(sf::RenderWindow& window) {
-    // Draw the boundary of the QuadTree node
+    //Draw the boundary of the QuadTree node
     sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
     rect.setPosition(bounds.left, bounds.top);
     rect.setFillColor(sf::Color::Transparent);
@@ -75,14 +73,14 @@ void QuadTree::draw(sf::RenderWindow& window) {
     window.draw(rect);
 
     // Draw all objects within the node
-    for (const auto& object : objects) {
-        sf::RectangleShape objRect(sf::Vector2f(object.width, object.height));
-        objRect.setPosition(object.left, object.top);
-        objRect.setFillColor(sf::Color::Transparent);
-        objRect.setOutlineColor(sf::Color::Red);
-        objRect.setOutlineThickness(1);
-        window.draw(objRect);
-    }
+    // for (const auto& object : objects) {
+    //     sf::RectangleShape objRect(sf::Vector2f(object.width, object.height));
+    //     objRect.setPosition(object.left, object.top);
+    //     objRect.setFillColor(sf::Color::Transparent);
+    //     objRect.setOutlineColor(sf::Color::Red);
+    //     objRect.setOutlineThickness(1);
+    //     window.draw(objRect);
+    // }
 
     // Recursively draw children
     if (split) {
@@ -124,4 +122,15 @@ void QuadTree::clear() {
             child.reset();
         }
     }
+}
+
+void QuadTree::updateBounds(sf::Vector2f center) {
+    float halfWidth = bounds.width/2;
+    float halfHeight = bounds.height/2;
+    bounds.left = center.x - halfWidth;
+    bounds.top = center.y - halfHeight;
+    windowBounds = sf::FloatRect((bounds.left + bounds.width/4), (bounds.top + bounds.height/4), bounds.width/2, bounds.height/2); 
+
+    std::cout << "bounds: " << bounds.left << ", " << bounds.top << ", " << bounds.width << ", " << bounds.height << std::endl;
+    std::cout << "windowBounds: " << windowBounds.left << ", " << windowBounds.top << ", " << windowBounds.width << ", " << windowBounds.height << std::endl;
 }

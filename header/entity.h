@@ -24,5 +24,5 @@ public:
     //functions
     virtual void applyMovement() = 0;
     virtual void handleCollision(Entity& entity) = 0;
-    virtual void render(sf::RenderWindow& window) = 0;
+    virtual void render(sf::RenderWindow& window) const = 0;
 };

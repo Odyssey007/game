@@ -34,5 +34,5 @@ public:
     //ENTITY fetchers
     virtual const sf::Shape& getShape() const override;
     //ENTITY functions
-    virtual void render(sf::RenderWindow& window) override;
+    virtual void render(sf::RenderWindow& window) const override;
 };
