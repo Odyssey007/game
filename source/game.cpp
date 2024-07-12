@@ -6,22 +6,18 @@ Game::Game() :
     window(nullptr), resolution(sf::Vector2u(0, 0)),
     //entities
     player(std::make_shared<Player>()), 
-    slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>()),
+    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(10)),
     objects(std::make_shared<std::vector<std::shared_ptr<Object>>>())
 {
     //?temp
-    slimeNum = 2; objectNum = 1; 
+    objectNum = 1; 
     //preliminaries
     currentWindow();
     //entities
     player->setInitialPosition(sf::Vector2u(650, 500)); //player
     collisionManager.addEntity(player); 
-    for (size_t i = 0; i < slimeNum; i++) { //slimes
-        std::shared_ptr<Slime> slime = std::make_shared<Slime>();
-        slime->setInitialPosition(resolution);
-        slimes->push_back(slime);
-        collisionManager.addEntity(slime);
-    }
+    enemyPool.currentEnemies(currentWave, resolution, collisionManager);
+
     for (size_t i = 0; i < objectNum; i++) { //static obstacles
         std::shared_ptr<Object> object = std::make_shared<Object>();
         objects->push_back(object);
@@ -46,22 +42,29 @@ bool Game::winRunning() const {
 
 void Game::update() {
     handleEvents();
+    view.setCenter(player->getShape().getGlobalBounds().left, 
+                   player->getShape().getGlobalBounds().top);
     //update entities
     player->update();
-    view.setCenter(player->getShape().getGlobalBounds().left, player->getShape().getGlobalBounds().top);
-
-    for (auto& slime : *slimes) {
-        slime->update((player->getShape()).getPosition(), 100.0f);
-    }
+    enemyPool.update(player->getShape().getPosition());
     //collision check
-    collisionManager.checkCollisions();
+    collisionManager.update();
     player->applyMovement();
-    for (auto& slime : *slimes) {
-        slime->applyMovement();
-    }
-
-
+    enemyPool.applyMovement();
+    //
+    checkWave();
+    //
     checkGameEnd();
+}
+
+void Game::checkWave() {
+    std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
+    if (enemyPool.allDead() || waveClock.getElapsedTime() >= waveTimer) {
+        currentWave++;
+        enemyPool.resetEnemies(collisionManager);
+        enemyPool.currentEnemies(currentWave*2, resolution, collisionManager);
+        waveClock.restart();
+    }
 }
 
 void Game::handleEvents() {
@@ -87,9 +90,8 @@ void Game::render() {
     for (const auto& obstacle : *objects) { //static obstacles
         obstacle->render(*window);
     }
-    for (const auto& slime : *slimes) { //slimes
-        slime->render(*window);
-    }
+    enemyPool.render(*window);
     player->render(*window); //player
+    
     window->display();
 }

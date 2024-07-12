@@ -24,11 +24,11 @@ float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {
 
 //creates a box around the furthest pixels in x && y directions
 sf::IntRect calcImageBounds(const sf::Image& image) {
-    unsigned int left = image.getSize().x, right = 0;
-    unsigned int top = image.getSize().y, bottom = 0;
+    size_t left = image.getSize().x, right = 0;
+    size_t top = image.getSize().y, bottom = 0;
 
-    for (unsigned int x = 0; x < image.getSize().x; ++x) {
-        for (unsigned int y = 0; y < image.getSize().y; ++y) {
+    for (size_t x = 0; x < image.getSize().x; ++x) {
+        for (size_t y = 0; y < image.getSize().y; ++y) {
             if (image.getPixel(x, y).a != 0) {
                 if (x <= left) left = x;
                 if (x >= right) right = x;

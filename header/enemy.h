@@ -12,10 +12,14 @@ protected:
     Animation animation;
     sf::Vector2u animationSheetDim;
     float frameDuration;
-    //stats
+    //stats 
     float health;
     float movementSpeed;
     float baseDamage;
+    //atributes 
+    EnemyType enemyType;
+    int currentAbility;
+    bool alive;
     //movement 
     std::vector<sf::Vector2f> directions;
     sf::Vector2f bestDirection;
@@ -31,15 +35,15 @@ public:
     //constructor
     Enemy();
     virtual ~Enemy() = default;
+    virtual void update(const sf::Vector2f& target) = 0;
     //ENTITY fetchers
-    virtual const sf::Vector2f& getVelocity() override;
+    virtual bool isAlive() const override;
+    virtual int getState() const override;
+    virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
-    virtual void setInitialPosition(const sf::Vector2u& resolution) override;
     virtual void setVelocity(const sf::Vector2f& velocity) override;
+    virtual void setInitialPosition(const sf::Vector2u& resolution) override;
     //ENTITY functions 
-    virtual void handleCollision(Entity& entity) override;
-
-
-
     virtual void applyMovement() override;
+    virtual void handleCollision(Entity& entity) override;
 };

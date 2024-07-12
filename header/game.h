@@ -6,6 +6,8 @@
 #include "slime.h"
 #include "obstacles.h"
 #include "ability.h"
+#include "quadtree.h"
+#include "enemyPool.h"
 
 class Game {
 private:
@@ -14,12 +16,16 @@ private:
     sf::Vector2u resolution;
     sf::View view;
     sf::Event event;
-    //collision big papa
+    //collision
     CollisionManager collisionManager;
-    //entities
+    //PLAYER
     std::shared_ptr<Player> player;
-    size_t slimeNum;
-    std::shared_ptr<std::vector<std::shared_ptr<Slime>>> slimes;
+    //ENEMY
+    EnemyPool enemyPool; 
+    size_t currentWave;
+    sf::Clock waveClock;
+    sf::Time waveTimer;
+    //OBJECTS
     size_t objectNum;
     std::shared_ptr<std::vector<std::shared_ptr<Object>>> objects;
     //functions
@@ -33,4 +39,6 @@ public:
     void update();
     void render();
     bool winRunning() const;
+
+    void checkWave();
 };

@@ -9,8 +9,16 @@ void CollisionManager::addObject(std::shared_ptr<Object> object) {
     objects.push_back(std::move(object));
 }
 
+void CollisionManager::removeEntity(const std::shared_ptr<Entity>& entity) {
+    entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
+}
+
+void CollisionManager::removeObject(const std::shared_ptr<Object>& object) {
+    objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
+}
+
 //!currently.brute forces through all entities spawned for collision check 
-void CollisionManager::checkCollisions() {
+void CollisionManager::update() {
     for (size_t i = 0; i < entities.size(); i++) {
         //entities-entities collisions
         for (size_t j = i+1; j < entities.size(); j++) {

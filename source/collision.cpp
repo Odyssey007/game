@@ -14,7 +14,7 @@ bool Collision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
 }
 
 sf::Vector2f Collision::calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius) {
-    float closetX, closetY, distance;
+    float closetX, closetY;
 
     closetX = std::max(boxBounds.left, std::min(circleCenter.x, boxBounds.left + boxBounds.width));
     closetY = std::max(boxBounds.top, std::min(circleCenter.y, boxBounds.top + boxBounds.height));
@@ -38,7 +38,7 @@ void BoxCollision::updateSize(const sf::FloatRect& bodyDim) {
 }
 
 void BoxCollision::followEntity(const sf::Vector2f& entityPosition) {
-    body.setPosition(entityPosition);
+    body.setPosition(entityPosition); 
 }
 
 //collision check BOX-BOX

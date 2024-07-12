@@ -2,7 +2,7 @@
 
 Enemy::Enemy() {
     //preliminaries
-    entityType = ENEMY;
+    entityType = ENEMY; alive = true; currentAbility = 0;
     loadTexture("slime", "assets/slime.png"); //load up slime into textures
     //movement set up
     movementSpeed = 200.0f; baseDamage = 5.0f;
@@ -82,7 +82,17 @@ void Enemy::setInitialPosition(const sf::Vector2u& resolution) {
     sprite.setPosition(spawnPosition.x, spawnPosition.y);
 }
 
-const sf::Vector2f& Enemy::getVelocity() {
+//ENTITY FUNCTIONS
+
+bool Enemy::isAlive() const {
+    return alive;
+}
+
+int Enemy::getState() const {
+    return currentAbility; 
+}
+
+const sf::Vector2f& Enemy::getVelocity() const {
     return moveDistance;
 }
 

@@ -1,11 +1,10 @@
 #include "../header/player.h"
 
-
 Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
-    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f),
+    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f), alive(true),
     //player bounds
     bounds(sf::IntRect(50, 30, 30, 80)),
     //movement
@@ -34,11 +33,11 @@ void Player::update() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) moveRight();
     //Update the player position if moving
     if (isMoving) {
+        //player moving animation
         animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
     }
     else {
         //player idle animation
-        animation.editScale = true; 
         animation.animationUpdate(0, facingRight, sprite, {0.93f, 0.93f});
     }
 }
@@ -78,16 +77,20 @@ void Player::moveRight() {
 
 //ENTITY FUNCTIONS
 
+bool Player::isAlive() const {
+    return alive;
+}
+
 //is not used
-size_t Player::getState() {
+int Player::getState() const {
     return 1;
 }
 
-const sf::Shape& Player::getShape() {
+const sf::Shape& Player::getShape() const {
     return hitBox.body;
 }
 
-const sf::Vector2f& Player::getVelocity() {
+const sf::Vector2f& Player::getVelocity() const {
     return moveDistance;
 }
 

@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "enemy.h"
 #include "collision.h"
+#include "collisionManager.h"
 #include "player.h"
 
 //currentAbility: 0 - NONE | 1 - NORMAL | 2 - LEAP
@@ -12,7 +13,6 @@ private:
     //hit box
     CircleCollision hitBox;
     //current ability in use
-    int currentAbility;
     bool firstAttack;
     //leap attack
     bool leaping; //charging buffer for leap
@@ -29,14 +29,10 @@ public:
     //constructor
     Slime();
     //functions
-    void update(const sf::Vector2f& target, const float attackRange);
-    
+    virtual void update(const sf::Vector2f& target) override; 
     static void playerContact(Player& player, Entity& slime);
-    
-
-    //ENTITY fetcher functions
-    virtual size_t getState() override;
-    virtual const sf::Shape& getShape() override;
+    //ENTITY fetchers
+    virtual const sf::Shape& getShape() const override;
     //ENTITY functions
     virtual void render(sf::RenderWindow& window) override;
 };

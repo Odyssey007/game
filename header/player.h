@@ -21,6 +21,7 @@ private:
     float health;
     float battleSpeed;
     const float kingdomSpeed;
+    bool alive;
     //hit box
     BoxCollision hitBox;
     sf::FloatRect bounds;
@@ -48,17 +49,17 @@ public:
     void takeDebuffs(float hpHit, float speedHit);
     
     //ENTITY fetchers
-    virtual size_t getState() override;
-    virtual const sf::Shape& getShape() override;
-    virtual const sf::Vector2f& getVelocity() override;
+    virtual bool isAlive() const override;
+    virtual int getState() const override;
+    virtual const sf::Shape& getShape() const override;
+    virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
     virtual void setInitialPosition(const sf::Vector2u& position) override;
     //ENTITY functions
+    virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
     virtual void render(sf::RenderWindow& window) override;
-
-    virtual void applyMovement() override;
 };
 
 //---------------------------------

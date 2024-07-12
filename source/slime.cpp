@@ -2,7 +2,7 @@
 
 Slime::Slime() :
     //ability
-    currentAbility(0), firstAttack(true),
+    firstAttack(true),
     //leap buffers
     leaping(false), chargeTimer(0.35f), needToRecover(false), recoveryTimer(0.35f),
     //leap distance
@@ -15,11 +15,12 @@ Slime::Slime() :
     hitBox = CircleCollision();
     bounds = sf::FloatRect(45, 70, 59, 49);
     hitBox.updateSize(bounds);
+    //hitBoxBody = std::make_shared<sf::CircleShape>(hitBox.body);
     //set origin and position
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 }
 
-void Slime::update(const sf::Vector2f& target, const float canLeap) {
+void Slime::update(const sf::Vector2f& target) {
     // Check if recovery buffer is needed for attack  
     if (needToRecover) {
         if (recoveryTimer > 0) {
@@ -28,6 +29,9 @@ void Slime::update(const sf::Vector2f& target, const float canLeap) {
         }
         needToRecover = false;
     }
+
+    float canLeap = 100.0f;
+
     //moves
     if (distance(target, sprite.getPosition()) >= canLeap && !leaping) {
         meleeMovement(target);
@@ -87,13 +91,10 @@ void Slime::playerContact(Player& player, Entity& slime) {
 
 //ENTITY FUNCTIONS
 
-size_t Slime::getState() {
-    return currentAbility; 
-}
-
-const sf::Shape& Slime::getShape() {
+const sf::Shape& Slime::getShape() const {
     return hitBox.body;
 }
+
 
 void Slime::render(sf::RenderWindow& window) {
     window.draw(sprite);

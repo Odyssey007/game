@@ -17,5 +17,7 @@ public:
     //functions 
     void addEntity(std::shared_ptr<Entity> entity);
     void addObject(std::shared_ptr<Object> object);
-    void checkCollisions();
+    void removeEntity(const std::shared_ptr<Entity>& entity);
+    void removeObject(const std::shared_ptr<Object>& object);
+    void update();
 };
