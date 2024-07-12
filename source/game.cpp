@@ -8,14 +8,14 @@ Game::Game() :
     player(std::make_shared<Player>()), 
     slimes(std::make_shared<std::vector<std::shared_ptr<Slime>>>()),
     objects(std::make_shared<std::vector<std::shared_ptr<Object>>>()),
-    quadTree(sf::FloatRect(0, 0, 1920, 1080), 3)
+    quadTree(sf::FloatRect(0, 0, 1920, 1080), 5)
 {
     //?temp
     slimeNum = 10; objectNum = 1; 
     //preliminaries
     currentWindow();
     //entities
-    player->setInitialPosition(sf::Vector2u(650, 500)); //player
+    player->setInitialPosition(sf::Vector2u(960, 540)); //player
     collisionManager.addEntity(player); 
     slimePool.getSlimes(resolution);
     for(auto& slime: slimePool.activeSlimes) {
@@ -67,6 +67,10 @@ void Game::update() {
         slime->applyMovement();
     }
 
+
+    if(!quadTree.windowBounds.intersects(player->getShape().getGlobalBounds())) {
+        quadTree.updateBounds(player->getShape().getPosition()); 
+    }
     quadTree.clear(); 
     quadTree.insertObject(player->getShape().getGlobalBounds()); 
     for(auto& slime : slimePool.activeSlimes) {
