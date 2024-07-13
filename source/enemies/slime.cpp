@@ -1,4 +1,4 @@
-#include "../header/slime.h"
+#include "../header/enemies/slime.h"
 
 Slime::Slime() :
     //ability

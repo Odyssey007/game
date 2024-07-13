@@ -1,8 +1,8 @@
 #pragma once
-#include "utility.h"
-#include "entity.h"
-#include "collision.h"
-#include "obstacles.h"
+#include "../header/utility.h"
+#include "../header/entity.h"
+#include "../header/collision.h"
+#include "../header/obstacles/object.h"
 
 class CollisionManager {
 private:

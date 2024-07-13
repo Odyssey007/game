@@ -7,7 +7,7 @@ Game::Game() :
     quadTree(sf::FloatRect(0, 0, 1920, 1080), 5),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(50)),
+    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(25)),
     objectPool(50)
 {
     //preliminaries
@@ -39,7 +39,8 @@ void Game::update() {
     view.setCenter(player->getShape().getGlobalBounds().left, 
                    player->getShape().getGlobalBounds().top);
     //update entities
-    player->update();
+    sf::Vector2f worldMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+    player->update(worldMousePos);
     enemyPool.update(player->getShape().getPosition());
     //collision check
     collisionManager.update();
@@ -49,23 +50,27 @@ void Game::update() {
     checkWave();
 
 
-    if(!quadTree.windowBounds.intersects(player->getShape().getGlobalBounds())) {
-        quadTree.updateBounds(player->getShape().getPosition()); 
-    }
-    quadTree.clear(); 
-    quadTree.insertObject(player->getShape().getGlobalBounds()); 
-    for(auto& slime : enemyPool.activeEnemies) {
-        quadTree.insertObject(slime->getShape().getGlobalBounds()); 
-    }
+    // if(!quadTree.windowBounds.intersects(player->getShape().getGlobalBounds())) {
+    //     quadTree.updateBounds(player->getShape().getPosition()); 
+    // }
+    // quadTree.clear(); 
+    // quadTree.insertObject(player->getShape().getGlobalBounds()); 
+    // for(auto& slime : enemyPool.activeEnemies) {
+    //     quadTree.insertObject(slime->getShape().getGlobalBounds()); 
+    // }
     
     checkGameEnd();
 }
 
 void Game::checkWave() {
-    std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
-    if (enemyPool.allDead() || waveClock.getElapsedTime() >= waveTimer) {
+    // std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
+    if (enemyPool.allDead()) {
         currentWave++;
         enemyPool.resetEnemies(collisionManager);
+        enemyPool.currentEnemies(currentWave*2, resolution, collisionManager);
+        waveClock.restart();
+    } else if (waveClock.getElapsedTime() >= waveTimer) {
+        currentWave++;
         enemyPool.currentEnemies(currentWave*2, resolution, collisionManager);
         waveClock.restart();
     }
@@ -95,7 +100,8 @@ void Game::render() {
     enemyPool.render(*window);//enemies
     player->render(*window);//player
     
-    quadTree.draw(*window);
+    
+    //quadTree.draw(*window);
     
     window->display();
 }

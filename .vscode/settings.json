@@ -77,7 +77,10 @@
         "__split_buffer": "cpp",
         "filesystem": "cpp",
         "__hash_table": "cpp",
-        "__tree": "cpp"
+        "__tree": "cpp",
+        "set": "cpp",
+        "shared_mutex": "cpp",
+        "cfenv": "cpp"
     },
     "cSpell.words": [
         "AABB",

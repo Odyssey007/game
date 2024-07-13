@@ -1,4 +1,4 @@
-#include "../header/obstacles.h"
+#include "../header/obstacles/object.h"
 
 Object::Object() {
     //preliminaries

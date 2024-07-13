@@ -1,5 +1,5 @@
 #pragma once 
-#include "utility.h"
+#include "../header/utility.h"
 
 enum EntityType { PLAYER, ENEMY, OBSTACLE };
 enum EnemyType { SLIME };

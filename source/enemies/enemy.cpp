@@ -1,4 +1,4 @@
-#include "../header/enemy.h"
+#include "../header/enemies/enemy.h"
 
 Enemy::Enemy() {
     //preliminaries

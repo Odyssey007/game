@@ -4,7 +4,7 @@
 #include <cmath>
 #include <memory>
 #include <random>
-#include "deltaTime.h"
+#include "../header/deltaTime.h"
 
 float magnitude(const sf::Vector2f& vector);
 sf::Vector2f normalize(const sf::Vector2f& one);

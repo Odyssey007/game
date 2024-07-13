@@ -1,8 +1,8 @@
 #pragma once
-#include "utility.h"
-#include "slime.h"
-#include "player.h"
-#include "obstacles.h"
+#include "../header/utility.h"
+#include "../header/enemies/slime.h"
+#include "../header/player/player.h"
+#include "../header/obstacles/object.h"
 
 class QuadTree {
 private: 

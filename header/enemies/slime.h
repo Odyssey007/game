@@ -1,9 +1,9 @@
 #pragma once
-#include "utility.h"
-#include "enemy.h"
-#include "collision.h"
-#include "collisionManager.h"
-#include "player.h"
+#include "../header/utility.h"
+#include "../header/enemies/enemy.h"
+#include "../header/collision.h"
+#include "../header/collisionManager.h"
+#include "../header/player/player.h"
 
 //currentAbility: 0 - NONE | 1 - NORMAL | 2 - LEAP
 class Player;
