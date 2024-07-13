@@ -7,7 +7,7 @@ Game::Game() :
     quadTree(sf::FloatRect(0, 0, 1920, 1080), 5),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(50)),
+    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(10)),
     objectPool(50)
 {
     //preliminaries
@@ -47,6 +47,12 @@ void Game::update() {
     enemyPool.applyMovement();
     //
     checkWave();
+    sf::Vector2i mouse = sf::Mouse::getPosition(*window); 
+    std::cout << mouse.x << ", " << mouse.y << std::endl; 
+
+    sf::Vector2f worldMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+    ability.mouseClick(worldMousePos, player->getShape().getPosition());
+
 
 
     if(!quadTree.windowBounds.intersects(player->getShape().getGlobalBounds())) {
@@ -62,7 +68,7 @@ void Game::update() {
 }
 
 void Game::checkWave() {
-    std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
+    //std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
     if (enemyPool.allDead() || waveClock.getElapsedTime() >= waveTimer) {
         currentWave++;
         enemyPool.resetEnemies(collisionManager);
@@ -94,8 +100,9 @@ void Game::render() {
     objectPool.render(*window);//objects
     enemyPool.render(*window);//enemies
     player->render(*window);//player
+    ability.render(*window); 
     
-    quadTree.draw(*window);
+    //quadTree.draw(*window);
     
     window->display();
 }

@@ -24,7 +24,8 @@ public:
     //constructor
     Ability(); 
 
-    void mouseClick(const sf::Vector2i& mousePosition, sf::Vector2f playerPosition);
+    void mouseClick(const sf::Vector2f& mousePosition, sf::Vector2f playerPosition);
     void slashSpriteRotation(float angle, sf::Vector2f position); 
     void updateSlashTime(); 
+    void render(sf::RenderWindow& window);
 };

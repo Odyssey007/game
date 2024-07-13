@@ -21,6 +21,7 @@ private:
     QuadTree quadTree;
     //PLAYER
     std::shared_ptr<Player> player;
+    Ability ability; 
     //ENEMY
     EnemyPool enemyPool; 
     size_t currentWave;

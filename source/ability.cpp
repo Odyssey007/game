@@ -14,12 +14,15 @@ Ability::Ability() :
     slashSprite.setOrigin(slashSprite.getLocalBounds().width / 2, slashSprite.getLocalBounds().height / 2);
 }   
 
-void Ability::mouseClick(const sf::Vector2i& mousePosition, sf::Vector2f playerPosition) {
+void Ability::mouseClick(const sf::Vector2f& mousePosition, sf::Vector2f playerPosition) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        slashAngle = rotationAngle(playerPosition.x, playerPosition.y, mousePosition.x, mousePosition.y);
-        hitBoxSlash.createSlashShape(playerPosition.x, playerPosition.y, 90.0f, 1.2f, slashAngle);
-        slashSpriteRotation(slashAngle, playerPosition); 
+        std::cout << mousePosition.x << " .... " << mousePosition.y << std::endl;
         slashVisible = true; 
+        if(slashVisible) {
+            slashAngle = rotationAngle(playerPosition.x, playerPosition.y, mousePosition.x, mousePosition.y);
+            hitBoxSlash.createSlashShape(playerPosition.x, playerPosition.y, 90.0f, 1.2f, slashAngle);
+            slashSpriteRotation(slashAngle, playerPosition); 
+        }
     }
     updateSlashTime(); 
 }
@@ -39,5 +42,12 @@ void Ability::updateSlashTime() {
             slashVisible = false; 
             slashTime = 0.0f; 
         }
+    }
+}
+
+void Ability::render(sf::RenderWindow& window){
+    if(slashVisible) {
+        window.draw(slashSprite); 
+        //window.draw(hitBoxSlash.slash);
     }
 }
