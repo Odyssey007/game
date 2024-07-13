@@ -7,8 +7,8 @@ Game::Game() :
     quadTree(sf::FloatRect(0, 0, 1920, 1080), 5),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(25)),
-    objectPool(50)
+    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(10000)),
+    objectPool(2)
 {
     //preliminaries
     currentWindow();
@@ -36,29 +36,30 @@ bool Game::winRunning() const {
 
 void Game::update() {
     handleEvents();
-    view.setCenter(player->getShape().getGlobalBounds().left, 
-                   player->getShape().getGlobalBounds().top);
+    //centering camera to player
+    sf::FloatRect playerBounds = player->getBounds();
+    view.setCenter(playerBounds.left + playerBounds.width/2.0f, 
+                   playerBounds.top + playerBounds.height/2.0f);
     //update entities
-    sf::Vector2f worldMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-    player->update(worldMousePos);
-    enemyPool.update(player->getShape().getPosition());
+    sf::Vector2f playerPosition = player->getPosition(); 
+    sf::Vector2f mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+    player->update(mousePosition);
+    enemyPool.update(playerPosition);
     //collision check
     collisionManager.update();
     player->applyMovement();
     enemyPool.applyMovement();
     //
+    if(!quadTree.windowBounds.intersects(playerBounds)) {
+        quadTree.updateBounds(playerPosition); 
+    }
+    quadTree.clear(); 
+    quadTree.insertObject(playerBounds); 
+    for(auto& slime : enemyPool.activeEnemies) {
+        quadTree.insertObject(slime->getBounds()); 
+    }
+    //
     checkWave();
-
-
-    // if(!quadTree.windowBounds.intersects(player->getShape().getGlobalBounds())) {
-    //     quadTree.updateBounds(player->getShape().getPosition()); 
-    // }
-    // quadTree.clear(); 
-    // quadTree.insertObject(player->getShape().getGlobalBounds()); 
-    // for(auto& slime : enemyPool.activeEnemies) {
-    //     quadTree.insertObject(slime->getShape().getGlobalBounds()); 
-    // }
-    
     checkGameEnd();
 }
 
@@ -101,7 +102,7 @@ void Game::render() {
     player->render(*window);//player
     
     
-    //quadTree.draw(*window);
+    quadTree.draw(*window);
     
     window->display();
 }

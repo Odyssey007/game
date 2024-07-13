@@ -108,10 +108,10 @@ void Enemy::applyMovement() {
 
 void Enemy::handleCollision(Entity& entity) {
     //set up
-    sf::Vector2f position1 = this->getShape().getPosition();
-    sf::Vector2f position2 = entity.getShape().getPosition();
-    float radius1 = this->getShape().getGlobalBounds().width / 2.0f;
-    float radius2 = entity.getShape().getGlobalBounds().width / 2.0f;
+    sf::Vector2f position1 = this->getPosition();
+    sf::Vector2f position2 = entity.getPosition();
+    float radius1 = this->getBounds().width / 2.0f;
+    float radius2 = entity.getBounds().width / 2.0f;
     //
     float minDistance = radius1 + radius2;
     float dist = distance(position1, position2);

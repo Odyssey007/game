@@ -64,6 +64,8 @@ void QuadTree::splitRoot() {
 }
 
 void QuadTree::draw(sf::RenderWindow& window) {
+    //std::cout << "bounds: " << bounds.left << ", " << bounds.top << ", " << bounds.width << ", " << bounds.height << std::endl;
+    //std::cout << "windowBounds: " << windowBounds.left << ", " << windowBounds.top << ", " << windowBounds.width << ", " << windowBounds.height << std::endl;
     //Draw the boundary of the QuadTree node
     sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
     rect.setPosition(bounds.left, bounds.top);
@@ -130,7 +132,4 @@ void QuadTree::updateBounds(sf::Vector2f center) {
     bounds.left = center.x - halfWidth;
     bounds.top = center.y - halfHeight;
     windowBounds = sf::FloatRect((bounds.left + bounds.width/4), (bounds.top + bounds.height/4), bounds.width/2, bounds.height/2); 
-
-    std::cout << "bounds: " << bounds.left << ", " << bounds.top << ", " << bounds.width << ", " << bounds.height << std::endl;
-    std::cout << "windowBounds: " << windowBounds.left << ", " << windowBounds.top << ", " << windowBounds.width << ", " << windowBounds.height << std::endl;
 }

@@ -91,10 +91,13 @@ void Slime::playerContact(Player& player, Entity& slime) {
 
 //ENTITY FUNCTIONS
 
-const sf::Shape& Slime::getShape() const {
-    return hitBox.body;
+sf::FloatRect Slime::getBounds() const {
+    return hitBox.body.getGlobalBounds();
 }
 
+sf::Vector2f Slime::getPosition() const {
+    return hitBox.body.getPosition();
+}
 
 void Slime::render(sf::RenderWindow& window) const {
     window.draw(sprite);

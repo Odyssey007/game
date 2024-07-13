@@ -6,7 +6,7 @@ Player::Player() :
     //player stats
     health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f), alive(true),
     //player bounds
-    bounds(sf::IntRect(50, 30, 30, 80)),
+    bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
     moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
 {
@@ -92,9 +92,13 @@ int Player::getState() const {
     return 1;
 }
 
-const sf::Shape& Player::getShape() const {
-    return hitBox.body;
+sf::FloatRect Player::getBounds() const {
+    return hitBox.body.getGlobalBounds();
 }
+
+sf::Vector2f Player::getPosition() const {
+    return hitBox.body.getPosition();
+} 
 
 const sf::Vector2f& Player::getVelocity() const {
     return moveDistance;

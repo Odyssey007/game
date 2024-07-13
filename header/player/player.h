@@ -49,7 +49,8 @@ public:
     //ENTITY fetchers
     virtual bool isAlive() const override;
     virtual int getState() const override;
-    virtual const sf::Shape& getShape() const override;
+    virtual sf::FloatRect getBounds() const override;
+    virtual sf::Vector2f getPosition() const override;
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;

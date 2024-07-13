@@ -10,7 +10,7 @@ public:
     virtual void updateSize(const sf::FloatRect& bodyDim) = 0;
     virtual void followEntity(const sf::Vector2f& entityPosition) = 0;
     //collision check AABB-CIRCLE
-    static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
+    static bool checkCollision(const sf::FloatRect& boxBounds, const sf::FloatRect& circleBounds);
     static sf::Vector2f calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius);
 };
 
@@ -24,7 +24,7 @@ public:
     //functions
     virtual void updateSize(const sf::FloatRect& bodyDim) override;
     virtual void followEntity(const sf::Vector2f& entityPosition) override;
-    static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
+    static bool checkCollision(const sf::FloatRect& bounds1, const sf::FloatRect& bounds2);
 };
 
 class CircleCollision : public Collision {
@@ -36,7 +36,7 @@ public:
     //functions
     virtual void updateSize(const sf::FloatRect& bodyDim) override;
     virtual void followEntity(const sf::Vector2f& entityPosition) override;
-    static bool checkCollision(const sf::Shape& body1, const sf::Shape& body2);
+    static bool checkCollision(const sf::FloatRect& bounds1, const sf::FloatRect& bounds2);
 };
 
 class SlashShape {
