@@ -21,7 +21,7 @@ public:
     virtual const sf::Vector2f& getVelocity() const = 0; //gets entity movement speed
     //setters
     virtual void setVelocity(const sf::Vector2f& velocity) = 0; //changes entity movement speed
-    virtual void setInitialPosition(const sf::Vector2u& position) = 0; //sets inital position of entities
+    virtual void setInitialPosition(const sf::View& view) = 0; //sets inital position of entities
     //functions
     virtual void applyMovement() = 0;
     virtual void handleCollision(Entity& entity) = 0;

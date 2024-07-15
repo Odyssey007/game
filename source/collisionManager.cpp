@@ -20,13 +20,13 @@ void CollisionManager::removeObject(const std::shared_ptr<Object>& object) {
 //!currently.brute forces through all entities spawned for collision check 
 void CollisionManager::update() {
     for (size_t i = 0; i < entities.size(); i++) {
-        //entities-entities collisions
-        for (size_t j = i+1; j < entities.size(); j++) {
-            handleEntityCollision(*entities[i], *entities[j]);
-        }
         //entities-objects collisions
         for (size_t j = 0; j < objects.size(); j++) {
             handleObjectCollision(*entities[i], *objects[j]);
+        }
+        //entities-entities collisions
+        for (size_t j = i+1; j < entities.size(); j++) {
+            handleEntityCollision(*entities[i], *entities[j]);
         }
     }
 }

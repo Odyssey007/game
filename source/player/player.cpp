@@ -108,9 +108,9 @@ void Player::setVelocity(const sf::Vector2f& velocity) {
     moveDistance = velocity;
 }
 
-void Player::setInitialPosition(const sf::Vector2u& position) { 
-    sprite.setPosition(position.x, position.y);
-    hitBox.body.setPosition(position.x, position.y);
+void Player::setInitialPosition(const sf::View& view) { 
+    sprite.setPosition(700, 700);
+    hitBox.body.setPosition(700, 700);
 }
 
 void Player::handleCollision(Entity& other) {

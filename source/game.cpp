@@ -7,15 +7,15 @@ Game::Game() :
     quadTree(sf::FloatRect(0, 0, 1920, 1080), 5),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(10000)),
+    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(15)),
     objectPool(2)
 {
     //preliminaries
     currentWindow();
     //entities
-    player->setInitialPosition(sf::Vector2u(960, 540)); //player
+    player->setInitialPosition(view); //player
     collisionManager.addEntity(player); 
-    enemyPool.currentEnemies(currentWave, resolution, collisionManager);
+    enemyPool.currentEnemies(currentWave, view, collisionManager);
     objectPool.currentObjects(1, collisionManager);
 }
 
@@ -50,14 +50,14 @@ void Game::update() {
     player->applyMovement();
     enemyPool.applyMovement();
     //
-    if(!quadTree.windowBounds.intersects(playerBounds)) {
-        quadTree.updateBounds(playerPosition); 
-    }
-    quadTree.clear(); 
-    quadTree.insertObject(playerBounds); 
-    for(auto& slime : enemyPool.activeEnemies) {
-        quadTree.insertObject(slime->getBounds()); 
-    }
+    // if(!quadTree.windowBounds.intersects(playerBounds)) {
+    //     quadTree.updateBounds(playerPosition); 
+    // }
+    // quadTree.clear(); 
+    // quadTree.insertObject(playerBounds); 
+    // for(auto& slime : enemyPool.activeEnemies) {
+    //     quadTree.insertObject(slime->getBounds()); 
+    // }
     //
     checkWave();
     checkGameEnd();
@@ -68,11 +68,11 @@ void Game::checkWave() {
     if (enemyPool.allDead()) {
         currentWave++;
         enemyPool.resetEnemies(collisionManager);
-        enemyPool.currentEnemies(currentWave*2, resolution, collisionManager);
+        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     } else if (waveClock.getElapsedTime() >= waveTimer) {
         currentWave++;
-        enemyPool.currentEnemies(currentWave*2, resolution, collisionManager);
+        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     }
 }
@@ -102,7 +102,7 @@ void Game::render() {
     player->render(*window);//player
     
     
-    quadTree.draw(*window);
+    //quadTree.draw(*window);
     
     window->display();
 }

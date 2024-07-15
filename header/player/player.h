@@ -54,7 +54,7 @@ public:
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
-    virtual void setInitialPosition(const sf::Vector2u& position) override;
+    virtual void setInitialPosition(const sf::View& view) override;
     //ENTITY functions
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
