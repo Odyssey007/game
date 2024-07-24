@@ -1,9 +1,9 @@
 #pragma once
-#include "utility.h"
-#include "enemy.h"
-#include "collision.h"
-#include "collisionManager.h"
-#include "player.h"
+#include "../header/utility.h"
+#include "../header/enemies/enemy.h"
+#include "../header/collision.h"
+#include "../header/collisionManager.h"
+#include "../header/player/player.h"
 
 //currentAbility: 0 - NONE | 1 - NORMAL | 2 - LEAP
 class Player;
@@ -32,7 +32,8 @@ public:
     virtual void update(const sf::Vector2f& target) override; 
     static void playerContact(Player& player, Entity& slime);
     //ENTITY fetchers
-    virtual const sf::Shape& getShape() const override;
+    virtual sf::FloatRect getBounds() const override;
+    virtual sf::Vector2f getPosition() const override;
     //ENTITY functions
     virtual void render(sf::RenderWindow& window) const override;
 };

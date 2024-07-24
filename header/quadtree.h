@@ -1,8 +1,8 @@
 #pragma once
-#include "utility.h"
-#include "slime.h"
-#include "player.h"
-#include "obstacles.h"
+#include "../header/utility.h"
+#include "../header/enemies/slime.h"
+#include "../header/player/player.h"
+#include "../header/obstacles/object.h"
 
 class QuadTree {
 private: 
@@ -10,7 +10,6 @@ private:
     unsigned int rootCapacity; 
     int level; 
     bool split; 
-    std::vector <sf::FloatRect> allObjects; 
     std::vector <sf::FloatRect> objects; 
     std::unique_ptr <QuadTree> children[4]; 
     // std::__shared_ptr<Slime> slimes; 
@@ -29,3 +28,28 @@ public:
     void updateBounds(sf::Vector2f center);
     void clear(); 
 };
+
+class Grid {
+private: 
+    sf::FloatRect gridBounds; 
+    sf::FloatRect bufferZone; 
+    sf::FloatRect visibleGrid; 
+    std::vector <sf::FloatRect> entities;
+    std::unordered_map<std::string, std::vector<sf::FloatRect>::iterator> hashEntities; 
+
+    std::deque<sf::FloatRect> totalGrids;  
+    std::unordered_map<int, std::deque<sf::FloatRect>::iterator> hashGrid; 
+    std::vector<sf::FloatRect> cells; 
+    float cellWidth; 
+    float cellHeight;  
+
+public:
+    Grid(); 
+    Grid(sf::FloatRect bounds); 
+
+    //void gridExpansion();
+    void makeCell(sf::FloatRect grid); 
+    void bufferRegion(sf::View visible);
+    void insertObject(sf::FloatRect objects);
+    void draw(sf::RenderWindow &window); 
+}; 

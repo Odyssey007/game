@@ -1,11 +1,9 @@
 #include "../header/collision.h"
 
 //COLLISION CHECK BETWEEN BOX-CIRCLE || CIRCLE-BOX
-bool Collision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
-    sf::FloatRect circleBounds = body2.getGlobalBounds();
+bool Collision::checkCollision(const sf::FloatRect& boxBounds, const sf::FloatRect& circleBounds) {
     float radius = circleBounds.width / 2.0f;
     sf::Vector2f circleCenter(circleBounds.left + radius, circleBounds.top + radius);
-    sf::FloatRect boxBounds = body1.getGlobalBounds();
 
     sf::Vector2f distanceVector = calcDistance(boxBounds, circleCenter, radius);
     float distance = magnitude(distanceVector);
@@ -14,10 +12,8 @@ bool Collision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
 }
 
 sf::Vector2f Collision::calcDistance(sf::FloatRect boxBounds, sf::Vector2f circleCenter, float radius) {
-    float closetX, closetY;
-
-    closetX = std::max(boxBounds.left, std::min(circleCenter.x, boxBounds.left + boxBounds.width));
-    closetY = std::max(boxBounds.top, std::min(circleCenter.y, boxBounds.top + boxBounds.height));
+    float closetX = std::max(boxBounds.left, std::min(circleCenter.x, boxBounds.left + boxBounds.width));
+    float closetY = std::max(boxBounds.top, std::min(circleCenter.y, boxBounds.top + boxBounds.height));
 
     sf::Vector2f distanceVector = circleCenter - sf::Vector2f(closetX, closetY);
 
@@ -28,7 +24,7 @@ sf::Vector2f Collision::calcDistance(sf::FloatRect boxBounds, sf::Vector2f circl
 BoxCollision::BoxCollision() {
     //visual
     body.setOutlineColor(sf::Color::Red);
-    body.setOutlineThickness(1.0f);
+    body.setOutlineThickness(0.0f);
     body.setFillColor(sf::Color::Transparent);
 }
 
@@ -42,8 +38,8 @@ void BoxCollision::followEntity(const sf::Vector2f& entityPosition) {
 }
 
 //collision check BOX-BOX
-bool BoxCollision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
-    return body1.getGlobalBounds().intersects(body2.getGlobalBounds());
+bool BoxCollision::checkCollision(const sf::FloatRect& bounds1, const sf::FloatRect& bounds2) {
+    return bounds1.intersects(bounds2);
 }
 
 //CIRCLE HITBOX
@@ -65,8 +61,8 @@ void CircleCollision::followEntity(const sf::Vector2f& entityPosition) {
 }
 
 //collision check CIRCLE-CIRCLE
-bool CircleCollision::checkCollision(const sf::Shape& body1, const sf::Shape& body2) {
-    return body1.getGlobalBounds().intersects(body2.getGlobalBounds());
+bool CircleCollision::checkCollision(const sf::FloatRect& bounds1, const sf::FloatRect& bounds2) {
+    return bounds1.intersects(bounds2);
 }
 
 //SLASH

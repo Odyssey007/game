@@ -1,4 +1,4 @@
-#include "../header/player.h"
+#include "../header/player/player.h"
 
 Player::Player() :
     //animation
@@ -6,7 +6,7 @@ Player::Player() :
     //player stats
     health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f), alive(true),
     //player bounds
-    bounds(sf::IntRect(50, 30, 30, 80)),
+    bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
     moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
 {
@@ -20,12 +20,18 @@ Player::Player() :
     hitBox.updateSize(bounds);
     //set origin
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
+    //abilities
+    abilities.push_back(std::make_shared<Slash>()); 
 }
 
-void Player::update() {
+void Player::update(const sf::Vector2f& mousePosition) {
     //reset each after each movement
     isMoving = false;
-    moveDistance = sf::Vector2f(0.0f, 0.0f); 
+    moveDistance = sf::Vector2f(0.0f, 0.0f);
+
+    for (auto& ability : abilities) {
+        ability->activate(mousePosition, hitBox.body.getPosition());
+    }
     //Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) moveDown(); 
@@ -86,9 +92,13 @@ int Player::getState() const {
     return 1;
 }
 
-const sf::Shape& Player::getShape() const {
-    return hitBox.body;
+sf::FloatRect Player::getBounds() const {
+    return hitBox.body.getGlobalBounds();
 }
+
+sf::Vector2f Player::getPosition() const {
+    return hitBox.body.getPosition();
+} 
 
 const sf::Vector2f& Player::getVelocity() const {
     return moveDistance;
@@ -115,6 +125,9 @@ void Player::handleCollision(Entity& other) {
 void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
     window.draw(hitBox.body);
+    for (auto& ability : abilities) {
+        ability->render(window);
+    }
 }
 
 //stores each enemy cooldown for attacking buffer
@@ -150,22 +163,4 @@ void Player::takeDebuffs(float hpHit, float speedHit) {
 
 float Player::getHealth() {
     return health;
-}
-
-//--------------------------------------------------
-
-//function for Sword class
-Sword::Sword() {
-    //preliminaries
-    texture.loadFromFile("assets/sword.png");
-    sprite.setTexture(texture);
-    animation = Animation(&texture, {1, 1}, 0.18f);
-    sprite.setTextureRect(animation.uvRect);
-    sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-    facingRight = true;
-}
-
-void Sword::updateSword(sf::Vector2f playerPosition) {
-    animation.animationUpdate(0, facingRight, sprite, {1.0f, 1.0f}); 
-    sprite.setPosition(playerPosition.x + 20, playerPosition.y); 
 }

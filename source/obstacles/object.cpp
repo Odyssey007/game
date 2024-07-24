@@ -1,4 +1,4 @@
-#include "../header/obstacles.h"
+#include "../header/obstacles/object.h"
 
 Object::Object() {
     //preliminaries
@@ -6,12 +6,12 @@ Object::Object() {
     //?temporary => set up texture
     obstacle.setFillColor(sf::Color::Yellow);
     obstacle.setSize(sf::Vector2f(75.0f, 100.0f));
-    obstacle.setOrigin(sf::Vector2f(25.0f/2.0f, 50.0f));
+    obstacle.setOrigin(sf::Vector2f(75.0f/2.0f, 50.0f));
     //hitbox
     bounds = sf::FloatRect(0, 0, 75, 100);
     hitBox.updateSize(bounds);
     //set initial position
-    initialPosition(sf::Vector2u(800, 400));
+    initialPosition(sf::Vector2u(800, 50));
 }
 
 void Object::render(sf::RenderWindow& window) {
@@ -26,7 +26,7 @@ void Object::initialPosition(const sf::Vector2u& position) {
 
 void Object::handleCollision(Entity& entity) {
     if (entity.collisionType == AABB) {
-        sf::FloatRect entityBounds = entity.getShape().getGlobalBounds();
+        sf::FloatRect entityBounds = entity.getBounds();
         sf::FloatRect objectBounds = this->obstacle.getGlobalBounds();
 
         sf::Vector2f moveDistance = entity.getVelocity();
@@ -70,7 +70,7 @@ void Object::handleCollision(Entity& entity) {
 
         entity.setVelocity(moveDistance);
     } else if (entity.collisionType == CIRCLE) {
-        sf::FloatRect entityBounds = entity.getShape().getGlobalBounds();
+        sf::FloatRect entityBounds = entity.getBounds();
         sf::FloatRect ObjectBounds = this->obstacle.getGlobalBounds();
         
         float radius = entityBounds.width / 2.0f;

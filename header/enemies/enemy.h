@@ -1,12 +1,12 @@
 #pragma once
-#include "utility.h"
-#include "entity.h"
-#include "animation.h"
+#include "../header/utility.h"
+#include "../header/entity.h"
+#include "../header/animation.h"
 
 class Enemy : public Entity {
 protected:
     //texture
-    std::map<std::string, sf::Texture> textures;
+    std::unordered_map<std::string, sf::Texture> textures;
     sf::Sprite sprite;
     //animation
     Animation animation;

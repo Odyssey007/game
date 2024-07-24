@@ -13,7 +13,6 @@ EnemyPool::EnemyPool(EnemyType type, size_t totalEnemies) :
 }
 
 void EnemyPool::currentEnemies(size_t numEnemies, const sf::Vector2u& resolution, CollisionManager& manager) {
-    activeEnemies.clear();
     currentNumEnemies = std::min(numEnemies, pool.size());
     for (size_t i = 0; i < currentNumEnemies && !pool.empty(); ++i) {
         std::shared_ptr<Enemy> enemy = pool.back();

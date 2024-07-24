@@ -1,7 +1,7 @@
 #pragma once
-#include "utility.h"
-#include "slime.h"
-#include "collisionManager.h"
+#include "../header/utility.h"
+#include "../header/enemies/slime.h"
+#include "../header/collisionManager.h"
 
 class EnemyPool {
 private: 

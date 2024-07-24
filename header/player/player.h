@@ -1,12 +1,9 @@
 #pragma once
-#include "utility.h"
-#include "entity.h"
-#include "animation.h"
-#include "slime.h"
-
-#include "obstacles.h"
-
-enum PlayerAbilities {  };
+#include "../header/utility.h"
+#include "../header/entity.h"
+#include "../header/animation.h"
+#include "../header/enemies/slime.h"
+#include "../header/player/abilities/basicSlash.h"
 
 class Player : public Entity {
 private:
@@ -22,6 +19,7 @@ private:
     float battleSpeed;
     const float kingdomSpeed;
     bool alive;
+    std::vector<std::shared_ptr<Abilities>> abilities;
     //hit box
     BoxCollision hitBox;
     sf::FloatRect bounds;
@@ -45,13 +43,14 @@ public:
     //fetchers
     float getHealth();
     //functions
-    void update();
+    void update(const sf::Vector2f& mousePosition);
     void takeDebuffs(float hpHit, float speedHit);
     
     //ENTITY fetchers
     virtual bool isAlive() const override;
     virtual int getState() const override;
-    virtual const sf::Shape& getShape() const override;
+    virtual sf::FloatRect getBounds() const override;
+    virtual sf::Vector2f getPosition() const override;
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
@@ -60,20 +59,4 @@ public:
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
     virtual void render(sf::RenderWindow& window) const override;
-};
-
-//---------------------------------
-
-class Sword {
-    private: 
-        sf::Texture texture;
-        sf::Sprite sprite;
-        Animation animation;
-
-        bool facingRight;
-    public: 
-        //constructor
-        Sword();
-        //function
-        void updateSword(sf::Vector2f playerPosition);
 };

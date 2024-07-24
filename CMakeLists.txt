@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(header)
 
-file(GLOB SOURCES "source/*.cpp")
+file(GLOB SOURCES "source/*.cpp" "source/player/*.cpp" "source/player/abilities/*.cpp" "source/enemies/*.cpp" "source/obstacles/*.cpp")
 
 find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
 

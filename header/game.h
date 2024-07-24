@@ -1,13 +1,13 @@
 #pragma once
 //game engine
-#include "utility.h"
-#include "collisionManager.h"
-#include "player.h"
-#include "slime.h"
-#include "obstacles.h"
-#include "ability.h"
-#include "quadtree.h"
-#include "pool.h"
+#include "../header/utility.h"
+#include "../header/collisionManager.h"
+#include "../header/player/player.h"
+#include "../header/enemies/slime.h"
+#include "../header/obstacles/object.h"
+#include "../header/player/abilities/ability.h"
+#include "../header/quadtree.h"
+#include "../header/pool.h"
 
 class Game {
 private:
@@ -19,9 +19,9 @@ private:
     //collision
     CollisionManager collisionManager;
     QuadTree quadTree;
+    Grid grid; 
     //PLAYER
     std::shared_ptr<Player> player;
-    Ability ability; 
     //ENEMY
     EnemyPool enemyPool; 
     size_t currentWave;

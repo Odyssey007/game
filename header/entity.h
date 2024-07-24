@@ -1,5 +1,5 @@
 #pragma once 
-#include "utility.h"
+#include "../header/utility.h"
 
 enum EntityType { PLAYER, ENEMY, OBSTACLE };
 enum EnemyType { SLIME };
@@ -16,7 +16,8 @@ public:
     //fetchers
     virtual bool isAlive() const = 0;
     virtual int getState() const = 0; //gets enemy move -- as of now
-    virtual const sf::Shape& getShape() const = 0; //gets hitbox body
+    virtual sf::FloatRect getBounds() const = 0; //gets the globalBounds()
+    virtual sf::Vector2f getPosition() const = 0; //gets position
     virtual const sf::Vector2f& getVelocity() const = 0; //gets entity movement speed
     //setters
     virtual void setVelocity(const sf::Vector2f& velocity) = 0; //changes entity movement speed

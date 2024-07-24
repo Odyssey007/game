@@ -40,12 +40,12 @@ void CollisionManager::handleEntityCollision(Entity& entity1, Entity& entity2) {
     } else {
         if (entity1.collisionType == entity2.collisionType) {
             if (entity1.collisionType == AABB) { //both are box collision
-                collided = BoxCollision::checkCollision(entity1.getShape(), entity2.getShape());
+                collided = BoxCollision::checkCollision(entity1.getBounds(), entity2.getBounds());
             } else if (entity1.collisionType == CIRCLE) { //both are circle collision
-                collided = CircleCollision::checkCollision(entity1.getShape(), entity2.getShape());
+                collided = CircleCollision::checkCollision(entity1.getBounds(), entity2.getBounds());
             } 
         } else { //box-circle collision
-                collided = Collision::checkCollision(entity1.getShape(), entity2.getShape());
+                collided = Collision::checkCollision(entity1.getBounds(), entity2.getBounds());
             }
         if (collided) {
             entity1.handleCollision(entity2);

@@ -1,8 +1,8 @@
 #pragma once
-#include "utility.h"
-#include "entity.h"
-#include "collision.h"
-#include "entity.h"
+#include "../header/utility.h"
+#include "../header/entity.h"
+#include "../header/collision.h"
+#include "../header/entity.h"
 
 //obstacleType: 0 - non-dmg | 1 - dmg
 
@@ -26,7 +26,7 @@ public:
     void initialPosition(const sf::Vector2u& position);
     void render(sf::RenderWindow& window);
 
-    sf::FloatRect getGlobalBounds();
+    //sf::FloatRect getGlobalBounds();
 
     void handleCollision(Entity& entity);
 };
