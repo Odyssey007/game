@@ -7,16 +7,17 @@ Game::Game() :
     quadTree(sf::FloatRect(0, 0, 1920*2, 1080*2), 5),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(5), waveTimer(sf::seconds(10000)),
+    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(15)),
     objectPool(2)
 {
     //preliminaries
     currentWindow();
     //entities
-    player->setInitialPosition(sf::Vector2u(resolution.x/2, resolution.y/2)); //player
+    player->setInitialPosition(view); //player
     collisionManager.addEntity(player); 
-    enemyPool.currentEnemies(currentWave, resolution, collisionManager);
+    enemyPool.currentEnemies(currentWave, view, collisionManager);
     objectPool.currentObjects(1, collisionManager);
+    std::cout << player->getPosition().x <<", " <<player->getPosition().y << std::endl; 
     //grid initialization
     grid = Grid(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
 }
@@ -53,7 +54,7 @@ void Game::update() {
     enemyPool.applyMovement();
     //
     // if(!quadTree.windowBounds.intersects(playerBounds)) {
-    //     quadTree.updateBounds(mousePosition); 
+    //     quadTree.updateBounds(playerPosition); 
     // }
     // quadTree.clear(); 
     // quadTree.insertObject(playerBounds); 
@@ -71,11 +72,11 @@ void Game::checkWave() {
     if (enemyPool.allDead()) {
         currentWave++;
         enemyPool.resetEnemies(collisionManager);
-        enemyPool.currentEnemies(currentWave*2, resolution, collisionManager);
+        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     } else if (waveClock.getElapsedTime() >= waveTimer) {
         currentWave++;
-        enemyPool.currentEnemies(currentWave*2, resolution, collisionManager);
+        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     }
 }

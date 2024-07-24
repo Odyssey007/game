@@ -25,73 +25,65 @@ void Object::initialPosition(const sf::Vector2u& position) {
 }
 
 void Object::handleCollision(Entity& entity) {
-    if (entity.collisionType == AABB) {
-        sf::FloatRect entityBounds = entity.getBounds();
-        sf::FloatRect objectBounds = this->obstacle.getGlobalBounds();
+    sf::FloatRect entityBounds = entity.getBounds();
+    sf::Vector2f moveDistance = entity.getVelocity();
+    currentBounds = this->obstacle.getGlobalBounds();
 
-        sf::Vector2f moveDistance = entity.getVelocity();
-        sf::FloatRect nextMovement = entityBounds;
-        nextMovement.left += moveDistance.x; 
-        nextMovement.top += moveDistance.y;
+    switch (entity.collisionType) {
+        case AABB:
+            resolveBoxCollision(moveDistance, entityBounds);
+            break;
+        case CIRCLE:
+            resolveCircleCollision(moveDistance, entityBounds);
+            break;
+    }
+    entity.setVelocity(moveDistance);
+}
 
-        if (objectBounds.intersects(nextMovement)) {
-            //right
-            if (entityBounds.left < objectBounds.left &&
-                entityBounds.left + entityBounds.width <= objectBounds.left &&
-                entityBounds.top + entityBounds.height > objectBounds.top &&
-                entityBounds.top < objectBounds.top + objectBounds.height) {
-                    moveDistance.x = 0;
-            }
+void Object::resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds) {
+    sf::FloatRect nextMovement = entityBounds;
+    nextMovement.left += velocity.x; 
+    nextMovement.top += velocity.y;
 
-            //left
-            if (entityBounds.left > objectBounds.left &&
-                entityBounds.left + entityBounds.width > objectBounds.left + objectBounds.width &&
-                entityBounds.top + entityBounds.height > objectBounds.top &&
-                entityBounds.top < objectBounds.top + objectBounds.height) {
-                    moveDistance.x = 0;
-            }
-
-            //top
-            if (entityBounds.top < objectBounds.top &&
-                entityBounds.top + entityBounds.height <= objectBounds.top &&
-                entityBounds.left + entityBounds.width > objectBounds.left &&
-                entityBounds.left < objectBounds.left + objectBounds.width) {
-                    moveDistance.y = 0;
-            }
-
-            //bottom
-            if (entityBounds.top > objectBounds.top &&
-                entityBounds.top + entityBounds.height > objectBounds.top + objectBounds.height &&
-                entityBounds.left + entityBounds.width > objectBounds.left &&
-                entityBounds.left < objectBounds.left + objectBounds.width) {
-                    moveDistance.y = 0;
-            }
+    if (currentBounds.intersects(nextMovement)) {
+        if (entityBounds.left < currentBounds.left && //right
+            entityBounds.left + entityBounds.width <= currentBounds.left &&
+            entityBounds.top + entityBounds.height > currentBounds.top &&
+            entityBounds.top < currentBounds.top + currentBounds.height) {
+                velocity.x = 0;
+        } else if (entityBounds.left > currentBounds.left && //left
+            entityBounds.left + entityBounds.width > currentBounds.left + currentBounds.width &&
+            entityBounds.top + entityBounds.height > currentBounds.top &&
+            entityBounds.top < currentBounds.top + currentBounds.height) {
+                velocity.x = 0;
+        } else if (entityBounds.top < currentBounds.top && //top
+            entityBounds.top + entityBounds.height <= currentBounds.top &&
+            entityBounds.left + entityBounds.width > currentBounds.left &&
+            entityBounds.left < currentBounds.left + currentBounds.width) {
+                velocity.y = 0;
+        } else if (entityBounds.top > currentBounds.top && //bottom
+            entityBounds.top + entityBounds.height > currentBounds.top + currentBounds.height &&
+            entityBounds.left + entityBounds.width > currentBounds.left &&
+            entityBounds.left < currentBounds.left + currentBounds.width) {
+                velocity.y = 0;
         }
+    }
+}
 
-        entity.setVelocity(moveDistance);
-    } else if (entity.collisionType == CIRCLE) {
-        sf::FloatRect entityBounds = entity.getBounds();
-        sf::FloatRect ObjectBounds = this->obstacle.getGlobalBounds();
-        
-        float radius = entityBounds.width / 2.0f;
-        sf::Vector2f currentCenter(entityBounds.left + radius, entityBounds.top + radius);
-        
-        //next position
-        sf::Vector2f moveDistance = entity.getVelocity();
-        sf::Vector2f nextCenter = currentCenter + moveDistance;
+void Object::resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds) {
+    float radius = entityBounds.width / 2.0f;
+    sf::Vector2f currentCenter(entityBounds.left + radius, entityBounds.top + radius);
+    
+    sf::Vector2f nextCenter = currentCenter + velocity; 
+    sf::Vector2f distanceVector = Collision::calcDistance(currentBounds, nextCenter, radius);
+    float distance = magnitude(distanceVector);
 
-        sf::Vector2f distanceVector = Collision::calcDistance(ObjectBounds, nextCenter, radius);
-        float distance = magnitude(distanceVector);
+    if (distance < radius) {
+        if (distance != 0) distanceVector /= distance;
 
-        if (distance < radius) {
-            if (distance != 0) {
-                distanceVector /= distance;
-            }
-
-            float dot = dotProduct(moveDistance, distanceVector);
-            moveDistance -= dot*distanceVector;
-
-            entity.setVelocity(moveDistance);
-        }
+        float overlap = radius - distance;
+        sf::Vector2f correction = distanceVector * overlap;
+        nextCenter += correction;
+        velocity = nextCenter - currentCenter;    
     }
 }

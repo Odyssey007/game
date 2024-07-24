@@ -54,31 +54,44 @@ void Enemy::meleeMovement(const sf::Vector2f& target) {
 
 //ENTITY FUNCTIONS
 
-void Enemy::setInitialPosition(const sf::Vector2u& resolution) {
+void Enemy::setInitialPosition(const sf::View& view) {
     //pick the side of the screen to spawn in
+    sf::FloatRect viewBounds(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     static std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> distribute(1, 4);
 
     std::pair<int, int> rangeX, rangeY;
     switch (distribute(gen)) {
-        case 1: //top-left
-            rangeX = {-100, -10};
-            rangeY = {-100, -10};
+        case 1: //top
+            std::cout << "1\n";
+            rangeX = {static_cast<int>(viewBounds.left), static_cast<int>(viewBounds.left + viewBounds.width)};
+            rangeY = {static_cast<int>(viewBounds.top) - 150, static_cast<int>(viewBounds.top) - 100};
             break;
-        case 2: //bottom-left
-            rangeX = {-100, -10};
-            rangeY = {static_cast<int>(resolution.y) + 10, static_cast<int>(resolution.y) + 100};
+        case 2: //bottom
+            std::cout << "2\n";
+            rangeX = {static_cast<int>(viewBounds.left), static_cast<int>(viewBounds.left + viewBounds.width)};
+            rangeY = {static_cast<int>(viewBounds.top + viewBounds.height) + 100, static_cast<int>(viewBounds.top + viewBounds.height) + 150};
             break;
-        case 3: //top-right
-            rangeX = {static_cast<int>(resolution.x) + 10, static_cast<int>(resolution.x) + 100};
-            rangeY = {-100, -10};
+        case 3: //left 
+            std::cout << "3\n";
+            rangeX = {static_cast<int>(viewBounds.left) - 150*(1.71), static_cast<int>(viewBounds.left) - 100*(1.71)};
+            rangeY = {static_cast<int>(viewBounds.top), static_cast<int>(viewBounds.top + viewBounds.height)};
             break;
-        case 4: //bottom-left
-            rangeX = {static_cast<int>(resolution.x) + 10, static_cast<int>(resolution.x) + 100};
-            rangeY = {static_cast<int>(resolution.y) + 10, static_cast<int>(resolution.y) + 100};
+        case 4: //right
+            std::cout << "4\n";
+            rangeX = {static_cast<int>(viewBounds.left + viewBounds.width) + 100*(1.71), static_cast<int>(viewBounds.left + viewBounds.width) + 150*(1.71)};
+            rangeY = {static_cast<int>(viewBounds.top), static_cast<int>(viewBounds.top + viewBounds.height)};
             break;
-    };
+    }
+
+
     sf::Vector2i spawnPosition = randomGenerator(rangeX, rangeY);
+
+    // std::cout << rangeX.first << ", " << rangeX.second << std::endl;
+    // std::cout << rangeY.first << ", " << rangeY.second << std::endl;
+    // std::cout << "||||||||\n";
+    // std::cout << spawnPosition.x << ", " << spawnPosition.y << std::endl;
+
     sprite.setPosition(spawnPosition.x, spawnPosition.y);
 }
 
@@ -118,12 +131,9 @@ void Enemy::handleCollision(Entity& entity) {
 
     if (dist < minDistance) {
         float overlap = minDistance - dist;
-
-        sf::Vector2f direction = position2 - position1;
-        direction = normalize(direction);
-        
+        sf::Vector2f direction = normalize(position2 - position1);
         sf::Vector2f correction = direction * (overlap / 2.0f);
-
+        //apply a separation force
         this->setVelocity(this->getVelocity() - correction);
         entity.setVelocity(entity.getVelocity() + correction);
     }

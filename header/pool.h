@@ -11,7 +11,7 @@ private:
 public:
     std::vector<std::shared_ptr<Enemy>> activeEnemies;
     EnemyPool(EnemyType type, size_t totalEnemies); 
-    void currentEnemies(size_t numEnemies, const sf::Vector2u& resolution, CollisionManager& manager);
+    void currentEnemies(size_t numEnemies, const sf::View& view, CollisionManager& manager);
     void update(const sf::Vector2f& target);
     void applyMovement();
     void render(sf::RenderWindow& window) const;

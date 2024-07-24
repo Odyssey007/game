@@ -12,12 +12,12 @@ EnemyPool::EnemyPool(EnemyType type, size_t totalEnemies) :
     }
 }
 
-void EnemyPool::currentEnemies(size_t numEnemies, const sf::Vector2u& resolution, CollisionManager& manager) {
+void EnemyPool::currentEnemies(size_t numEnemies, const sf::View& view, CollisionManager& manager) {
     currentNumEnemies = std::min(numEnemies, pool.size());
     for (size_t i = 0; i < currentNumEnemies && !pool.empty(); ++i) {
         std::shared_ptr<Enemy> enemy = pool.back();
         pool.pop_back();
-        enemy->setInitialPosition(resolution);
+        enemy->setInitialPosition(view);
         activeEnemies.push_back(enemy);
         manager.addEntity(enemy);
     }

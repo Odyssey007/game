@@ -6,7 +6,7 @@ Slime::Slime() :
     //leap buffers
     leaping(false), chargeTimer(0.35f), needToRecover(false), recoveryTimer(0.35f),
     //leap distance
-    leapDistance(150.0f), totalLeapDistance(0.0f)
+    leapDistance(50.0f), totalLeapDistance(0.0f)
 {
     //preliminaries
     enemyType = SLIME; collisionType = CIRCLE;
@@ -101,5 +101,5 @@ sf::Vector2f Slime::getPosition() const {
 
 void Slime::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    window.draw(hitBox.body);
+    //window.draw(hitBox.body);
 }

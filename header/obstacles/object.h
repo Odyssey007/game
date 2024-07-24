@@ -9,15 +9,15 @@
 class Object {
 private:
     //texture
-    
     sf::Texture texture;
     sf::Sprite sprite;
     //hitbox
     BoxCollision hitBox;
     sf::FloatRect bounds;
+    sf::FloatRect currentBounds;
     //functions
-    void handleCollisionBox(Entity& other);
-    void handleCollisionCircle(Entity& other);
+    void resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
+    void resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
 public:
     sf::RectangleShape obstacle; //?temporary
 
@@ -25,8 +25,6 @@ public:
     //functions
     void initialPosition(const sf::Vector2u& position);
     void render(sf::RenderWindow& window);
-
     //sf::FloatRect getGlobalBounds();
-
     void handleCollision(Entity& entity);
 };

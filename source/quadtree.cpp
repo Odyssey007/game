@@ -147,7 +147,6 @@ Grid::Grid(sf::FloatRect bounds) :
     // Centering initial grid based on the player
     gridBounds.left = -gridBounds.width/4;
     gridBounds.top = -gridBounds.height/4;
-    std::cout << "bufferZone: " << gridBounds.left << ", " << gridBounds.top << ", " << gridBounds.width << ", " << gridBounds.height << std::endl;
     static const sf::Vector2f offsets[9] = {
         { 0.0f,  0.0f}, {-1.0f,  0.0f}, {-1.0f, -1.0f}, // Center, Left, Top-left
         { 0.0f, -1.0f}, { 1.0f, -1.0f}, { 1.0f,  0.0f}, // Top, Top-right, right
@@ -211,6 +210,7 @@ void Grid::bufferRegion(sf::View visible) {
     bufferZone.top = -(visible.getCenter().y)/2;
     bufferZone.width = visible.getSize().x + visible.getCenter().x;
     bufferZone.height = visible.getSize().y + visible.getCenter().y;
+    std::cout <<  visible.getSize().x << ", " << visible.getSize().y << std::endl; 
 }
 
 
