@@ -27,4 +27,5 @@ public:
     void render(sf::RenderWindow& window);
     //sf::FloatRect getGlobalBounds();
     void handleCollision(Entity& entity);
+    sf::FloatRect getBounds() const;
 };

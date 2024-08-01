@@ -87,3 +87,7 @@ void Object::resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect&
         velocity = nextCenter - currentCenter;    
     }
 }
+
+sf::FloatRect Object::getBounds() const {
+    return hitBox.body.getGlobalBounds();
+}

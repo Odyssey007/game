@@ -1,8 +1,28 @@
 #include "../header/quadtree.h"
 
+bool containsWithTolerance(const sf::FloatRect& bounds, float x, float y, float tolerance = 0.0001f) {
+    return (x >= bounds.left - tolerance && x <= bounds.left + bounds.width + tolerance &&
+            y >= bounds.top - tolerance && y <= bounds.top + bounds.height + tolerance);
+}
+
+
+//Methods for QuadTree
 QuadTree::QuadTree(sf::FloatRect bounds, int level)
-    : bounds(bounds), maxObjects(5), maxLevels(7), level(level) 
+    : level(level), maxLevels(7), bounds(bounds), maxObjects(3)
 {}
+
+int QuadTree::getPrimaryNode(const sf::FloatRect& rect) const {
+    float midpointX = rect.left + rect.width / 2;
+    float midpointY = rect.top + rect.height / 2;
+
+    for (int i = 0; i < 4; ++i) {
+        if (containsWithTolerance(node[i]->bounds, midpointX, midpointY)) {
+            return i;
+        }
+    }
+
+    return -1; // If no child node contains the midpoint, return -1
+}
 
 void QuadTree::splitRoot() {
     float x = bounds.left;
@@ -26,7 +46,7 @@ void QuadTree::splitRoot() {
 
 void QuadTree::insertObject(sf::FloatRect object) {
     if (!bounds.intersects(object)) {
-        return; // Object is out of bounds
+        return;
     }
 
     if (node[0]) {
@@ -57,34 +77,12 @@ void QuadTree::insertObject(sf::FloatRect object) {
     }
 }
 
-int QuadTree::getPrimaryNode(const sf::FloatRect& rect) const {
-    int primaryNodeIndex = -1;
-    float midpointVertical = bounds.left + bounds.width / 2;
-    float midpointHorizontal = bounds.top + bounds.height / 2;
-
-    bool topQuad = (rect.top < midpointHorizontal && rect.top + rect.height <= midpointHorizontal);
-    bool botQuad = (rect.top >= midpointHorizontal);
-
-    if (rect.left < midpointVertical && rect.left + rect.width <= midpointVertical) {
-        if (topQuad) {
-            primaryNodeIndex = 1;  // Top-Left quadrant
-        } else if (botQuad) {
-            primaryNodeIndex = 2;  // Bottom-Left quadrant
-        }
-    } else if (rect.left >= midpointVertical) {
-        if (topQuad) {
-            primaryNodeIndex = 0;  // Top-Right quadrant
-        } else if (botQuad) {
-            primaryNodeIndex = 3;  // Bottom-Right quadrant
-        }
-    }
-
-    return primaryNodeIndex;
-}
-
-
 bool QuadTree::intersects(const sf::FloatRect& other) const {
         return bounds.intersects(other);
+}
+
+sf::FloatRect QuadTree::getBounds() const {
+    return bounds;
 }
 
 void QuadTree::clear() {
@@ -124,7 +122,7 @@ void Grid::setBounds(const sf::FloatRect& newBounds) {
 
 void Grid::makeCells() {
     cells.clear(); // Clear existing cells
-    int numCellsPerRow = 4; // Number of cells per row/column
+    int numCellsPerRow = 4; 
     float cellWidth = bounds.width / numCellsPerRow;
     float cellHeight = bounds.height / numCellsPerRow;
 
@@ -170,22 +168,13 @@ void GridSystem::createGrids() {
         newGrid.setBounds(newGridBounds); // Use the setter to set bounds and update cells
         totalGrids.push_back(newGrid);
     }
-    // for (const auto& grid : totalGrids) {
-    //     //std::cout << "Grid Bounds: " << grid.bounds.left << ", " << grid.bounds.top << ", " << grid.bounds.width << ", " << grid.bounds.height << std::endl;
-    //     // for (const auto& cell : grid.cells) {
-    //     //     std::cout << "  Cell Bounds: " << cell.left << ", " << cell.top << ", " << cell.width << ", " << cell.height << std::endl;
-    //     // }
-    // }
 }
-
 
 void GridSystem::bufferRegion(sf::Vector2f playerPosition) {
     bufferZone.width = (3 * gridBounds.width) / 4;
     bufferZone.height = (3 * gridBounds.height) / 4;
     bufferZone.left = playerPosition.x - bufferZone.width / 2;
     bufferZone.top = playerPosition.y - bufferZone.height / 2;
-    //std::cout << "active enemies: " << enemyPool->activeEnemies.size() << std::endl; 
-    //std::cout << "bufferZone: " << bufferZone.left << ", " << bufferZone.top << ", " << bufferZone.width << ", " << bufferZone.height << std::endl; 
 }
 
 std::vector<int> GridSystem::activeGrids(sf::FloatRect player) {
@@ -194,7 +183,6 @@ std::vector<int> GridSystem::activeGrids(sf::FloatRect player) {
     bufferDistFromGrid.clear(); 
     gridNum.push_back(-1);
 
-        //std::cout << "starting" << std::endl;
     for (unsigned int i = 0; i < totalGrids.size(); i++) {
         if (totalGrids[i].bounds.intersects(player)) {
             gridNum[0] = i;
@@ -206,7 +194,6 @@ std::vector<int> GridSystem::activeGrids(sf::FloatRect player) {
         float x = bufferZone.left - totalGrids[i].bounds.left; 
         float y = bufferZone.top - totalGrids[i].bounds.top; 
         bufferDistFromGrid.push_back(std::sqrt(x * x + y * y)); 
-        //std::cout << "distance: " << bufferDistFromGrid[i] << std::endl; 
     }
 
     findActiveCells(); 
@@ -224,24 +211,16 @@ std::vector<sf::FloatRect> GridSystem::getCellsInGrid(int gridIndex) {
 void GridSystem::findActiveCells() {
     activeCells.clear(); // Clear previous active cells
 
-    //std::cout << "Active Grids: " << std::flush;
     for (unsigned int i = 0; i < gridNum.size(); i++) {
-        //std::cout << gridNum[i] << ", " << std::endl; 
         if (i > 0) { 
             std::vector<sf::FloatRect> tempCells = getCellsInGrid(gridNum[i]);
             for (const auto& cell : tempCells) {
-                //std::cout << "  Cell Bounds: " << cell.left << ", " << cell.top << ", " << cell.width << ", " << cell.height << std::endl;
                 if (cell.intersects(bufferZone)) {
                     activeCells.emplace_back(cell, 0);
                 }
             }
         }
     }
-
-    //std::cout << "Active cell size: " << activeCells.size() << std::endl;
-    // for(const auto& cells : activeCells) {
-    //     std::cout << "active cells: " << cells.left << ", " << cells.top << ", " << cells.width << ", " << cells.height << std::endl; 
-    // }
 }
 
 void GridSystem::updateGrids() {
@@ -273,26 +252,38 @@ void GridSystem::getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<Obje
     player = c; 
 }
 
+bool GridSystem::entityCell(sf::FloatRect cell, sf::FloatRect entity) {
+    float midpointX = entity.left + entity.width / 2;
+    float midpointY = entity.top + entity.height / 2;
+
+    if(containsWithTolerance(cell, midpointX, midpointY)) {
+        return true; 
+    } else {
+        return false; 
+    }
+}
+
 void GridSystem::populateQuadTree() {
     for (QuadTree& quadTree : activeCells) {
         quadTree.clear(); 
         if(quadTree.intersects(player->getBounds())) {
-            //std::cout << "its working." << std::endl;
-            quadTree.insertObject(player->getBounds()); 
+            if(entityCell(quadTree.getBounds(), player->getBounds())) {
+                quadTree.insertObject(player->getBounds()); 
+            }
         }
         for (const auto& enemy : enemyPool->activeEnemies) {
             if(quadTree.intersects(enemy->getBounds())) {
-                quadTree.insertObject(enemy->getBounds()); 
+                if(entityCell(quadTree.getBounds(), player->getBounds())){
+                    quadTree.insertObject(enemy->getBounds()); 
+                }
             }
         }
-        // for (const auto& objects : objectPool->activeObjects) {
-        //     if(quadTree.intersects(objectPool->getBounds())) {
-        //         quadTree.insertObject(objectPool->getBounds()); 
-        //     }
-        // }
-        //std::cout << "object in cell: " << quadTree.objects.size() << " || " << quadTree.bounds.left << std::endl; 
+        for (const auto& objects : objectPool->activeObjects) {
+            if(quadTree.intersects(objects->getBounds())) {
+                quadTree.insertObject(objects->getBounds()); 
+            }
+        }
     }
-    std::cout << std::endl; 
 }
 
 void GridSystem::draw(sf::RenderWindow& window) {

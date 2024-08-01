@@ -8,7 +8,7 @@ Game::Game() :
     player(std::make_shared<Player>()), 
     enemyPool(std::make_shared<EnemyPool>(EnemyType::SLIME, 100)),
     objectPool(std::make_shared<ObjectPool>(2)),
-    currentWave(1), waveTimer(sf::seconds(10))
+    currentWave(2), waveTimer(sf::seconds(1000))
     // enemyPool(EnemyType::SLIME, 100)
 {
     //preliminaries

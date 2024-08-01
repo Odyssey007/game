@@ -1,6 +1,7 @@
 #pragma once
 #include "../header/utility.h"
 #include "../header/enemies/slime.h"
+#include "../header/obstacles/object.h"
 #include "../header/collisionManager.h"
 
 class EnemyPool {
