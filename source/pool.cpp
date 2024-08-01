@@ -8,7 +8,7 @@ EnemyPool::EnemyPool(EnemyType type, size_t totalEnemies) :
         if (type == EnemyType::SLIME) {
             enemy = std::make_shared<Slime>();
         } //!more types
-        pool.push_back(enemy);
+        pool.emplace_back(enemy);
     }
 }
 
@@ -68,17 +68,17 @@ ObjectPool::ObjectPool(size_t totalObjects) :
     totalObjects(totalObjects), currentNumObjects(0) 
 {
     for (size_t i = 0; i < totalObjects; ++i) {
-        pool.push_back(std::make_shared<Object>());
+        pool.emplace_back(std::make_shared<Object>());
     }
 }
 
-void ObjectPool::currentObjects(size_t numObjects, CollisionManager& manager) {
+void ObjectPool::currentObjects(size_t numObjects, const sf::View& view, CollisionManager& manager) {
     activeObjects.clear();
     currentNumObjects = std::min(numObjects, pool.size());
     for (size_t i = 0; i < currentNumObjects && !pool.empty(); ++i) {
         std::shared_ptr<Object> object = pool.back();
         pool.pop_back();
-        //object->setInitialPosition(resolution);
+        object->initialPosition(view);
         activeObjects.push_back(object);
         manager.addObject(object);
     }

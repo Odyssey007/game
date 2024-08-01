@@ -6,7 +6,7 @@ Slime::Slime() :
     //leap buffers
     leaping(false), chargeTimer(0.35f), needToRecover(false), recoveryTimer(0.35f),
     //leap distance
-    leapDistance(50.0f), totalLeapDistance(0.0f)
+    leapDistance(150.0f), totalLeapDistance(0.0f)
 {
     //preliminaries
     enemyType = SLIME; collisionType = CIRCLE;

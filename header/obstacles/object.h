@@ -23,7 +23,7 @@ public:
 
     Object();
     //functions
-    void initialPosition(const sf::Vector2u& position);
+    void initialPosition(const sf::View& view);
     void render(sf::RenderWindow& window);
     //sf::FloatRect getGlobalBounds();
     void handleCollision(Entity& entity);

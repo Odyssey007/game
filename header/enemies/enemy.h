@@ -13,9 +13,9 @@ protected:
     sf::Vector2u animationSheetDim;
     float frameDuration;
     //stats 
-    float health;
-    float movementSpeed;
-    float baseDamage;
+    int health;
+    int movementSpeed;
+    int baseDamage;
     //atributes 
     EnemyType enemyType;
     int currentAbility;

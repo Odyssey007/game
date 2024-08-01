@@ -24,27 +24,41 @@ Player::Player() :
     abilities.push_back(std::make_shared<Slash>()); 
 }
 
+void Player::dash(const sf::Vector2f& mousePosition) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && dashClock.getElapsedTime().asSeconds() > dashCooldown) {
+        isDashing = true;
+        dashClock.restart();
+
+        // Calculate move distance
+        sf::Vector2f direction = mousePosition - sprite.getPosition();
+        float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+        moveDistance = direction / length;
+        totalDashDistance = 0; 
+    }
+
+    if (isDashing) {
+        if (totalDashDistance < dashDistance) {
+            sf::Vector2f move;
+            move.x = moveDistance.x * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
+            move.y = moveDistance.y * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
+
+            sprite.move(move);
+            hitBox.followEntity(sprite.getPosition());
+            totalDashDistance += magnitude(move);
+        } else {
+            isDashing = false; 
+        }
+    }
+}
+
+
 void Player::update(const sf::Vector2f& mousePosition) {
-    //reset each after each movement
-    isMoving = false;
-    moveDistance = sf::Vector2f(0.0f, 0.0f);
+    dash(mousePosition);
+
+    movement();
 
     for (auto& ability : abilities) {
         ability->activate(mousePosition, hitBox.body.getPosition());
-    }
-    //Capture keyboard input for movement
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) moveUp();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) moveDown(); 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) moveLeft();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) moveRight();
-    //Update the player position if moving
-    if (isMoving) {
-        //player moving animation
-        animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
-    }
-    else {
-        //player idle animation
-        animation.animationUpdate(0, facingRight, sprite, {0.93f, 0.93f});
     }
 }
 
@@ -57,28 +71,35 @@ void Player::applyMovement() {
     }
 }
 
-//cases for each movement type
-
-void Player::moveUp() {
-    moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    isMoving = true;
-}
-
-void Player::moveDown() {
-    moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
-    isMoving = true;
-}
-
-void Player::moveLeft() {
-    if (facingRight) facingRight = false;
-    moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    isMoving = true;
-}
-
-void Player::moveRight() {
-    if (!facingRight) facingRight = true;
-    moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-    isMoving = true;
+void Player::movement() {
+    //reset each after each movement
+    isMoving = false;
+    moveDistance = sf::Vector2f(0.0f, 0.0f);
+    //Capture keyboard input for movement
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
+        moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+        isMoving = true;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { //down
+        moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
+        isMoving = true;
+    } 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { //left
+        if (facingRight) facingRight = false;
+        moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+        isMoving = true;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { //right
+        if (!facingRight) facingRight = true;
+        moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+        isMoving = true;
+    };
+    //update the player position if moving
+    if (isMoving) {
+        animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});//moving animation
+    } else {
+        animation.animationUpdate(0, facingRight, sprite, {0.93f, 0.93f});//idle animation
+    }
 }
 
 //ENTITY FUNCTIONS
@@ -108,9 +129,10 @@ void Player::setVelocity(const sf::Vector2f& velocity) {
     moveDistance = velocity;
 }
 
-void Player::setInitialPosition(const sf::View& view) { 
-    sprite.setPosition(700, 700);
-    hitBox.body.setPosition(700, 700);
+void Player::setInitialPosition(const sf::View& view) {
+//!if this is not center of the screen || view won't be 0-window
+    sprite.setPosition(960, 540);
+    hitBox.body.setPosition(960, 540);
 }
 
 void Player::handleCollision(Entity& other) {

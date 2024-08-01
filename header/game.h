@@ -9,6 +9,10 @@
 #include "../header/quadtree.h"
 #include "../header/pool.h"
 
+#include "../header/menu.h"
+
+#include "../header/player/abilities/blast.h"
+
 class Game {
 private:
     //window reset up
@@ -41,4 +45,16 @@ public:
     bool winRunning() const;
 
     void checkWave();
+
+    sf::FloatRect screenPosition;
+    sf::Vector2f mousePosition;
+    sf::Vector2f playerPosition;
+    sf::FloatRect playerBounds;
+
+
+    Menu menu;
+    GameState gameState;
+
+    sf::Clock fireCooldown;
+    BlastPool blastPool;
 };

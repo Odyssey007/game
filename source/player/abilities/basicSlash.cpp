@@ -8,11 +8,14 @@ Slash::Slash() :
     animation = Animation(&textures["basicSlash"], {4, 2}, 0.12f);
     sprite.setTextureRect(animation.uvRect);
     sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
-} 
+    //default key
+    key = sf::Keyboard::Key::Unknown;
+    mouseKey = sf::Mouse::Button::Right;
+}
 
 void Slash::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) { 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        slashVisible = true; 
+    if (sf::Mouse::isButtonPressed(mouseKey) || sf::Keyboard::isKeyPressed(key)) {
+        slashVisible = true;
         if(slashVisible){
             slashAngle = rotationAngle(playerPosition.x, playerPosition.y, mousePosition.x, mousePosition.y);
             hitBoxSlash.createSlashShape(playerPosition.x, playerPosition.y, 90.0f, 1.2f, slashAngle);
@@ -27,7 +30,9 @@ void Slash::slashSpriteRotation(float angle, sf::Vector2f position) {
     float angleDegrees = radianToDegrees(angle); 
     sprite.setPosition(position + offset);
     sprite.setRotation(angleDegrees);
-    animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
+    for (size_t i = 0; i < 4; i++) {
+        animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});
+    }
 }
 
 void Slash::updateSlashTime() {

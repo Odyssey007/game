@@ -2,10 +2,11 @@
 
 Enemy::Enemy() {
     //preliminaries
+    health = 100;
     entityType = ENEMY; alive = true; currentAbility = 0;
     loadTexture("slime", "assets/slime.png"); //load up slime into textures
     //movement set up
-    movementSpeed = 200.0f; baseDamage = 5.0f;
+    movementSpeed = 150; baseDamage = 5;
     bestDirection = sf::Vector2f(0.0f, 0.0f);
     generateDirections();
 }
@@ -48,7 +49,7 @@ void Enemy::meleeMovement(const sf::Vector2f& target) {
     //separation force from neighbors
     
     //move
-    moveDistance = bestDirection*movementSpeed*DeltaTime::getInstance()->getDeltaTime();
+    moveDistance = bestDirection*static_cast<float>(movementSpeed)*DeltaTime::getInstance()->getDeltaTime();
     //sprite.move(moveDistance);
 }
 
@@ -63,34 +64,23 @@ void Enemy::setInitialPosition(const sf::View& view) {
     std::pair<int, int> rangeX, rangeY;
     switch (distribute(gen)) {
         case 1: //top
-            std::cout << "1\n";
             rangeX = {static_cast<int>(viewBounds.left), static_cast<int>(viewBounds.left + viewBounds.width)};
             rangeY = {static_cast<int>(viewBounds.top) - 150, static_cast<int>(viewBounds.top) - 100};
             break;
-        case 2: //bottom
-            std::cout << "2\n";
+        case 2: //bottom --sd
             rangeX = {static_cast<int>(viewBounds.left), static_cast<int>(viewBounds.left + viewBounds.width)};
             rangeY = {static_cast<int>(viewBounds.top + viewBounds.height) + 100, static_cast<int>(viewBounds.top + viewBounds.height) + 150};
             break;
-        case 3: //left 
-            std::cout << "3\n";
-            rangeX = {static_cast<int>(viewBounds.left) - 150*(1.71), static_cast<int>(viewBounds.left) - 100*(1.71)};
+        case 3: //left -- sd
+            rangeX = {static_cast<int>(viewBounds.left) - 150, static_cast<int>(viewBounds.left) - 100};
             rangeY = {static_cast<int>(viewBounds.top), static_cast<int>(viewBounds.top + viewBounds.height)};
             break;
         case 4: //right
-            std::cout << "4\n";
-            rangeX = {static_cast<int>(viewBounds.left + viewBounds.width) + 100*(1.71), static_cast<int>(viewBounds.left + viewBounds.width) + 150*(1.71)};
+            rangeX = {static_cast<int>(viewBounds.left + viewBounds.width) + 100, static_cast<int>(viewBounds.left + viewBounds.width) + 150};
             rangeY = {static_cast<int>(viewBounds.top), static_cast<int>(viewBounds.top + viewBounds.height)};
             break;
     }
-
-
     sf::Vector2i spawnPosition = randomGenerator(rangeX, rangeY);
-
-    // std::cout << rangeX.first << ", " << rangeX.second << std::endl;
-    // std::cout << rangeY.first << ", " << rangeY.second << std::endl;
-    // std::cout << "||||||||\n";
-    // std::cout << spawnPosition.x << ", " << spawnPosition.y << std::endl;
 
     sprite.setPosition(spawnPosition.x, spawnPosition.y);
 }

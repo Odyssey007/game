@@ -27,7 +27,7 @@ private:
     std::vector<std::shared_ptr<Object>> activeObjects;
 public:
     ObjectPool(size_t totalObjects); 
-    void currentObjects(size_t numObjects, CollisionManager& manager);
+    void currentObjects(size_t numObjects, const sf::View& view, CollisionManager& manager);
     void update();
     void render(sf::RenderWindow& window) const;
     void resetObjects(CollisionManager& manager);

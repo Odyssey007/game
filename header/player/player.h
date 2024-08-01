@@ -4,6 +4,7 @@
 #include "../header/animation.h"
 #include "../header/enemies/slime.h"
 #include "../header/player/abilities/basicSlash.h"
+#include "../header/player/abilities/dash.h"
 
 class Player : public Entity {
 private:
@@ -27,10 +28,6 @@ private:
     sf::Vector2f moveDistance;
     bool isMoving;
     bool facingRight;
-    void moveUp();
-    void moveDown();
-    void moveLeft();
-    void moveRight();
     //enemy cooldown
     std::unordered_map<Entity*, sf::Clock> enemyCooldown;
     bool canAttack(Entity& entity);
@@ -59,4 +56,17 @@ public:
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
     virtual void render(sf::RenderWindow& window) const override;
+
+
+    bool isDashing = false;
+    float dashCooldown = 0.5f;
+    sf::Clock dashClock;
+    float totalDashDistance = 0;
+    float dashDistance = 300;
+    void dash(const sf::Vector2f& mousePosition);
+
+    PlayerAbilityType ability;
+    void movement();
+    void acquireAbility();
+    void activateAbility(const sf::Vector2f& mousePosition);
 };

@@ -27,6 +27,9 @@ void CollisionManager::update() {
         //entities-entities collisions
         for (size_t j = i+1; j < entities.size(); j++) {
             handleEntityCollision(*entities[i], *entities[j]);
+            if (entities[i]->entityType == PLAYER) {
+                
+            }
         }
     }
 }

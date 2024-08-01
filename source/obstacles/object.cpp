@@ -11,7 +11,7 @@ Object::Object() {
     bounds = sf::FloatRect(0, 0, 75, 100);
     hitBox.updateSize(bounds);
     //set initial position
-    initialPosition(sf::Vector2u(800, 50));
+    // initialPosition(sf::Vector2u(0, 0));
 }
 
 void Object::render(sf::RenderWindow& window) {
@@ -19,9 +19,19 @@ void Object::render(sf::RenderWindow& window) {
     //window.draw(hitBox.body);
 }
 
-void Object::initialPosition(const sf::Vector2u& position) {
-    obstacle.setPosition(position.x, position.y);
-    hitBox.body.setPosition(position.x, position.y);
+void Object::initialPosition(const sf::View& view) {
+    sf::FloatRect viewBounds(view.getCenter() - view.getSize() / 2.0f, view.getSize());
+    std::pair<int, int> rangeX, rangeY;
+
+    rangeX.first = static_cast<int>(viewBounds.left) + bounds.width/2;
+    rangeX.second = static_cast<int>(viewBounds.left + viewBounds.width) - bounds.width/2;
+
+    rangeY.first = static_cast<int>(viewBounds.top) + bounds.height/2;
+    rangeY.second = static_cast<int>(viewBounds.top + viewBounds.height) - bounds.height/2;
+
+    sf::Vector2i pos = randomGenerator(rangeX, rangeY);
+    
+    obstacle.setPosition(pos.x, pos.y);
 }
 
 void Object::handleCollision(Entity& entity) {
