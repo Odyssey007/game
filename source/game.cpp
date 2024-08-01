@@ -4,22 +4,24 @@
 Game::Game() : 
     //window setup
     window(nullptr), resolution(sf::Vector2u(0, 0)),
-    quadTree(sf::FloatRect(0, 0, 1920*2, 1080*2), 5),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(15)),
-    objectPool(2)
+    enemyPool(std::make_shared<EnemyPool>(EnemyType::SLIME, 100)),
+    objectPool(std::make_shared<ObjectPool>(2)),
+    currentWave(1), waveTimer(sf::seconds(10))
+    // enemyPool(EnemyType::SLIME, 100)
 {
     //preliminaries
     currentWindow();
     //entities
     player->setInitialPosition(view); //player
     collisionManager.addEntity(player); 
-    enemyPool.currentEnemies(currentWave, view, collisionManager);
-    objectPool.currentObjects(1, collisionManager);
-    std::cout << player->getPosition().x <<", " <<player->getPosition().y << std::endl; 
+    enemyPool->currentEnemies(currentWave, view, collisionManager);
+    objectPool->currentObjects(1, collisionManager);
+    //std::cout << player->getPosition().x <<", " <<player->getPosition().y << std::endl; 
     //grid initialization
-    grid = Grid(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
+    grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
+    grid.getInstances(enemyPool, objectPool, player); 
 }
 
 //sets up the window
@@ -47,11 +49,11 @@ void Game::update() {
     sf::Vector2f playerPosition = player->getPosition(); 
     sf::Vector2f mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
     player->update(mousePosition);
-    enemyPool.update(playerPosition);
+    enemyPool->update(playerPosition);
     //collision check
     collisionManager.update();
     player->applyMovement();
-    enemyPool.applyMovement();
+    enemyPool->applyMovement();
     //
     // if(!quadTree.windowBounds.intersects(playerBounds)) {
     //     quadTree.updateBounds(playerPosition); 
@@ -62,21 +64,25 @@ void Game::update() {
     //     quadTree.insertObject(slime->getBounds()); 
     // }
     //
-    grid.bufferRegion(view); 
+    grid.bufferRegion(playerPosition); 
+    grid.activeGrids(player->getBounds()); 
+    grid.updateGrids(); 
+    grid.populateQuadTree(); 
+
     checkWave();
     checkGameEnd();
 }
 
 void Game::checkWave() {
     // std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
-    if (enemyPool.allDead()) {
+    if (enemyPool->allDead()) {
         currentWave++;
-        enemyPool.resetEnemies(collisionManager);
-        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
+        enemyPool->resetEnemies(collisionManager);
+        enemyPool->currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     } else if (waveClock.getElapsedTime() >= waveTimer) {
         currentWave++;
-        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
+        enemyPool->currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     }
 }
@@ -101,8 +107,8 @@ void Game::render() {
     window->setView(view);
     window->clear();
     //entities
-    objectPool.render(*window);//objects
-    enemyPool.render(*window);//enemies
+    objectPool->render(*window);//objects
+    enemyPool->render(*window);//enemies
     player->render(*window);//player
     
     

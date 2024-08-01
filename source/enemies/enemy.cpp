@@ -63,22 +63,22 @@ void Enemy::setInitialPosition(const sf::View& view) {
     std::pair<int, int> rangeX, rangeY;
     switch (distribute(gen)) {
         case 1: //top
-            std::cout << "1\n";
+            //std::cout << "1\n";
             rangeX = {static_cast<int>(viewBounds.left), static_cast<int>(viewBounds.left + viewBounds.width)};
             rangeY = {static_cast<int>(viewBounds.top) - 150, static_cast<int>(viewBounds.top) - 100};
             break;
         case 2: //bottom
-            std::cout << "2\n";
+            //std::cout << "2\n";
             rangeX = {static_cast<int>(viewBounds.left), static_cast<int>(viewBounds.left + viewBounds.width)};
             rangeY = {static_cast<int>(viewBounds.top + viewBounds.height) + 100, static_cast<int>(viewBounds.top + viewBounds.height) + 150};
             break;
         case 3: //left 
-            std::cout << "3\n";
+            //std::cout << "3\n";
             rangeX = {static_cast<int>(viewBounds.left) - 150*(1.71), static_cast<int>(viewBounds.left) - 100*(1.71)};
             rangeY = {static_cast<int>(viewBounds.top), static_cast<int>(viewBounds.top + viewBounds.height)};
             break;
         case 4: //right
-            std::cout << "4\n";
+            //std::cout << "4\n";
             rangeX = {static_cast<int>(viewBounds.left + viewBounds.width) + 100*(1.71), static_cast<int>(viewBounds.left + viewBounds.width) + 150*(1.71)};
             rangeY = {static_cast<int>(viewBounds.top), static_cast<int>(viewBounds.top + viewBounds.height)};
             break;

@@ -18,17 +18,18 @@ private:
     sf::Event event;
     //collision
     CollisionManager collisionManager;
-    QuadTree quadTree;
-    Grid grid; 
+    GridSystem grid; 
     //PLAYER
     std::shared_ptr<Player> player;
     //ENEMY
-    EnemyPool enemyPool; 
+    //EnemyPool enemyPool; 
+    std::shared_ptr<EnemyPool> enemyPool;
+    std::shared_ptr<ObjectPool> objectPool;
     size_t currentWave;
     sf::Clock waveClock;
     sf::Time waveTimer;
     //OBJECTS
-    ObjectPool objectPool;
+    //ObjectPool objectPool;
     //functions
     void currentWindow();
     void handleEvents();

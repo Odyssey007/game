@@ -1,4 +1,5 @@
 #pragma once
+#include "../header/pool.h"
 #include "../header/utility.h"
 #include "../header/enemies/slime.h"
 #include "../header/player/player.h"
@@ -7,49 +8,66 @@
 class QuadTree {
 private: 
     sf::FloatRect bounds; 
-    unsigned int rootCapacity; 
+    unsigned int maxObjects;  
+    int maxLevels; 
     int level; 
-    bool split; 
-    std::vector <sf::FloatRect> objects; 
-    std::unique_ptr <QuadTree> children[4]; 
-    // std::__shared_ptr<Slime> slimes; 
-    // std::__shared_ptr<Player> player; 
-    // std::__shared_ptr<Object> obstacles; 
+    std::unique_ptr<QuadTree> node[4]; 
     void splitRoot(); 
-public:
-    sf::FloatRect windowBounds; 
-
+public: 
+    std::vector<sf::FloatRect> objects; 
     //constructor
     //QuadTree() = default; 
-    QuadTree(sf::FloatRect bounds,unsigned int rootCapacity);
+    QuadTree(sf::FloatRect bounds, int level);
+    int getPrimaryNode(const sf::FloatRect& rect) const;
     void insertObject(sf::FloatRect object); 
-    //std::vector <sf::FloatRect> query(sf::FloatRect range);
-    void draw(sf::RenderWindow& window); 
-    void updateBounds(sf::Vector2f center);
+    bool intersects(const sf::FloatRect& other) const;
     void clear(); 
+    void draw(sf::RenderWindow& window);
 };
 
-class Grid {
-private: 
-    sf::FloatRect gridBounds; 
-    sf::FloatRect bufferZone; 
-    sf::FloatRect visibleGrid; 
-    std::vector <sf::FloatRect> entities;
-    std::unordered_map<std::string, std::vector<sf::FloatRect>::iterator> hashEntities; 
 
-    std::deque<sf::FloatRect> totalGrids;  
-    std::unordered_map<int, std::deque<sf::FloatRect>::iterator> hashGrid; 
-    std::vector<sf::FloatRect> cells; 
-    float cellWidth; 
-    float cellHeight;  
+struct Grid {
+    sf::FloatRect bounds;
+    std::vector<sf::FloatRect> cells;
 
-public:
-    Grid(); 
-    Grid(sf::FloatRect bounds); 
-
-    //void gridExpansion();
-    void makeCell(sf::FloatRect grid); 
-    void bufferRegion(sf::View visible);
-    void insertObject(sf::FloatRect objects);
-    void draw(sf::RenderWindow &window); 
+    void setBounds(const sf::FloatRect& newBounds);
+    void makeCells();
 }; 
+
+
+class GridSystem {
+private:
+    sf::FloatRect gridBounds;
+    sf::FloatRect bufferZone;
+    sf::FloatRect visibleGrid;
+
+    std::vector<sf::FloatRect> entities;
+    std::unordered_map<std::string, std::vector<sf::FloatRect>::iterator> hashEntities;
+
+    std::vector<QuadTree> activeCells;
+    std::vector<float> bufferDistFromGrid;
+    std::vector<Grid> totalGrids;
+    std::vector<int> gridNum;
+
+    float cellWidth;
+    float cellHeight;
+    Grid newGrid;
+    static const sf::Vector2f offsets[9];
+
+    std::shared_ptr<EnemyPool> enemyPool;
+    std::shared_ptr<ObjectPool> objectPool;  
+    std::shared_ptr<Player> player;  
+public:
+    GridSystem();
+    GridSystem(sf::FloatRect bounds);
+ 
+    void createGrids(); 
+    void bufferRegion(sf::Vector2f playerPosition);
+    std::vector<int> activeGrids(sf::FloatRect player);
+    std::vector<sf::FloatRect> getCellsInGrid(int gridIndex); 
+    void findActiveCells(); 
+    void updateGrids(); 
+    void populateQuadTree();
+    void getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<ObjectPool> b, std::shared_ptr<Player> c);
+    void draw(sf::RenderWindow &window);
+};
