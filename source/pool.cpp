@@ -19,7 +19,7 @@ void EnemyPool::currentEnemies(size_t numEnemies, const sf::View& view, Collisio
         pool.pop_back();
         enemy->setInitialPosition(view);
         activeEnemies.push_back(enemy);
-        manager.addEntity(enemy);
+        // manager.addEntity(enemy);
     }
 }
 
@@ -56,7 +56,7 @@ void EnemyPool::render(sf::RenderWindow& window) const {
 
 void EnemyPool::resetEnemies(CollisionManager& manager) {
     for (auto& enemy : activeEnemies) {
-        manager.removeEntity(enemy);
+        // manager.removeEntity(enemy);
         pool.push_back(enemy);
     }
     activeEnemies.clear();
@@ -78,9 +78,9 @@ void ObjectPool::currentObjects(size_t numObjects, const sf::View& view, Collisi
     for (size_t i = 0; i < currentNumObjects && !pool.empty(); ++i) {
         std::shared_ptr<Object> object = pool.back();
         pool.pop_back();
-        object->initialPosition(view);
+        object->setInitialPosition(view);
         activeObjects.push_back(object);
-        manager.addObject(object);
+        // manager.addObject(object);
     }
 }
 
@@ -90,7 +90,7 @@ void ObjectPool::update() {
 
 void ObjectPool::resetObjects(CollisionManager& manager) {
     for (auto& object : activeObjects) {
-        manager.removeObject(object);
+        // manager.removeObject(object);
         pool.push_back(object);
     }
     activeObjects.clear();

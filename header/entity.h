@@ -8,8 +8,6 @@ enum CollisionType { AABB, CIRCLE };
 class Entity {
 protected:
 public:
-    bool isStuck = false;
-
     Entity() = default;
     ~Entity() = default;
     EntityType entityType;

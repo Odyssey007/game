@@ -46,4 +46,9 @@ public:
     //ENTITY functions 
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& entity) override;
+
+
+
+    std::vector<std::shared_ptr<Entity>> neighbors;
+    std::vector<std::shared_ptr<Entity>> objectNeighbors;
 };

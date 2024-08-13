@@ -62,3 +62,8 @@ float rotationAngle(float centerX, float centerY, float mouseX, float mouseY) {
 float radianToDegrees(float radians) {
     return radians * 180 / M_PI; 
 }
+
+bool containsWithTolerance(const sf::FloatRect& bounds, float x, float y, float tolerance) {
+    return (x >= bounds.left - tolerance && x <= bounds.left + bounds.width + tolerance &&
+            y >= bounds.top - tolerance && y <= bounds.top + bounds.height + tolerance);
+}

@@ -1,34 +1,35 @@
 #include "../header/collisionManager.h"
 
 //adds entity into the lil vector
-void CollisionManager::addEntity(std::shared_ptr<Entity> entity) {
-    entities.push_back(std::move(entity));
-}
+// void CollisionManager::addEntity(std::shared_ptr<Entity> entity) {
+//     entities.push_back(std::move(entity));
+// }
 
-void CollisionManager::addObject(std::shared_ptr<Object> object) {
-    objects.push_back(std::move(object));
-}
+// void CollisionManager::addObject(std::shared_ptr<Object> object) {
+//     objects.push_back(std::move(object));
+// }
 
-void CollisionManager::removeEntity(const std::shared_ptr<Entity>& entity) {
-    entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
-}
+// void CollisionManager::removeEntity(const std::shared_ptr<Entity>& entity) {
+//     entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
+// }
 
-void CollisionManager::removeObject(const std::shared_ptr<Object>& object) {
-    objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
-}
+// void CollisionManager::removeObject(const std::shared_ptr<Object>& object) {
+//     objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
+// }
 
 //!currently.brute forces through all entities spawned for collision check 
-void CollisionManager::update() {
+void CollisionManager::update(const std::vector<std::shared_ptr<Entity>> entities) {
     for (size_t i = 0; i < entities.size(); i++) {
         //entities-objects collisions
-        for (size_t j = 0; j < objects.size(); j++) {
-            handleObjectCollision(*entities[i], *objects[j]);
-        }
+        // for (size_t j = 0; j < objects.size(); j++) {
+        //     
+        // }
         //entities-entities collisions
         for (size_t j = i+1; j < entities.size(); j++) {
-            handleEntityCollision(*entities[i], *entities[j]);
-            if (entities[i]->entityType == PLAYER) {
-                
+            if (entities[j]->entityType == 2) {
+                handleObjectCollision(*entities[i], *entities[j]);
+            } else {
+                handleEntityCollision(*entities[i], *entities[j]); 
             }
         }
     }
@@ -56,6 +57,9 @@ void CollisionManager::handleEntityCollision(Entity& entity1, Entity& entity2) {
     }
 }
 
-void CollisionManager::handleObjectCollision(Entity& entity, Object& object) {
-    object.handleCollision(entity);
+void CollisionManager::handleObjectCollision(Entity& entity1, Entity& entity2) {
+    if (entity1.entityType == 2) {
+        entity1.handleCollision(entity2);
+    }
+    entity2.handleCollision(entity1);
 }

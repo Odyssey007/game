@@ -2,7 +2,8 @@
 
 Object::Object() {
     //preliminaries
-    //entityType = OBSTACLE; collisionType = AABB;
+    //collisionType = AABB;
+    entityType = OBSTACLE;
     //?temporary => set up texture
     obstacle.setFillColor(sf::Color::Yellow);
     obstacle.setSize(sf::Vector2f(75.0f, 100.0f));
@@ -14,12 +15,12 @@ Object::Object() {
     // initialPosition(sf::Vector2u(0, 0));
 }
 
-void Object::render(sf::RenderWindow& window) {
+void Object::render(sf::RenderWindow& window) const {
     window.draw(obstacle);
     //window.draw(hitBox.body);
 }
 
-void Object::initialPosition(const sf::View& view) {
+void Object::setInitialPosition(const sf::View& view) {
     sf::FloatRect viewBounds(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     std::pair<int, int> rangeX, rangeY;
 
@@ -96,4 +97,36 @@ void Object::resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect&
         nextCenter += correction;
         velocity = nextCenter - currentCenter;    
     }
+}
+
+sf::FloatRect Object::getBounds() const {
+    return obstacle.getGlobalBounds();
+}
+
+sf::Vector2f Object::getPosition() const {
+    return hitBox.body.getPosition();
+}
+
+
+//cracker
+
+bool Object::isAlive() const {
+    return true;
+}
+
+int Object::getState() const {
+    return -1;
+}
+
+const sf::Vector2f& Object::getVelocity() const {
+    static const sf::Vector2f dummyVelocity(0.0f, 0.0f);
+    return dummyVelocity;
+}
+
+void Object::setVelocity(const sf::Vector2f& velocity) {
+    return;
+}
+
+void Object::applyMovement() {
+    return;
 }

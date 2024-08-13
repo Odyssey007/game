@@ -6,7 +6,7 @@
 #include "../header/enemies/slime.h"
 #include "../header/obstacles/object.h"
 #include "../header/player/abilities/ability.h"
-#include "../header/quadtree.h"
+#include "../header/gridSystem.h"
 #include "../header/pool.h"
 
 #include "../header/menu.h"
@@ -22,16 +22,18 @@ private:
     sf::Event event;
     //collision
     CollisionManager collisionManager;
-    QuadTree quadTree;
+    GridSystem grid; 
     //PLAYER
     std::shared_ptr<Player> player;
     //ENEMY
-    EnemyPool enemyPool; 
+    //EnemyPool enemyPool; 
+    std::shared_ptr<EnemyPool> enemyPool;
+    std::shared_ptr<ObjectPool> objectPool;
     size_t currentWave;
     sf::Clock waveClock;
     sf::Time waveTimer;
     //OBJECTS
-    ObjectPool objectPool;
+    //ObjectPool objectPool;
     //functions
     void currentWindow();
     void handleEvents();
@@ -57,4 +59,8 @@ public:
 
     sf::Clock fireCooldown;
     BlastPool blastPool;
+
+
+    bool once = true;
+    std::vector<std::shared_ptr<Entity>> neighbors;
 };

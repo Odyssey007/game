@@ -50,7 +50,6 @@ void Enemy::meleeMovement(const sf::Vector2f& target) {
     
     //move
     moveDistance = bestDirection*static_cast<float>(movementSpeed)*DeltaTime::getInstance()->getDeltaTime();
-    //sprite.move(moveDistance);
 }
 
 //ENTITY FUNCTIONS

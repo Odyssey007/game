@@ -6,7 +6,7 @@
 
 //obstacleType: 0 - non-dmg | 1 - dmg
 
-class Object {
+class Object : public Entity {
 private:
     //texture
     sf::Texture texture;
@@ -23,8 +23,19 @@ public:
 
     Object();
     //functions
-    void initialPosition(const sf::View& view);
-    void render(sf::RenderWindow& window);
+
     //sf::FloatRect getGlobalBounds();
-    void handleCollision(Entity& entity);
+    //
+    virtual bool isAlive() const override; //?idk
+    virtual int getState() const override; //?might need
+    virtual sf::FloatRect getBounds() const override;
+    virtual sf::Vector2f getPosition() const override;
+    virtual const sf::Vector2f& getVelocity() const override; //!nope
+    //
+    virtual void setVelocity(const sf::Vector2f& velocity) override; //!nope
+    virtual void setInitialPosition(const sf::View& view) override;
+    //
+    virtual void applyMovement() override; //!nope
+    virtual void handleCollision(Entity& entity) override;
+    virtual void render(sf::RenderWindow& window) const override;
 };

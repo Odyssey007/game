@@ -1,6 +1,7 @@
 #pragma once
 #include "../header/utility.h"
 #include "../header/enemies/slime.h"
+#include "../header/obstacles/object.h"
 #include "../header/collisionManager.h"
 
 class EnemyPool {
@@ -10,6 +11,7 @@ private:
     std::vector<std::shared_ptr<Enemy>> pool;
 public:
     std::vector<std::shared_ptr<Enemy>> activeEnemies;
+    EnemyPool() = default; 
     EnemyPool(EnemyType type, size_t totalEnemies); 
     void currentEnemies(size_t numEnemies, const sf::View& view, CollisionManager& manager);
     void update(const sf::Vector2f& target);
@@ -24,8 +26,8 @@ private:
     size_t totalObjects; 
     size_t currentNumObjects; 
     std::vector<std::shared_ptr<Object>> pool;
-    std::vector<std::shared_ptr<Object>> activeObjects;
 public:
+    std::vector<std::shared_ptr<Object>> activeObjects;
     ObjectPool(size_t totalObjects); 
     void currentObjects(size_t numObjects, const sf::View& view, CollisionManager& manager);
     void update();

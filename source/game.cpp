@@ -4,21 +4,26 @@
 Game::Game() : 
     //window setup
     window(nullptr), resolution(sf::Vector2u(0, 0)),
-    quadTree(sf::FloatRect(0, 0, 1920, 1080), 7),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(EnemyType::SLIME, 100), currentWave(1), waveTimer(sf::seconds(455)),
-    objectPool(2), blastPool(100)
+    enemyPool(std::make_shared<EnemyPool>(EnemyType::SLIME, 15)),
+    objectPool(std::make_shared<ObjectPool>(2)),
+    currentWave(7), waveTimer(sf::seconds(100)),
+    blastPool(100)
+    // enemyPool(EnemyType::SLIME, 100)
 {
     //preliminaries
     currentWindow();
     //entities
-    player->setInitialPosition(view); //player
-    collisionManager.addEntity(player); 
-    enemyPool.currentEnemies(currentWave, view, collisionManager);
-    objectPool.currentObjects(2, view, collisionManager);
-
     gameState = GAME;
+    player->setInitialPosition(view); //player
+    // collisionManager.addEntity(player); 
+    enemyPool->currentEnemies(currentWave, view, collisionManager);
+    objectPool->currentObjects(2, view, collisionManager);
+    //std::cout << player->getPosition().x <<", " <<player->getPosition().y << std::endl; 
+    //grid initialization
+    grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
+    grid.getInstances(enemyPool, objectPool, player); 
 }
 
 //sets up the window
@@ -57,21 +62,35 @@ void Game::update() {
     view.setCenter(playerBounds.left + playerBounds.width/2.0f, 
                 playerBounds.top + playerBounds.height/2.0f);
         
+    
+    grid.getNeighbors();
+
     //update entities
     player->update(mousePosition);
-    enemyPool.update(playerPosition);
+    enemyPool->update(playerPosition);
 
+    
+
+
+    grid.bufferRegion(playerPosition); 
+    grid.activeGrids(player->getBounds()); 
+    grid.updateGrids(); 
+    grid.populateQuadTree(); 
+    
+
+
+    // collisionManager.update(neighbors);
+
+    //collision check
+    // player->applyMovement();
+    // enemyPool->applyMovement();
     if (fireCooldown.getElapsedTime().asSeconds() >= 0.15) {
         blastPool.currentBlasts(mousePosition, playerPosition);
         fireCooldown.restart();
     }
     blastPool.resetBlasts(screenPosition);
 
-    //collision check
-    collisionManager.update();
-    player->applyMovement();
-    enemyPool.applyMovement();
-    //end game shi
+ 
     checkWave();
     checkGameEnd();
 }
@@ -86,34 +105,17 @@ void Game::handleEvents() {
     }
 }
 
-void Game::render() {
-    if (gameState == MENU) {
-        menu.render(*window);
-    } else {
-        window->setView(view);
-        window->clear();
-        //entities
-        objectPool.render(*window);//objects
-        enemyPool.render(*window);//enemies
-        player->render(*window);//player
-        
-        //quadTree.draw(*window);
-
-        blastPool.render(*window);
-    }
-    window->display();
-}
 
 void Game::checkWave() {
     // std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
-    if (enemyPool.allDead()) {
+    if (enemyPool->allDead()) {
         currentWave++;
-        enemyPool.resetEnemies(collisionManager);
-        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
+        enemyPool->resetEnemies(collisionManager);
+        enemyPool->currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     } else if (waveClock.getElapsedTime() >= waveTimer) {
         currentWave++;
-        enemyPool.currentEnemies(currentWave*2, view, collisionManager);
+        enemyPool->currentEnemies(currentWave*2, view, collisionManager);
         waveClock.restart();
     }
 }
@@ -123,4 +125,24 @@ void Game::checkGameEnd() {
     // if (player->getHealth() == 0) {
     //     throw std::runtime_error("Game Over\n");
     // }
+}
+
+void Game::render() {
+    if (gameState == MENU) {
+        menu.render(*window);
+    } else {
+        window->setView(view);
+        window->clear();
+        //entities
+        objectPool->render(*window);//objects
+        enemyPool->render(*window);//enemies
+        player->render(*window);//player
+        
+        //quadTree.draw(*window);
+
+        blastPool.render(*window);
+        
+        grid.draw(*window); 
+    }
+    window->display();
 }
