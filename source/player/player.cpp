@@ -4,7 +4,7 @@ Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
-    health(100.0f), battleSpeed(600.0f), kingdomSpeed(300.0f), alive(true),
+    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f), alive(true),
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement

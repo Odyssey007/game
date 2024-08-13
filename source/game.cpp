@@ -8,7 +8,7 @@ Game::Game() :
     player(std::make_shared<Player>()), 
     enemyPool(std::make_shared<EnemyPool>(EnemyType::SLIME, 100)),
     objectPool(std::make_shared<ObjectPool>(2)),
-    currentWave(2), waveTimer(sf::seconds(1000))
+    currentWave(4), waveTimer(sf::seconds(10))
     // enemyPool(EnemyType::SLIME, 100)
 {
     //preliminaries
@@ -67,7 +67,9 @@ void Game::update() {
     grid.bufferRegion(playerPosition); 
     grid.activeGrids(player->getBounds()); 
     grid.updateGrids(); 
-    grid.populateQuadTree(); 
+    grid.populateQuadTree(playerPosition); 
+    grid.getNeighbors(); 
+    std::cout << std::endl;
 
     checkWave();
     checkGameEnd();

@@ -1,28 +1,9 @@
 #include "../header/quadtree.h"
 
-bool containsWithTolerance(const sf::FloatRect& bounds, float x, float y, float tolerance = 0.0001f) {
-    return (x >= bounds.left - tolerance && x <= bounds.left + bounds.width + tolerance &&
-            y >= bounds.top - tolerance && y <= bounds.top + bounds.height + tolerance);
-}
-
-
 //Methods for QuadTree
 QuadTree::QuadTree(sf::FloatRect bounds, int level)
-    : level(level), maxLevels(7), bounds(bounds), maxObjects(3)
+    : level(level), maxLevels(7), bounds(bounds), maxObjects(7)
 {}
-
-int QuadTree::getPrimaryNode(const sf::FloatRect& rect) const {
-    float midpointX = rect.left + rect.width / 2;
-    float midpointY = rect.top + rect.height / 2;
-
-    for (int i = 0; i < 4; ++i) {
-        if (containsWithTolerance(node[i]->bounds, midpointX, midpointY)) {
-            return i;
-        }
-    }
-
-    return -1; // If no child node contains the midpoint, return -1
-}
 
 void QuadTree::splitRoot() {
     float x = bounds.left;
@@ -36,46 +17,54 @@ void QuadTree::splitRoot() {
     node[3] = std::make_unique<QuadTree>(sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight), level + 1);
 
     for (const auto& object : objects) {
-        int primaryNodeIndex = getPrimaryNode(object);
-        if (primaryNodeIndex != -1) {
-            node[primaryNodeIndex]->insertObject(object);
+        for (int i = 0; i < 4; i++) {
+            node[i]->insertObject(object);
         }
     }
-    objects.clear(); 
+    objects.clear();
 }
 
-void QuadTree::insertObject(sf::FloatRect object) {
+void QuadTree::insertObject(const sf::FloatRect& object) {
     if (!bounds.intersects(object)) {
         return;
     }
 
-    if (node[0]) {
-        int primaryNodeIndex = getPrimaryNode(object);
-        if (primaryNodeIndex != -1) {
-            node[primaryNodeIndex]->insertObject(object);
-            return;
-        }
+    if (!node[0] && (objects.size() >= maxObjects && level < maxLevels)) {
+        splitRoot();
     }
 
-    objects.push_back(object);
-
-    if (objects.size() > maxObjects && level < maxLevels) {
-        if (!node[0]) {
-            splitRoot();
+    if (node[0]) {
+        bool inserted = false;
+        for (int i = 0; i < 4; i++) {
+            if (node[i]->bounds.intersects(object)) {
+                node[i]->insertObject(object);
+                inserted = true;
+            }
         }
+        // Only add to current node if it doesn't fit cleanly into any child
+        if (!inserted) {
+            objects.push_back(object);
+        }
+    } else {
+        objects.push_back(object);
+    }
+}
 
-        auto it = objects.begin();
-        while (it != objects.end()) {
-            int primaryNodeIndex = getPrimaryNode(*it);
-            if (primaryNodeIndex != -1) {
-                node[primaryNodeIndex]->insertObject(*it);
-                it = objects.erase(it);
-            } else {
-                ++it;
+void QuadTree::getNodeElements(std::vector<std::vector<sf::FloatRect>>& elements) {
+    if(!objects.empty()) {
+        elements.push_back(objects); 
+    }
+    
+    if(node[0]) {
+        for (int i = 0; i < 4; i++) {
+            if (node[i]) {
+                node[i]->getNodeElements(elements);
             }
         }
     }
 }
+
+
 
 bool QuadTree::intersects(const sf::FloatRect& other) const {
         return bounds.intersects(other);
@@ -217,6 +206,7 @@ void GridSystem::findActiveCells() {
             for (const auto& cell : tempCells) {
                 if (cell.intersects(bufferZone)) {
                     activeCells.emplace_back(cell, 0);
+                    //std::cout << "Active cells: " << cell.left << ", " << cell.top << ", " << cell.width << ", " << cell.height << std::endl;
                 }
             }
         }
@@ -252,37 +242,31 @@ void GridSystem::getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<Obje
     player = c; 
 }
 
-bool GridSystem::entityCell(sf::FloatRect cell, sf::FloatRect entity) {
-    float midpointX = entity.left + entity.width / 2;
-    float midpointY = entity.top + entity.height / 2;
-
-    if(containsWithTolerance(cell, midpointX, midpointY)) {
-        return true; 
-    } else {
-        return false; 
-    }
-}
-
-void GridSystem::populateQuadTree() {
+void GridSystem::populateQuadTree(sf::Vector2f position) {
     for (QuadTree& quadTree : activeCells) {
         quadTree.clear(); 
         if(quadTree.intersects(player->getBounds())) {
-            if(entityCell(quadTree.getBounds(), player->getBounds())) {
-                quadTree.insertObject(player->getBounds()); 
-            }
+            quadTree.insertObject(player->getBounds()); 
         }
         for (const auto& enemy : enemyPool->activeEnemies) {
             if(quadTree.intersects(enemy->getBounds())) {
-                if(entityCell(quadTree.getBounds(), player->getBounds())){
-                    quadTree.insertObject(enemy->getBounds()); 
-                }
+                quadTree.insertObject(enemy->getBounds()); 
             }
         }
         for (const auto& objects : objectPool->activeObjects) {
-            if(quadTree.intersects(objects->getBounds())) {
-                quadTree.insertObject(objects->getBounds()); 
-            }
+            quadTree.insertObject(objects->getBounds()); 
         }
+    }
+}
+
+void GridSystem::getNeighbors() {
+    for (QuadTree& quadTree : activeCells) {
+        quadTree.getNodeElements(cellObjects); 
+        std::cout << "size: " << cellObjects.size() << std::endl; 
+        // for(unsigned int i = 0; i < cellObjects.size(); i++){
+        //     std::cout << "object " << i << ": " << cellObjects[i].size() <<std::endl; 
+        // }
+        cellObjects.clear();  
     }
 }
 

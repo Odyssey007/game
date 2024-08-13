@@ -18,6 +18,7 @@ private:
     void splitRoot(); 
     int getPrimaryNode(const sf::FloatRect& rect) const;
 public: 
+
     //constructor
     QuadTree(sf::FloatRect bounds, int level);
 
@@ -25,8 +26,9 @@ public:
     void clear(); 
     sf::FloatRect getBounds() const;
     void draw(sf::RenderWindow& window);
-    void insertObject(sf::FloatRect object); 
+    void insertObject(const sf::FloatRect& object); 
     bool intersects(const sf::FloatRect& other) const;
+    void getNodeElements(std::vector<std::vector<sf::FloatRect>>& elements); 
 };
 
 
@@ -58,18 +60,20 @@ private:
     std::shared_ptr<Player> player;  
     std::shared_ptr<EnemyPool> enemyPool;
     std::shared_ptr<ObjectPool> objectPool;  
-public:
+public: 
+    std::vector<std::vector<sf::FloatRect>> cellObjects;
+
     GridSystem();
     GridSystem(sf::FloatRect bounds);
  
     void createGrids(); 
     void updateGrids(); 
     void findActiveCells(); 
-    void populateQuadTree();
+    void getNeighbors(); 
     void draw(sf::RenderWindow &window);
+    void populateQuadTree(sf::Vector2f position);
     void bufferRegion(sf::Vector2f playerPosition);
     std::vector<int> activeGrids(sf::FloatRect player);
     std::vector<sf::FloatRect> getCellsInGrid(int gridIndex); 
-    bool entityCell(sf::FloatRect cell, sf::FloatRect entity);
     void getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<ObjectPool> b, std::shared_ptr<Player> c);
 };
