@@ -80,10 +80,15 @@
         "__tree": "cpp",
         "set": "cpp",
         "shared_mutex": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "unordered_set": "cpp",
+        "__functional_base": "cpp",
+        "__locale": "cpp"
     },
     "cSpell.words": [
         "AABB",
-        "Debuffs"
+        "BASICSLASH",
+        "Debuffs",
+        "Fullscreen"
     ]
 }

@@ -1,7 +1,9 @@
-#include "../header/game.h"
+#include "../header/battle/game.h"
+#include "../header/game/window.h"
 
 int main() {
     Game game;
+    //Screen game; 
     while(game.winRunning()) {
         DeltaTime::getInstance()->restart();
         game.update(); //update frame
