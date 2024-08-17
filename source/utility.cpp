@@ -23,7 +23,7 @@ float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {
 }
 
 //creates a box around the furthest pixels in x && y directions
-sf::IntRect calcImageBounds(const sf::Image& image) {
+sf::FloatRect calcImageBounds(const sf::Image& image) {
     size_t left = image.getSize().x, right = 0;
     size_t top = image.getSize().y, bottom = 0;
 
@@ -38,7 +38,7 @@ sf::IntRect calcImageBounds(const sf::Image& image) {
         }
     }
 
-    return sf::IntRect(left, top, right-left, bottom-top);
+    return sf::FloatRect(left, top, right-left, bottom-top);
 }
 
 //returns an signed int between range

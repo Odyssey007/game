@@ -2,7 +2,7 @@
 #include "../header/utility.h"
 #include "../header/player/abilities/ability.h"
 
-class Slash : public Abilities {
+class Slash : public Ability {
 private: 
     SlashShape hitBoxSlash;
 

@@ -20,7 +20,7 @@ private:
     float battleSpeed;
     const float kingdomSpeed;
     bool alive;
-    std::vector<std::shared_ptr<Abilities>> abilities;
+    std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
     BoxCollision hitBox;
     sf::FloatRect bounds;
@@ -45,13 +45,12 @@ public:
     
     //ENTITY fetchers
     virtual bool isAlive() const override;
-    virtual int getState() const override;
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
-    virtual void setInitialPosition(const sf::View& view) override;
+    virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
     //ENTITY functions
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
@@ -67,6 +66,4 @@ public:
 
     PlayerAbilityType ability;
     void movement();
-    void acquireAbility();
-    void activateAbility(const sf::Vector2f& mousePosition);
 };

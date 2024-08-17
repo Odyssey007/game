@@ -48,7 +48,7 @@ public:
 
     void checkWave();
 
-    sf::FloatRect screenPosition;
+    sf::FloatRect screenBounds;
     sf::Vector2f mousePosition;
     sf::Vector2f playerPosition;
     sf::FloatRect playerBounds;
@@ -59,6 +59,7 @@ public:
 
     sf::Clock fireCooldown;
     BlastPool blastPool;
+    Blast blast;
 
 
     bool once = true;

@@ -6,24 +6,22 @@ Game::Game() :
     window(nullptr), resolution(sf::Vector2u(0, 0)),
     //entities
     player(std::make_shared<Player>()), 
-    enemyPool(std::make_shared<EnemyPool>(EnemyType::SLIME, 15)),
+    enemyPool(std::make_shared<EnemyPool>(100)),
     objectPool(std::make_shared<ObjectPool>(2)),
-    currentWave(7), waveTimer(sf::seconds(100)),
+    currentWave(0), waveTimer(sf::seconds(50)),
     blastPool(100)
     // enemyPool(EnemyType::SLIME, 100)
 {
     //preliminaries
     currentWindow();
+    grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
     //entities
     gameState = GAME;
-    player->setInitialPosition(view); //player
-    // collisionManager.addEntity(player); 
-    enemyPool->currentEnemies(currentWave, view, collisionManager);
-    objectPool->currentObjects(2, view, collisionManager);
-    //std::cout << player->getPosition().x <<", " <<player->getPosition().y << std::endl; 
-    //grid initialization
-    grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
-    grid.getInstances(enemyPool, objectPool, player); 
+    player->setInitialPosition(screenBounds); //player
+    grid.addEntity(player);
+    enemyPool->currentEnemies(currentWave, screenBounds, grid);
+    objectPool->currentObjects(2, screenBounds, grid);
+    blast = Blast();
 }
 
 //sets up the window
@@ -34,6 +32,7 @@ void Game::currentWindow() {
     view = window->getDefaultView();
     resolution = window->getSize();
     window->setFramerateLimit(120);
+    screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
 }
 
 bool Game::winRunning() const {
@@ -41,11 +40,12 @@ bool Game::winRunning() const {
 }
 
 void Game::update() {
+    blast.update({0,0});
     if (gameState == EXIT) {
         window->close();
         return;
     }
-    screenPosition = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
+    screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     playerBounds = player->getBounds();
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
@@ -61,15 +61,14 @@ void Game::update() {
     //centering camera to player
     view.setCenter(playerBounds.left + playerBounds.width/2.0f, 
                 playerBounds.top + playerBounds.height/2.0f);
-        
-    
-    grid.getNeighbors();
 
     //update entities
     player->update(mousePosition);
     enemyPool->update(playerPosition);
 
-    
+    grid.checkCollision();
+    player->applyMovement();
+    enemyPool->applyMovement();
 
 
     grid.bufferRegion(playerPosition); 
@@ -88,7 +87,7 @@ void Game::update() {
         blastPool.currentBlasts(mousePosition, playerPosition);
         fireCooldown.restart();
     }
-    blastPool.resetBlasts(screenPosition);
+    blastPool.resetBlasts(screenBounds);
 
  
     checkWave();
@@ -108,16 +107,16 @@ void Game::handleEvents() {
 
 void Game::checkWave() {
     // std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
-    if (enemyPool->allDead()) {
-        currentWave++;
-        enemyPool->resetEnemies(collisionManager);
-        enemyPool->currentEnemies(currentWave*2, view, collisionManager);
-        waveClock.restart();
-    } else if (waveClock.getElapsedTime() >= waveTimer) {
-        currentWave++;
-        enemyPool->currentEnemies(currentWave*2, view, collisionManager);
-        waveClock.restart();
-    }
+    // if (enemyPool->allDead()) {
+    //     currentWave++;
+    //     enemyPool->resetEnemies();
+    //     enemyPool->currentEnemies(currentWave*2, view);
+    //     waveClock.restart();
+    // } else if (waveClock.getElapsedTime() >= waveTimer) {
+    //     currentWave++;
+    //     enemyPool->currentEnemies(currentWave*2, view);
+    //     waveClock.restart();
+    // }
 }
 
 void Game::checkGameEnd() {
@@ -142,7 +141,11 @@ void Game::render() {
 
         blastPool.render(*window);
         
-        grid.draw(*window); 
+        // grid.draw(*window); 
     }
+
+    // blast.render(*window);
+
+
     window->display();
 }

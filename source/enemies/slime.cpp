@@ -10,7 +10,7 @@ Slime::Slime() :
 {
     //preliminaries
     enemyType = SLIME; collisionType = CIRCLE;
-    sprite.setTexture(textures["slime"]);
+    sprite.setTexture(*textures["slime"]);
     //hit box
     hitBox = CircleCollision();
     bounds = sf::FloatRect(45, 70, 59, 49);
@@ -81,12 +81,13 @@ void Slime::leapAttack() {
 
 //static function
 void Slime::playerContact(Player& player, Entity& slime) {
-    size_t ability = slime.getState();
-    if (ability == 1) {
-        player.takeDebuffs(5.0f, 0.0f);
-    } else if (ability == 2) {
-        player.takeDebuffs(10.0f, 50.0f);
-    }
+    player.takeDebuffs(5.0f, 0.0f);
+    // size_t ability = slime.getState();
+    // if (ability == 1) {
+    //     player.takeDebuffs(5.0f, 0.0f);
+    // } else if (ability == 2) {
+    //     player.takeDebuffs(10.0f, 50.0f);
+    // }
 }
 
 //ENTITY FUNCTIONS
@@ -101,5 +102,5 @@ sf::Vector2f Slime::getPosition() const {
 
 void Slime::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    //window.draw(hitBox.body);
+    window.draw(hitBox.body);
 }

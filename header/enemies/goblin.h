@@ -16,4 +16,8 @@ public:
     virtual sf::Vector2f getPosition() const override;
     //ENTITY functions
     virtual void render(sf::RenderWindow& window) const override;
+    virtual void attacks() override;
+
+    bool facingRight;
+    bool isMoving;
 };

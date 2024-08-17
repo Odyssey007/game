@@ -28,6 +28,6 @@ void Dash::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playe
     return;
 }
 
-void Dash::render(sf::RenderWindow& window) const {
-    return;
-}
+// void Dash::render(sf::RenderWindow& window) const {
+//     return;
+// }

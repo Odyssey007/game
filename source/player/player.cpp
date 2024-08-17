@@ -11,17 +11,17 @@ Player::Player() :
     moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
 {
     //preliminaries
-    entityType = PLAYER; collisionType = AABB;
+    entityType = PLAYER; collisionType = BOX;
     texture.loadFromFile("assets/playerSheet.png");
     sprite.setTexture(texture);
-    animation = Animation(&texture, animationSheetDim, frameDuration);
+    animation = Animation(texture, animationSheetDim, frameDuration);
     sprite.setTextureRect(animation.uvRect);
     //hit box and bounds for player sprite
     hitBox.updateSize(bounds);
     //set origin
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
     //abilities
-    abilities.push_back(std::make_shared<Slash>()); 
+    // abilities.push_back(std::make_shared<Slash>()); 
 }
 
 void Player::dash(const sf::Vector2f& mousePosition) {
@@ -96,9 +96,9 @@ void Player::movement() {
     };
     //update the player position if moving
     if (isMoving) {
-        animation.animationUpdate(1, facingRight, sprite, {1.0f, 1.0f});//moving animation
+        animation.update(sprite, 1, facingRight, {1.0f, 1.0f});//moving animation
     } else {
-        animation.animationUpdate(0, facingRight, sprite, {0.93f, 0.93f});//idle animation
+        animation.update(sprite, 0, facingRight, {0.93f, 0.93f});//idle animation
     }
 }
 
@@ -106,11 +106,6 @@ void Player::movement() {
 
 bool Player::isAlive() const {
     return alive;
-}
-
-//is not used
-int Player::getState() const {
-    return 1;
 }
 
 sf::FloatRect Player::getBounds() const {
@@ -129,12 +124,14 @@ void Player::setVelocity(const sf::Vector2f& velocity) {
     moveDistance = velocity;
 }
 
-void Player::setInitialPosition(const sf::View& view) { 
-    sprite.setPosition(view.getSize().x/2, view.getSize().y/2);
-    hitBox.body.setPosition(view.getSize().x/2, view.getSize().y/2);
+void Player::setInitialPosition(const sf::FloatRect& screenBounds) { 
+    sprite.setPosition(screenBounds.width/2, screenBounds.height/2);
+    hitBox.body.setPosition(screenBounds.width/2, screenBounds.height/2);
 }
 
 void Player::handleCollision(Entity& other) {
+    return;
+
     EntityType otherEntity = other.entityType;
     if (otherEntity == ENEMY) {
         handleEnemyCollisions(other);
@@ -145,7 +142,7 @@ void Player::handleCollision(Entity& other) {
 
 void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    window.draw(hitBox.body);
+    // window.draw(hitBox.body);
     for (auto& ability : abilities) {
         ability->render(window);
     }

@@ -2,10 +2,9 @@
 #include "../header/utility.h"
 #include "../header/player/abilities/ability.h"
 
-class Blast : public Abilities {
+class Blast : public Ability {
 private:
-    sf::CircleShape body;
-    //CircleCollision hitbox;
+    CircleCollision hitBox;
 
     float blastSpeed; //how fast it travels
     float reloadSpeed;
@@ -16,11 +15,11 @@ public:
     bool isActive(const sf::FloatRect screenBounds) const;
 
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) override;
-    virtual void render(sf::RenderWindow& window) const override;
     
     
     sf::Vector2f move;
     void update(sf::Vector2f move);
+    virtual void render(sf::RenderWindow& window) const override;
 };
 
 class BlastPool {
@@ -29,6 +28,8 @@ private:
     size_t currentNumBlasts;
     std::vector<std::shared_ptr<Blast>> allBlasts;
     std::vector<std::shared_ptr<Blast>> activeBlasts;
+
+    bool wasMousePressed;
 public:
     BlastPool(size_t totalBlasts);
     void currentBlasts(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);

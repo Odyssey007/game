@@ -110,10 +110,14 @@ void GridSystem::updateGrids() {
     } 
 }
 
-void GridSystem::getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<ObjectPool> b, std::shared_ptr<Player> c) {
-    enemyPool = a; 
-    objectPool = b; 
-    player = c; 
+// void GridSystem::getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<ObjectPool> b, std::shared_ptr<Player> c) {
+//     enemyPool = a; 
+//     objectPool = b; 
+//     player = c; 
+// }
+
+void GridSystem::addEntity(std::shared_ptr<Entity> entity) {
+    entities.push_back(entity);
 }
 
 bool GridSystem::entityCell(sf::FloatRect cell, sf::FloatRect entity) {
@@ -129,75 +133,74 @@ bool GridSystem::entityCell(sf::FloatRect cell, sf::FloatRect entity) {
 
 void GridSystem::populateQuadTree() {
     for (QuadTree& quadTree : activeCells) {
-        quadTree.clear(); 
-        if(quadTree.intersects(player->getBounds())) {
-            // if(entityCell(quadTree.getBounds(), player->getBounds())) {
-            // }
-            quadTree.insertObject(player);
+        quadTree.clear();
+
+        for (const auto& entity : entities) {
+            if (quadTree.intersects(entity->getBounds())) {
+                quadTree.insertObject(entity);
+            }
+        }
+
+
+        // if(quadTree.intersects(player->getBounds())) {
+        //     // if(entityCell(quadTree.getBounds(), player->getBounds())) {
+        //     // }
+        //     quadTree.insertObject(player);
  
-        }
-        for (const auto& enemy : enemyPool->activeEnemies) {
-            if(quadTree.intersects(enemy->getBounds())) {
-                // if(entityCell(quadTree.getBounds(), player->getBounds())){
-                // }
-                quadTree.insertObject(enemy); 
-            }
-        }
-        for (const auto& objects : objectPool->activeObjects) {
-            if(quadTree.intersects(objects->getBounds())) {
-                quadTree.insertObject(objects); 
-            }
-        }
+        // }
+        // for (const auto& enemy : enemyPool->activeEnemies) {
+        //     if(quadTree.intersects(enemy->getBounds())) {
+        //         // if(entityCell(quadTree.getBounds(), player->getBounds())){
+        //         // }
+        //         quadTree.insertObject(enemy); 
+        //     }
+        // }
+        // for (const auto& objects : objectPool->activeObjects) {
+        //     if(quadTree.intersects(objects->getBounds())) {
+        //         quadTree.insertObject(objects); 
+        //     }
+        // }
     }
 }
 
 #include <unordered_set>
 
+void GridSystem::checkCollision() {
+    for (QuadTree& grid : activeCells) {
+        grid.getNodeElements(gridEntities);
+        getNeighbors(); //gets the neighbors within a grid
+        for (const auto& quadEntities : gridEntities) {
+            collisionManager.update(quadEntities);
+        }
+        gridEntities.clear();
+    }
+}
+
 void GridSystem::getNeighbors() {
     std::unordered_set<Entity*> uniqueEntities;
+    std::vector<std::shared_ptr<Entity>> enemyNeighbors;
 
-    for (QuadTree& quadTree : activeCells) {
-        std::vector<std::vector<std::shared_ptr<Entity>>> gridEntities;
-        quadTree.getNodeElements(gridEntities);
-
-        std::vector<std::shared_ptr<Entity>> ENEMIES;
-        std::vector<std::shared_ptr<Entity>> OBSTACLES;
-        for (const auto& quadEntities : gridEntities) {
-            std::vector<std::shared_ptr<Entity>> localNeighbors;
-            for (const auto& entity : quadEntities) {
-                localNeighbors.push_back(entity);
-                if (uniqueEntities.find(entity.get()) == uniqueEntities.end()) {
-                    if (entity->entityType == ENEMY) {
-                        ENEMIES.push_back(entity);
-                    } else if (entity->entityType == OBSTACLE) {
-                        OBSTACLES.push_back(entity);
-                    }
-                    if (entity->entityType != PLAYER) {
-                       uniqueEntities.insert(entity.get());
-                    }
-                }
-            }
-            collisionManager.update(localNeighbors);
-            for (auto& entity : localNeighbors) {
-                if (entity->entityType != PLAYER) {
-                    entity->applyMovement();
-                }
-            }
-        }
-        for (const auto& entity : ENEMIES) {
+    for (const auto& quadEntities : gridEntities) {
+        for (const auto& entity : quadEntities) {
             if (entity->entityType == ENEMY) {
-                Enemy* enemy = static_cast<Enemy*>(entity.get());
-                enemy->neighbors = ENEMIES;
-                enemy->objectNeighbors = OBSTACLES;
+                if (uniqueEntities.insert(entity.get()).second) {
+                    enemyNeighbors.push_back(entity);
+                }
             }
         }
     }
-
-    player->applyMovement();
-
-
+    for (const auto& entity : enemyNeighbors) {
+        Enemy* enemy = dynamic_cast<Enemy*>(entity.get());
+        if (enemy) {
+            enemy->neighbors.clear();
+            for (const auto& neighbor : enemyNeighbors) {
+                if (entity != neighbor) {
+                    enemy->neighbors.push_back(neighbor);
+                }
+            }
+        }
+    }
 }
-
 
 void GridSystem::draw(sf::RenderWindow& window) {
     for (const auto& grid : totalGrids) {

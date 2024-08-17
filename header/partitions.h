@@ -1,5 +1,4 @@
 #pragma once
-#include "../header/pool.h"
 #include "../header/utility.h"
 #include "../header/enemies/slime.h"
 #include "../header/player/player.h"

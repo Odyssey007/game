@@ -2,11 +2,12 @@
 #include "../header/utility.h"
 #include "../header/entity.h"
 #include "../header/animation.h"
+#include "../header/collision.h"
 
 class Enemy : public Entity {
 protected:
     //texture
-    std::unordered_map<std::string, sf::Texture> textures;
+    std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textures;
     sf::Sprite sprite;
     //animation
     Animation animation;
@@ -38,11 +39,10 @@ public:
     virtual void update(const sf::Vector2f& target) = 0;
     //ENTITY fetchers
     virtual bool isAlive() const override;
-    virtual int getState() const override;
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
-    virtual void setInitialPosition(const sf::View& view) override;
+    virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
     //ENTITY functions 
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& entity) override;
@@ -51,4 +51,8 @@ public:
 
     std::vector<std::shared_ptr<Entity>> neighbors;
     std::vector<std::shared_ptr<Entity>> objectNeighbors;
+
+    void boxOverlap(Entity& entity1, Entity& entity2);
+    void circleOverlap(Entity& entity1, Entity& entity2);
+    void boxCircleOverlap(Entity& box, Entity& circle);
 };

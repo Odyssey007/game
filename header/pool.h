@@ -1,8 +1,9 @@
 #pragma once
 #include "../header/utility.h"
 #include "../header/enemies/slime.h"
+#include "../header/enemies/goblin.h"
 #include "../header/obstacles/object.h"
-#include "../header/collisionManager.h"
+#include "../header/gridSystem.h"
 
 class EnemyPool {
 private: 
@@ -12,12 +13,13 @@ private:
 public:
     std::vector<std::shared_ptr<Enemy>> activeEnemies;
     EnemyPool() = default; 
-    EnemyPool(EnemyType type, size_t totalEnemies); 
-    void currentEnemies(size_t numEnemies, const sf::View& view, CollisionManager& manager);
+    EnemyPool(size_t totalEnemies); 
+    EnemyType getEnemyType();
+    void currentEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::Vector2f& target);
     void applyMovement();
     void render(sf::RenderWindow& window) const;
-    void resetEnemies(CollisionManager& manager);
+    void resetEnemies();
     bool allDead() const;
 };
 
@@ -29,8 +31,8 @@ private:
 public:
     std::vector<std::shared_ptr<Object>> activeObjects;
     ObjectPool(size_t totalObjects); 
-    void currentObjects(size_t numObjects, const sf::View& view, CollisionManager& manager);
+    void currentObjects(size_t numObjects, const sf::FloatRect& screenBounds, GridSystem& grid);
     void update();
     void render(sf::RenderWindow& window) const;
-    void resetObjects(CollisionManager& manager);
+    void resetObjects();
 };
