@@ -1,5 +1,5 @@
 #include "../header/battle/game.h"
-// #include "../header/game/window.h"
+#include "../header/game/window.h"
 
 int main() {
     Game game;
