@@ -5,6 +5,7 @@
 #include <memory>
 #include <random>
 #include <deque>
+#include <stack>
 #include <unordered_map>
 #include "../header/deltaTime.h"
 

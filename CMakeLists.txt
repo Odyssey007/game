@@ -7,20 +7,26 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Include directories
 include_directories(
     header
-    header/player
-    header/player/abilities
-    header/enemies
-    header/obstacles
+    header/battle
+    header/battle/player
+    header/battle/player/abilities
+    header/battle/enemies
+    header/battle/obstacles
+    header/game
+    header/kingdom
 )
 
 # Gather all source files
 file(GLOB SOURCES 
     "source/*.cpp"
-    "source/player/*.cpp"
-    "source/player/abilities/*.cpp"
-    "source/enemies/*.cpp"
-    "source/obstacles/*.cpp"
-)
+    "source/battle/*.cpp"
+    "source/battle/player/*.cpp"
+    "source/battle/player/abilities/*.cpp"
+    "source/battle/enemies/*.cpp"
+    "source/battle/obstacles/*.cpp"
+    "source/game/*.cpp"
+    "source/kingdom/*.cpp"
+    )
 
 find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
 
