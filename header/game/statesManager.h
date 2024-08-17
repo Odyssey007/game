@@ -1,4 +1,4 @@
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 #include "../header/game/states.h"
 #include "../header/game/battle.h"
 #include "../header/game/kingdom.h"

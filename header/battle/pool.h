@@ -1,5 +1,5 @@
 #pragma once
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 #include "../header/battle/enemies/slime.h"
 #include "../header/battle/obstacles/object.h"
 #include "../header/battle/collisionManager.h"

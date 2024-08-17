@@ -1,6 +1,6 @@
 #pragma once
 //game engine
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 #include "../header/battle/collisionManager.h"
 #include "../header/battle/player/player.h"
 #include "../header/battle/enemies/slime.h"

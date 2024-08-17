@@ -7,7 +7,7 @@
 #include <deque>
 #include <stack>
 #include <unordered_map>
-#include "../header/battle/deltaTime.h"
+#include "../header/deltaTime.h"
 
 float magnitude(const sf::Vector2f& vector);
 sf::Vector2f normalize(const sf::Vector2f& one);

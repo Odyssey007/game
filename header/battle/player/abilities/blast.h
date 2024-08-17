@@ -1,5 +1,5 @@
 #pragma once
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 #include "../header/battle/player/abilities/ability.h"
 
 class Blast : public Abilities {

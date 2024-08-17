@@ -1,5 +1,5 @@
 #pragma once 
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 #include "../header/battle/player/player.h"
 #include "../header/game/states.h"
 #include "../header/kingdom/dynamicAsset.h"

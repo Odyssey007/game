@@ -1,7 +1,7 @@
 #pragma once
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 #include "../header/battle/entity.h"
-#include "../header/battle/animation.h"
+#include "../header/animation.h"
 #include "../header/battle/enemies/slime.h"
 #include "../header/battle/player/abilities/basicSlash.h"
 #include "../header/battle/player/abilities/dash.h"

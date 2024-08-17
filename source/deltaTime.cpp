@@ -1,4 +1,4 @@
-#include "../header/battle/deltaTime.h"
+#include "../header/deltaTime.h"
 
 DeltaTime* DeltaTime::instance = nullptr;
 

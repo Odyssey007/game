@@ -1,4 +1,4 @@
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 
 class StaticAsset {
 private: 

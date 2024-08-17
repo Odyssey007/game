@@ -1,6 +1,6 @@
 #pragma once
 #include "../header/battle/pool.h"
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 #include "../header/battle/enemies/slime.h"
 #include "../header/battle/player/player.h"
 #include "../header/battle/obstacles/object.h"

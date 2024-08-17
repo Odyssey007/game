@@ -1,4 +1,4 @@
-#include "../header/battle/animation.h"
+#include "../header/animation.h"
 
 Animation::Animation() :
     //animation

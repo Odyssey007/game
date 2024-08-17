@@ -1,4 +1,4 @@
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 
 float magnitude(const sf::Vector2f& vector) {
     return std::sqrt(vector.x*vector.x + vector.y*vector.y);

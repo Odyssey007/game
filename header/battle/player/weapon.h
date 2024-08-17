@@ -1,6 +1,6 @@
 #pragma once
-#include "../header/battle/utility.h"
-#include "../header/battle/animation.h"
+#include "../header/utility.h"
+#include "../header/animation.h"
 
 class Sword {
     private: 

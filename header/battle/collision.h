@@ -1,5 +1,5 @@
 #pragma once
-#include "../header/battle/utility.h"
+#include "../header/utility.h"
 
 class Collision {
 protected:
