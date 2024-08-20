@@ -4,7 +4,7 @@
 #include "../header/battle/collisionManager.h"
 #include "../header/battle/player/player.h"
 #include "../header/battle/enemies/slime.h"
-#include "../header/battle/obstacles/object.h"
+#include "../header/battle/obstacles/pillar.h"
 #include "../header/battle/player/abilities/ability.h"
 #include "../header/battle/gridSystem.h"
 #include "../header/battle/pool.h"
@@ -24,11 +24,11 @@ private:
     CollisionManager collisionManager;
     GridSystem grid; 
     //PLAYER
-    std::shared_ptr<Player> player;
+    std::unique_ptr<Player> player;
     //ENEMY
     //EnemyPool enemyPool; 
-    std::shared_ptr<EnemyPool> enemyPool;
-    std::shared_ptr<ObjectPool> objectPool;
+    std::unique_ptr<EnemyPool> enemyPool;
+    std::unique_ptr<ObstaclePool> obstaclePool;
     size_t currentWave;
     sf::Clock waveClock;
     sf::Time waveTimer;
@@ -59,7 +59,4 @@ public:
 
     sf::Clock fireCooldown;
     BlastPool blastPool;
-
-    bool once = true;
-    std::vector<std::shared_ptr<Entity>> neighbors;
 };

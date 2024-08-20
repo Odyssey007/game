@@ -5,8 +5,8 @@ QuadTree::QuadTree(sf::FloatRect bounds, int level)
     : level(level), maxLevels(7), bounds(bounds), maxObjects(7)
 {}
 
-int QuadTree::getPrimaryNode(const std::shared_ptr<Entity>& entity) const {
-    sf::FloatRect rect = entity->getBounds();
+int QuadTree::getPrimaryNode(const Entity& entity) const {
+    sf::FloatRect rect = entity.getBounds();
     
     float midpointX = rect.left + rect.width / 2;
     float midpointY = rect.top + rect.height / 2;
@@ -39,8 +39,8 @@ void QuadTree::splitRoot() {
     objects.clear();
 }
 
-void QuadTree::insertObject(std::shared_ptr<Entity> entity) {
-    sf::FloatRect object = entity->getBounds();
+void QuadTree::insertObject(Entity& entity) {
+    sf::FloatRect object = entity.getBounds();
     if (!bounds.intersects(object)) {
         return;
     }
@@ -66,7 +66,7 @@ void QuadTree::insertObject(std::shared_ptr<Entity> entity) {
     }
 }
 
-void QuadTree::getNodeElements(std::vector<std::vector<std::shared_ptr<Entity>>>& elements) {
+void QuadTree::getNodeElements(std::vector<std::vector<std::reference_wrapper<Entity>>>& elements) {
     if(!objects.empty()) {
         elements.push_back(objects);
     }

@@ -7,7 +7,7 @@
 class Enemy : public Entity {
 protected:
     //texture
-    std::unordered_map<std::string, std::shared_ptr<sf::Texture>> textures;
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
     sf::Sprite sprite;
     //animation
     Animation animation;
@@ -49,8 +49,8 @@ public:
 
 
 
-    std::vector<std::shared_ptr<Entity>> neighbors;
-    std::vector<std::shared_ptr<Entity>> objectNeighbors;
+    std::vector<Entity*> neighbors;
+    std::vector<Entity*> objectNeighbors;
 
     void boxOverlap(Entity& entity1, Entity& entity2);
     void circleOverlap(Entity& entity1, Entity& entity2);

@@ -77,20 +77,24 @@ void Player::movement() {
     moveDistance = sf::Vector2f(0.0f, 0.0f);
     //Capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
+        direction = UP;
         moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { //down
+        direction = DOWN;
         moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
         isMoving = true;
     } 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { //left
         if (facingRight) facingRight = false;
+        direction = LEFT;
         moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { //right
         if (!facingRight) facingRight = true;
+        direction = RIGHT;
         moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     };
@@ -100,6 +104,10 @@ void Player::movement() {
     } else {
         animation.update(sprite, 0, facingRight, {0.93f, 0.93f});//idle animation
     }
+}
+
+Direction Player::getDirection() const {
+    return direction;
 }
 
 //ENTITY FUNCTIONS

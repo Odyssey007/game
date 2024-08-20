@@ -6,26 +6,34 @@
 
 
 
-class Object : public Entity {
+class Pillar : public Entity {
 private:
     //texture
-    std::vector<std::shared_ptr<sf::Texture>> textures;
+    std::vector<std::unique_ptr<sf::Texture>> textures;
     sf::Sprite sprite;
     //hitbox
     sf::FloatRect bounds;
-    //functions
     sf::FloatRect currentBounds;
+
+    bool alive;
+
+    void selectProperties();
+    int typePicker();
+    float scalePicker();
+    int rotationAngle();
+    void loadTexture(const std::string& filePath);
+
+    int spawn();
+    sf::Clock timer;
+    bool timerRunning = false;
+    int pickSide();
+
     void resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
     void resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
 public:
-    // sf::RectangleShape obstacle; //?temporary
-    void loadTexture(const std::string& filePath);
-
-    Object();
+    Pillar();
     //functions
-
-    //sf::FloatRect getGlobalBounds();
-    //
+    void respawn(const sf::FloatRect& screenBounds);
     virtual bool isAlive() const override; //?idk
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;

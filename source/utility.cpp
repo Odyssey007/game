@@ -67,3 +67,22 @@ bool containsWithTolerance(const sf::FloatRect& bounds, float x, float y, float 
     return (x >= bounds.left - tolerance && x <= bounds.left + bounds.width + tolerance &&
             y >= bounds.top - tolerance && y <= bounds.top + bounds.height + tolerance);
 }
+
+//!not used
+std::string generateID(std::string type) {
+    static unsigned int enemyCounter = 0;
+    static unsigned int obstacleCounter = 0;
+    static unsigned int abilityCounter = 0;
+
+    std::string id;
+    if (type == "enemy") {
+        id = "ENEMY_" + std::to_string(++enemyCounter);
+    } else if (type == "obstacle") {
+        id = "OBSTACLE_" + std::to_string(++obstacleCounter);
+    } else if (type == "ability") {
+        id = "ABILITY_" + std::to_string(++abilityCounter);
+    } else {
+        throw std::runtime_error("id bye bye");
+    }
+    return id;
+}

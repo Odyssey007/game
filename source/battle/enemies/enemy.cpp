@@ -13,12 +13,11 @@ Enemy::Enemy() {
 }
 
 void Enemy::loadTexture(const std::string& name, const std::string& filePath) {
-    auto texture = std::make_shared<sf::Texture>(); 
-    if (texture->loadFromFile(filePath)) {
-        textures[name] = texture;
-    } else {
-        throw std::runtime_error("Failed to load enemy texture");
+    auto texture = std::make_unique<sf::Texture>();
+    if (!texture->loadFromFile(filePath)) {
+        throw std::runtime_error("Failed to load enemy texture: " + filePath);
     }
+    textures.emplace(name, std::move(texture));
 }
 
 //generates all the directions of possible movement
