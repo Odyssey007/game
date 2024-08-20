@@ -22,13 +22,27 @@ public:
     bool allDead() const;
 };
 
+// class ObstaclePool {
+// private: 
+//     std::vector<std::shared_ptr<Pillar>> activeObstacles;
+// public:
+//     ObstaclePool() = delete;
+//     ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds); 
+//     void update(const sf::FloatRect& screenBounds);
+//     void render(sf::RenderWindow& window) const;
+//     void removeObstacles(GridSystem& grid);
+// };
+
 class ObstaclePool {
 private: 
-    std::vector<std::shared_ptr<Pillar>> activeObstacles;
+    size_t totalObjects; 
+    size_t currentNumObjects; 
+    std::vector<std::shared_ptr<Pillar>> pool;
 public:
-    ObstaclePool() = delete;
-    ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds); 
+    std::vector<std::shared_ptr<Pillar>> activeObjects;
+    ObstaclePool(size_t totalObjects); 
+    void currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::FloatRect& screenBounds);
     void render(sf::RenderWindow& window) const;
-    void removeObstacles(GridSystem& grid);
+    void resetObjects();
 };

@@ -77,29 +77,68 @@ void EnemyPool::resetEnemies() {
 
 //----------------
 
-ObstaclePool::ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds) {
-    for (size_t i = 0; i < 4; ++i) {
-        std::shared_ptr<Pillar> pillar = std::make_shared<Pillar>();
-        pillar->setInitialPosition(screenBounds);
-        grid.addEntity(pillar);
-        activeObstacles.emplace_back(std::move(pillar));
+// ObstaclePool::ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds) {
+//     for (size_t i = 0; i < 4; ++i) {
+//         std::shared_ptr<Pillar> pillar = std::make_shared<Pillar>();
+//         pillar->setInitialPosition(screenBounds);
+//         grid.addEntity(pillar);
+//         activeObstacles.emplace_back(std::move(pillar));
+//     }
+// }
+
+// void ObstaclePool::update(const sf::FloatRect& screenBounds) {
+//     for (auto& obstacle : activeObstacles) {
+//         obstacle->respawn(screenBounds);
+//     }
+// }
+
+// void ObstaclePool::removeObstacles(GridSystem& grid) {
+//     //
+// }
+
+// void ObstaclePool::render(sf::RenderWindow& window) const {
+//     for (const auto& obstacle : activeObstacles) {
+//         if (obstacle->isAlive()) {
+//             obstacle->render(window);
+//         }
+//     }
+// }
+
+ObstaclePool::ObstaclePool(size_t totalObjects) :
+    totalObjects(totalObjects), currentNumObjects(0) 
+{
+    for (size_t i = 0; i < totalObjects; ++i) {
+        pool.emplace_back(std::make_shared<Pillar>());
     }
 }
 
+void ObstaclePool::currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid) {
+    activeObjects.clear();
+    for (size_t i = 0; i < totalObjects && !pool.empty(); ++i) {
+        std::shared_ptr<Pillar> object = pool.back();
+        pool.pop_back();
+        object->setInitialPosition(screenBounds);
+        activeObjects.push_back(object);
+        grid.addEntity(object);
+    }
+}
+
+
 void ObstaclePool::update(const sf::FloatRect& screenBounds) {
-    for (auto& obstacle : activeObstacles) {
+    for (auto& obstacle : activeObjects) {
         obstacle->respawn(screenBounds);
     }
 }
 
-void ObstaclePool::removeObstacles(GridSystem& grid) {
-    //
+void ObstaclePool::resetObjects() {
+    for (auto& object : activeObjects) {
+        pool.push_back(object);
+    }
+    activeObjects.clear();
 }
 
 void ObstaclePool::render(sf::RenderWindow& window) const {
-    for (const auto& obstacle : activeObstacles) {
-        if (obstacle->isAlive()) {
-            obstacle->render(window);
-        }
+    for (const auto& object : activeObjects) {
+        object->render(window);
     }
 }
