@@ -2,7 +2,7 @@
 #include "../header/utility.h"
 #include "../header/battle/enemies/slime.h"
 #include "../header/battle/enemies/goblin.h"
-#include "../header/battle/obstacles/object.h"
+#include "../header/battle/obstacles/pillar.h"
 #include "../header/battle/gridSystem.h"
 
 class EnemyPool {
@@ -10,9 +10,9 @@ private:
     size_t totalEnemies; 
     size_t currentNumEnemies; 
     std::vector<std::shared_ptr<Enemy>> pool;
+    std::vector<std::shared_ptr<Enemy>> activeEnemies;
     EnemyType getEnemyType();
 public:
-    std::vector<std::shared_ptr<Enemy>> activeEnemies;
     EnemyPool(size_t totalEnemies); 
     void currentEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::Vector2f& target);
@@ -22,16 +22,13 @@ public:
     bool allDead() const;
 };
 
-class ObjectPool {
+class ObstaclePool {
 private: 
-    size_t totalObjects; 
-    size_t currentNumObjects; 
-    std::vector<std::shared_ptr<Object>> pool;
+    std::vector<std::shared_ptr<Pillar>> activeObstacles;
 public:
-    std::vector<std::shared_ptr<Object>> activeObjects;
-    ObjectPool(size_t totalObjects); 
-    void currentObjects(size_t numObjects, const sf::FloatRect& screenBounds, GridSystem& grid);
-    void update();
+    ObstaclePool() = delete;
+    ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds); 
+    void update(const sf::FloatRect& screenBounds);
     void render(sf::RenderWindow& window) const;
-    void resetObjects();
+    void removeObstacles(GridSystem& grid);
 };

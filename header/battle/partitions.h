@@ -2,7 +2,7 @@
 #include "../header/utility.h"
 #include "../header/battle/enemies/slime.h"
 #include "../header/battle/player/player.h"
-#include "../header/battle/obstacles/object.h"
+#include "../header/battle/obstacles/pillar.h"
 
 class QuadTree {
 private: 

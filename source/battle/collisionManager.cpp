@@ -5,7 +5,8 @@ void CollisionManager::update(const std::vector<std::shared_ptr<Entity>>& entiti
     for (size_t i = 0; i < entities.size(); i++) {
         //entities-entities collisions
         for (size_t j = i+1; j < entities.size(); j++) {
-            if (entities[j]->entityType == OBSTACLE) {
+            //!tf
+            if (entities[j]->entityType == OBSTACLE || entities[i]->entityType == OBSTACLE) {
                 handleObjectCollision(*entities[i], *entities[j]);
             } else {
                 handleEntityCollision(*entities[i], *entities[j]); 

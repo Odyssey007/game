@@ -8,7 +8,6 @@ BattleState::BattleState() :
     //entities
     player(std::make_shared<Player>()), 
     enemyPool(std::make_shared<EnemyPool>(15)),
-    objectPool(std::make_shared<ObjectPool>(2)),
     currentWave(7), waveTimer(sf::seconds(100)),
     blastPool(100)
     // enemyPool(EnemyType::SLIME, 100)

@@ -2,7 +2,7 @@
 #include "../header/utility.h"
 #include "../header/battle/entity.h"
 #include "../header/battle/collision.h"
-#include "../header/battle/obstacles/object.h"
+#include "../header/battle/obstacles/pillar.h"
 
 class CollisionManager {
 private:
