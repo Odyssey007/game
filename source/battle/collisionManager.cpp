@@ -6,7 +6,7 @@ void CollisionManager::update(const std::vector<std::reference_wrapper<Entity>>&
         for (size_t j = i + 1; j < entities.size(); j++) {
             Entity& entityA = entities[i].get(); 
             Entity& entityB = entities[j].get(); 
-            if (entityA.entityType == OBSTACLE || entityB.entityType == OBSTACLE) {
+            if (entityA.entityType == OBSTACLE) {
                 handleObjectCollision(entityA, entityB);
             } else {
                 handleEntityCollision(entityA, entityB);
