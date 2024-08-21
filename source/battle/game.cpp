@@ -7,6 +7,7 @@ Game::Game() :
     //entities
     player(std::make_unique<Player>()), 
     enemyPool(std::make_unique<EnemyPool>(100)),
+    obstaclePool(std::make_unique<ObstaclePool>(4)),
     currentWave(2), waveTimer(sf::seconds(50)),
     blastPool(100)
 {
@@ -17,8 +18,9 @@ Game::Game() :
     gameState = GAME;
     player->setInitialPosition(screenBounds); //player
     grid.addEntity(*player);
-    obstaclePool = std::make_unique<ObstaclePool>(grid, screenBounds);
+    // obstaclePool = std::make_unique<ObstaclePool>(grid, screenBounds);
     enemyPool->currentEnemies(currentWave, screenBounds, grid);
+    obstaclePool->currentObjects(screenBounds, grid);
 }
 
 //sets up the window

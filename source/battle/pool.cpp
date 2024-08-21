@@ -3,16 +3,18 @@
 EnemyPool::EnemyPool(size_t totalEnemies) : 
     totalEnemies(totalEnemies), currentNumEnemies(0)
 {
+    std::unique_ptr<Enemy> enemy;
     for (size_t i = 0; i < totalEnemies; ++i) {
         EnemyType type = getEnemyType();
         switch (type) {
             case EnemyType::SLIME:
-                pool.emplace_back(std::make_unique<Slime>());
+                enemy = std::make_unique<Slime>();
                 break;
             case EnemyType::GOBLIN:
-                pool.emplace_back(std::make_unique<Goblin>());
+                enemy = std::make_unique<Goblin>();
                 break;
         }
+        pool.emplace_back(std::move(enemy));
     }
 }
 
@@ -73,31 +75,37 @@ void EnemyPool::resetEnemies() {
     activeEnemies.clear();
 }
 
-//----------------
+//---------
 
-ObstaclePool::ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds) {
-    for (size_t i = 0; i < 4; ++i) {
-        std::unique_ptr<Pillar> pillar = std::make_unique<Pillar>();
-        pillar->setInitialPosition(screenBounds);
-        grid.addEntity(*pillar);
-        activeObstacles.emplace_back(std::move(pillar));
+ObstaclePool::ObstaclePool(size_t totalObjects) :
+    totalObstacle(totalObjects) 
+{
+    for (size_t i = 0; i < totalObjects; ++i) {
+        activeObstacle.emplace_back(std::make_unique<Pillar>()); 
+    }
+}
+
+void ObstaclePool::currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid) {
+    for (auto& object : activeObstacle) {
+        object->startPos(screenBounds);
+        grid.addEntity(*object);
     }
 }
 
 void ObstaclePool::update(const sf::FloatRect& screenBounds) {
-    for (auto& obstacle : activeObstacles) {
+    for (auto& obstacle : activeObstacle) {
         obstacle->respawn(screenBounds);
     }
 }
 
-void ObstaclePool::removeObstacles(GridSystem& grid) {
-    //
+void ObstaclePool::resetObjects() {
+    // 
 }
 
 void ObstaclePool::render(sf::RenderWindow& window) const {
-    for (const auto& obstacle : activeObstacles) {
-        if (obstacle->isAlive()) {
-            obstacle->render(window);
+    for (const auto& object : activeObstacle) {
+        if (object->isAlive()) {
+            object->render(window);
         }
     }
 }

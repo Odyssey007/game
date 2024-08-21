@@ -24,11 +24,12 @@ public:
 
 class ObstaclePool {
 private: 
-    std::vector<std::unique_ptr<Pillar>> activeObstacles;
+    size_t totalObstacle; 
+    std::vector<std::unique_ptr<Pillar>> activeObstacle;
 public:
-    ObstaclePool() = delete;
-    ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds); 
+    ObstaclePool(size_t totalObstacle); 
+    void currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::FloatRect& screenBounds);
     void render(sf::RenderWindow& window) const;
-    void removeObstacles(GridSystem& grid);
+    void resetObjects();
 };
