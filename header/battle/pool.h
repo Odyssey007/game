@@ -9,8 +9,8 @@ class EnemyPool {
 private: 
     size_t totalEnemies; 
     size_t currentNumEnemies; 
-    std::vector<std::shared_ptr<Enemy>> pool;
-    std::vector<std::shared_ptr<Enemy>> activeEnemies;
+    std::vector<std::unique_ptr<Enemy>> pool;
+    std::vector<std::unique_ptr<Enemy>> activeEnemies;
     EnemyType getEnemyType();
 public:
     EnemyPool(size_t totalEnemies); 
@@ -22,25 +22,12 @@ public:
     bool allDead() const;
 };
 
-// class ObstaclePool {
-// private: 
-//     std::vector<std::shared_ptr<Pillar>> activeObstacles;
-// public:
-//     ObstaclePool() = delete;
-//     ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds); 
-//     void update(const sf::FloatRect& screenBounds);
-//     void render(sf::RenderWindow& window) const;
-//     void removeObstacles(GridSystem& grid);
-// };
-
 class ObstaclePool {
 private: 
-    size_t totalObjects; 
-    size_t currentNumObjects; 
-    std::vector<std::shared_ptr<Pillar>> pool;
+    size_t totalObstacle; 
+    std::vector<std::unique_ptr<Pillar>> activeObstacle;
 public:
-    std::vector<std::shared_ptr<Pillar>> activeObjects;
-    ObstaclePool(size_t totalObjects); 
+    ObstaclePool(size_t totalObstacle); 
     void currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::FloatRect& screenBounds);
     void render(sf::RenderWindow& window) const;

@@ -1,6 +1,8 @@
 #pragma once
 #include "../header/battle/partitions.h"
-
+#include "../header/battle/collisionManager.h"
+#include "../header/battle/enemies/enemy.h"
+#include <unordered_set>
 class GridSystem {
 private:
     sf::FloatRect gridBounds;
@@ -18,17 +20,12 @@ private:
     static const sf::Vector2f offsets[9];
 
 
-    std::deque<std::shared_ptr<Entity>> entities;
-
-    // std::shared_ptr<Player> player;  
-    // std::shared_ptr<EnemyPool> enemyPool;
-    // std::shared_ptr<ObjectPool> objectPool;  
-    
+    std::vector<std::reference_wrapper<Entity>> entities;
     
     CollisionManager collisionManager;
 public:
-
-    void addEntity(std::shared_ptr<Entity> entity);
+    void addEntity(Entity& entity);
+    void removeEntity();
 
     GridSystem();
     GridSystem(sf::FloatRect bounds);
@@ -43,8 +40,7 @@ public:
     std::vector<int> activeGrids(sf::FloatRect player);
     std::vector<sf::FloatRect> getCellsInGrid(int gridIndex); 
     bool entityCell(sf::FloatRect cell, sf::FloatRect entity);
-    // void getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<ObjectPool> b, std::shared_ptr<Player> c);
 
-    std::vector<std::vector<std::shared_ptr<Entity>>> gridEntities;
+    std::vector<std::vector<std::reference_wrapper<Entity>>> gridEntities;
     void getNeighbors();
 };

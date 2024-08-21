@@ -16,11 +16,26 @@ Pillar::Pillar() {
     bounds = sprite.getGlobalBounds();
     selectProperties();
 
+    alive = true;
     if (spawn() == 11) {
         alive = false;
     } else {
         alive = true;
     }
+}
+
+void Pillar::startPos(const sf::FloatRect& screenBounds) {
+    std::pair<int, int> rangeX, rangeY;
+
+    rangeX.first = static_cast<int>(screenBounds.left) + bounds.width/2;
+    rangeX.second = static_cast<int>(screenBounds.left + screenBounds.width) - bounds.width/2;
+
+    rangeY.first = static_cast<int>(screenBounds.top) + bounds.height/2;
+    rangeY.second = static_cast<int>(screenBounds.top + screenBounds.height) - bounds.height/2;
+
+    sf::Vector2i pos = randomGenerator(rangeX, rangeY);
+    
+    sprite.setPosition(pos.x, pos.y);
 }
 
 void Pillar::selectProperties() {
@@ -80,7 +95,7 @@ void Pillar::respawn(const sf::FloatRect& screenBounds) {
             timer.restart();
             timerRunning = true;
         }
-        if (timer.getElapsedTime().asSeconds() <= 5.0f) {
+        if (timer.getElapsedTime().asSeconds() <= 3.0f) {
             return;
         }
         timerRunning = false;
@@ -100,8 +115,7 @@ void Pillar::respawn(const sf::FloatRect& screenBounds) {
 
 void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
     std::pair<int, int> rangeX, rangeY;
-
-    int offset = 500; 
+    int offset = 200; 
     int side = pickSide(); 
     switch (side) {
         case 0: //left
@@ -110,21 +124,18 @@ void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
             rangeY.first = static_cast<int>(screenBounds.top) - bounds.height - offset;
             rangeY.second = static_cast<int>(screenBounds.top + screenBounds.height + offset);
             break;
-
         case 1: //right
             rangeX.first = static_cast<int>(screenBounds.left + screenBounds.width) + offset;
             rangeX.second = static_cast<int>(screenBounds.left + screenBounds.width) + bounds.width + offset;
             rangeY.first = static_cast<int>(screenBounds.top) - bounds.height - offset;
             rangeY.second = static_cast<int>(screenBounds.top + screenBounds.height + offset);
             break;
-
         case 2: //top
             rangeX.first = static_cast<int>(screenBounds.left) - bounds.width - offset;
             rangeX.second = static_cast<int>(screenBounds.left + screenBounds.width + offset);
             rangeY.first = static_cast<int>(screenBounds.top) - bounds.height - offset;
             rangeY.second = static_cast<int>(screenBounds.top) - offset;
             break;
-
         case 3: //bottom
             rangeX.first = static_cast<int>(screenBounds.left) - bounds.width - offset;
             rangeX.second = static_cast<int>(screenBounds.left + screenBounds.width + offset);
@@ -132,11 +143,9 @@ void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
             rangeY.second = static_cast<int>(screenBounds.top + screenBounds.height) + bounds.height + offset;
             break;
     }
-
     sf::Vector2i pos = randomGenerator(rangeX, rangeY);
     sprite.setPosition(pos.x, pos.y);
 }
-
 
 void Pillar::handleCollision(Entity& entity) {
     if (this->alive == false) return;

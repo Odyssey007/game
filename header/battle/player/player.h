@@ -6,6 +6,8 @@
 #include "../header/battle/player/abilities/basicSlash.h"
 #include "../header/battle/player/abilities/dash.h"
 
+enum Direction { UP, DOWN, LEFT, RIGHT };
+
 class Player : public Entity {
 private:
     //texture
@@ -20,6 +22,7 @@ private:
     float battleSpeed;
     const float kingdomSpeed;
     bool alive;
+    Direction direction;
     std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
     BoxCollision hitBox;
@@ -42,7 +45,7 @@ public:
     //functions
     void update(const sf::Vector2f& mousePosition);
     void takeDebuffs(float hpHit, float speedHit);
-    
+    Direction getDirection() const;
     //ENTITY fetchers
     virtual bool isAlive() const override;
     virtual sf::FloatRect getBounds() const override;
@@ -55,6 +58,7 @@ public:
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
     virtual void render(sf::RenderWindow& window) const override;
+
 
 
     bool isDashing = false;

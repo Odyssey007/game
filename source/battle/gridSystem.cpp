@@ -110,16 +110,6 @@ void GridSystem::updateGrids() {
     } 
 }
 
-// void GridSystem::getInstances(std::shared_ptr<EnemyPool> a, std::shared_ptr<ObjectPool> b, std::shared_ptr<Player> c) {
-//     enemyPool = a; 
-//     objectPool = b; 
-//     player = c; 
-// }
-
-void GridSystem::addEntity(std::shared_ptr<Entity> entity) {
-    entities.emplace_back(entity);
-}
-
 bool GridSystem::entityCell(sf::FloatRect cell, sf::FloatRect entity) {
     float midpointX = entity.left + entity.width / 2;
     float midpointY = entity.top + entity.height / 2;
@@ -131,44 +121,33 @@ bool GridSystem::entityCell(sf::FloatRect cell, sf::FloatRect entity) {
     }
 }
 
+void GridSystem::addEntity(Entity& entity) {
+    entities.emplace_back(entity);
+}
+
+//!horror optimization
+void GridSystem::removeEntity() {
+
+}
+
+//!horror optimization
 void GridSystem::populateQuadTree() {
     for (QuadTree& quadTree : activeCells) {
         quadTree.clear(); 
         for (const auto& entity : entities) {
-            if (quadTree.intersects(entity->getBounds())) {
-                quadTree.insertObject(entity);
+            if (quadTree.intersects(entity.get().getBounds())) {
+                quadTree.insertObject(entity.get());
             }
         }
-
-        // if(quadTree.intersects(player->getBounds())) {
-        //     // if(entityCell(quadTree.getBounds(), player->getBounds())) {
-        //     // }
-        //     quadTree.insertObject(player);
- 
-        // }
-        // for (const auto& enemy : enemyPool->activeEnemies) {
-        //     if(quadTree.intersects(enemy->getBounds())) {
-        //         // if(entityCell(quadTree.getBounds(), player->getBounds())){
-        //         // }
-        //         quadTree.insertObject(enemy); 
-        //     }
-        // }
-        // for (const auto& objects : objectPool->activeObjects) {
-        //     if(quadTree.intersects(objects->getBounds())) {
-        //         quadTree.insertObject(objects); 
-        //     }
-        // }
     }
 }
-
-#include <unordered_set>
 
 void GridSystem::checkCollision() {
     for (QuadTree& grid : activeCells) {
         grid.getNodeElements(gridEntities);
-        getNeighbors(); //gets the neighbors within a grid
-        for (const auto& quadEntities : gridEntities) {
-            collisionManager.update(quadEntities);
+        getNeighbors(); // Get the neighbors within a grid
+        for (auto& quadEntities : gridEntities) {
+            collisionManager.update(quadEntities); 
         }
         gridEntities.clear();
     }
@@ -176,24 +155,26 @@ void GridSystem::checkCollision() {
 
 void GridSystem::getNeighbors() {
     std::unordered_set<Entity*> uniqueEntities;
-    std::vector<std::shared_ptr<Entity>> enemyNeighbors;
+    std::vector<Entity*> enemyNeighbors;
 
+    // Store unique enemies
     for (const auto& quadEntities : gridEntities) {
-        for (const auto& entity : quadEntities) {
-            if (entity->entityType == ENEMY) {
-                if (uniqueEntities.insert(entity.get()).second) {
-                    enemyNeighbors.push_back(entity);
+        for (const auto& entityRef : quadEntities) {
+            Entity& entity = entityRef.get();
+            if (entity.entityType == ENEMY) {
+                if (uniqueEntities.insert(&entity).second) {
+                    enemyNeighbors.push_back(&entity); 
                 }
             }
         }
     }
-    for (const auto& entity : enemyNeighbors) {
-        Enemy* enemy = dynamic_cast<Enemy*>(entity.get());
-        if (enemy) {
+    // Store the neighbors
+    for (Entity* entity : enemyNeighbors) {
+        if (Enemy* enemy = dynamic_cast<Enemy*>(entity)) {
             enemy->neighbors.clear();
-            for (const auto& neighbor : enemyNeighbors) {
-                if (entity != neighbor) {
-                    enemy->neighbors.push_back(neighbor);
+            for (Entity* neighbor : enemyNeighbors) {
+                if (entity != neighbor) { // Stop self-neighboring
+                    enemy->neighbors.push_back(neighbor); 
                 }
             }
         }

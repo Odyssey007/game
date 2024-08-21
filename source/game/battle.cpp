@@ -8,6 +8,7 @@ BattleState::BattleState() :
     //entities
     player(std::make_shared<Player>()), 
     enemyPool(std::make_shared<EnemyPool>(15)),
+    obstaclePool(),
     currentWave(7), waveTimer(sf::seconds(100)),
     blastPool(100)
     // enemyPool(EnemyType::SLIME, 100)
@@ -108,7 +109,7 @@ void BattleState::render(sf::RenderWindow& window) {
         window.setView(view);
 
         //entities
-        objectPool->render(window);//objects
+        obstaclePool->render(window);//objects
         enemyPool->render(window);//enemies
         player->render(window);//player
         blastPool.render(window);

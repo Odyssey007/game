@@ -26,7 +26,7 @@ private:
     //ENEMY
     //EnemyPool enemyPool; 
     std::shared_ptr<EnemyPool> enemyPool;
-    std::shared_ptr<ObstaclePool> objectPool;
+    std::shared_ptr<ObstaclePool> obstaclePool;
     size_t currentWave;
     sf::Clock waveClock;
     sf::Time waveTimer;

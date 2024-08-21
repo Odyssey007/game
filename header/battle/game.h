@@ -24,11 +24,11 @@ private:
     CollisionManager collisionManager;
     GridSystem grid; 
     //PLAYER
-    std::shared_ptr<Player> player;
+    std::unique_ptr<Player> player;
     //ENEMY
     //EnemyPool enemyPool; 
-    std::shared_ptr<EnemyPool> enemyPool;
-    std::shared_ptr<ObstaclePool> obstaclePool;
+    std::unique_ptr<EnemyPool> enemyPool;
+    std::unique_ptr<ObstaclePool> obstaclePool;
     size_t currentWave;
     sf::Clock waveClock;
     sf::Time waveTimer;
@@ -59,7 +59,4 @@ public:
 
     sf::Clock fireCooldown;
     BlastPool blastPool;
-
-    bool once = true;
-    std::vector<std::shared_ptr<Entity>> neighbors;
 };

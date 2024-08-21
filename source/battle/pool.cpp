@@ -3,18 +3,18 @@
 EnemyPool::EnemyPool(size_t totalEnemies) : 
     totalEnemies(totalEnemies), currentNumEnemies(0)
 {
-    std::shared_ptr<Enemy> enemy;
+    std::unique_ptr<Enemy> enemy;
     for (size_t i = 0; i < totalEnemies; ++i) {
         EnemyType type = getEnemyType();
         switch (type) {
             case EnemyType::SLIME:
-                enemy = std::make_shared<Slime>();
+                enemy = std::make_unique<Slime>();
                 break;
             case EnemyType::GOBLIN:
-                enemy = std::make_shared<Goblin>();
+                enemy = std::make_unique<Goblin>();
                 break;
         }
-        pool.emplace_back(enemy);
+        pool.emplace_back(std::move(enemy));
     }
 }
 
@@ -29,10 +29,10 @@ EnemyType EnemyPool::getEnemyType() {
 void EnemyPool::currentEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid) {
     currentNumEnemies = std::min(numEnemies, pool.size());
     for (size_t i = 0; i < currentNumEnemies && !pool.empty(); ++i) {
-        std::shared_ptr<Enemy> enemy = std::move(pool.back());
+        auto enemy = std::move(pool.back());
         pool.pop_back();
         enemy->setInitialPosition(screenBounds);
-        grid.addEntity(enemy);
+        grid.addEntity(*enemy);
         activeEnemies.push_back(std::move(enemy));
     }
 }
@@ -75,70 +75,37 @@ void EnemyPool::resetEnemies() {
     activeEnemies.clear();
 }
 
-//----------------
-
-// ObstaclePool::ObstaclePool(GridSystem& grid, const sf::FloatRect& screenBounds) {
-//     for (size_t i = 0; i < 4; ++i) {
-//         std::shared_ptr<Pillar> pillar = std::make_shared<Pillar>();
-//         pillar->setInitialPosition(screenBounds);
-//         grid.addEntity(pillar);
-//         activeObstacles.emplace_back(std::move(pillar));
-//     }
-// }
-
-// void ObstaclePool::update(const sf::FloatRect& screenBounds) {
-//     for (auto& obstacle : activeObstacles) {
-//         obstacle->respawn(screenBounds);
-//     }
-// }
-
-// void ObstaclePool::removeObstacles(GridSystem& grid) {
-//     //
-// }
-
-// void ObstaclePool::render(sf::RenderWindow& window) const {
-//     for (const auto& obstacle : activeObstacles) {
-//         if (obstacle->isAlive()) {
-//             obstacle->render(window);
-//         }
-//     }
-// }
+//---------
 
 ObstaclePool::ObstaclePool(size_t totalObjects) :
-    totalObjects(totalObjects), currentNumObjects(0) 
+    totalObstacle(totalObjects) 
 {
     for (size_t i = 0; i < totalObjects; ++i) {
-        pool.emplace_back(std::make_shared<Pillar>());
+        activeObstacle.emplace_back(std::make_unique<Pillar>()); 
     }
 }
 
 void ObstaclePool::currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid) {
-    activeObjects.clear();
-    for (size_t i = 0; i < totalObjects && !pool.empty(); ++i) {
-        std::shared_ptr<Pillar> object = pool.back();
-        pool.pop_back();
-        object->setInitialPosition(screenBounds);
-        activeObjects.push_back(object);
-        grid.addEntity(object);
+    for (auto& object : activeObstacle) {
+        object->startPos(screenBounds);
+        grid.addEntity(*object);
     }
 }
 
-
 void ObstaclePool::update(const sf::FloatRect& screenBounds) {
-    for (auto& obstacle : activeObjects) {
+    for (auto& obstacle : activeObstacle) {
         obstacle->respawn(screenBounds);
     }
 }
 
 void ObstaclePool::resetObjects() {
-    for (auto& object : activeObjects) {
-        pool.push_back(object);
-    }
-    activeObjects.clear();
+    // 
 }
 
 void ObstaclePool::render(sf::RenderWindow& window) const {
-    for (const auto& object : activeObjects) {
-        object->render(window);
+    for (const auto& object : activeObstacle) {
+        if (object->isAlive()) {
+            object->render(window);
+        }
     }
 }

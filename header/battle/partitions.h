@@ -1,8 +1,6 @@
 #pragma once
 #include "../header/utility.h"
-#include "../header/battle/enemies/slime.h"
-#include "../header/battle/player/player.h"
-#include "../header/battle/obstacles/pillar.h"
+#include "../header/battle/entity.h"
 
 class QuadTree {
 private: 
@@ -11,11 +9,11 @@ private:
     sf::FloatRect bounds; 
     unsigned int maxObjects;  
     std::unique_ptr<QuadTree> node[4]; 
-    std::vector<std::shared_ptr<Entity>> objects; //!needs to be entity
+    std::vector<std::reference_wrapper<Entity>> objects;
 
     //private functions
     void splitRoot(); 
-    int getPrimaryNode(const std::shared_ptr<Entity>& entity) const; //!!
+    int getPrimaryNode(const Entity& weakEntity) const;
 public: 
     //constructor
     QuadTree(sf::FloatRect bounds, int level);
@@ -24,9 +22,9 @@ public:
     void clear(); 
     sf::FloatRect getBounds() const;
     void draw(sf::RenderWindow& window);
-    void insertObject(std::shared_ptr<Entity> entity);  //!!
+    void insertObject(Entity& entity);
     bool intersects(const sf::FloatRect& other) const;
-    void getNodeElements(std::vector<std::vector<std::shared_ptr<Entity>>>& elements);
+    void getNodeElements(std::vector<std::vector<std::reference_wrapper<Entity>>>& elements);
     
 };
 

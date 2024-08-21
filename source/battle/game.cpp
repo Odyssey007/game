@@ -5,12 +5,11 @@ Game::Game() :
     //window setup
     window(nullptr), resolution(sf::Vector2u(0, 0)),
     //entities
-    player(std::make_shared<Player>()), 
-    enemyPool(std::make_shared<EnemyPool>(100)),
-    obstaclePool(std::make_shared<ObstaclePool>(4)),
+    player(std::make_unique<Player>()), 
+    enemyPool(std::make_unique<EnemyPool>(100)),
+    obstaclePool(std::make_unique<ObstaclePool>(4)),
     currentWave(2), waveTimer(sf::seconds(50)),
     blastPool(100)
-    // enemyPool(EnemyType::SLIME, 100)
 {
     //preliminaries
     currentWindow();
@@ -18,7 +17,7 @@ Game::Game() :
     //entities
     gameState = GAME;
     player->setInitialPosition(screenBounds); //player
-    grid.addEntity(player);
+    grid.addEntity(*player);
     // obstaclePool = std::make_unique<ObstaclePool>(grid, screenBounds);
     enemyPool->currentEnemies(currentWave, screenBounds, grid);
     obstaclePool->currentObjects(screenBounds, grid);
@@ -65,6 +64,7 @@ void Game::update() {
     //update entities
     player->update(mousePosition);
     enemyPool->update(playerPosition);
+    obstaclePool->update(screenBounds);
 
     grid.checkCollision();
     player->applyMovement();
@@ -132,7 +132,6 @@ void Game::render() {
         window->setView(view);
         window->clear();
         //entities
-        obstaclePool->render(*window);//objects
         enemyPool->render(*window);//enemies
         player->render(*window);//player
         
@@ -140,6 +139,7 @@ void Game::render() {
 
         blastPool.render(*window);
         
+        obstaclePool->render(*window);//objects
         // grid.draw(*window); 
     }
     window->display();

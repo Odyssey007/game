@@ -38,6 +38,7 @@ public:
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
     //
+    void startPos(const sf::FloatRect& screenBounds);
     virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
     //
     virtual void handleCollision(Entity& entity) override;
