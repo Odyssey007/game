@@ -19,7 +19,6 @@ public:
     void applyMovement();
     void render(sf::RenderWindow& window) const;
     void resetEnemies();
-    bool allDead() const;
 };
 
 class ObstaclePool {

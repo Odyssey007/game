@@ -25,7 +25,6 @@ public:
     void insertObject(Entity& entity);
     bool intersects(const sf::FloatRect& other) const;
     void getNodeElements(std::vector<std::vector<std::reference_wrapper<Entity>>>& elements);
-    
 };
 
 struct Grid {

@@ -39,19 +39,10 @@ void EnemyPool::currentEnemies(size_t numEnemies, const sf::FloatRect& screenBou
 
 void EnemyPool::update(const sf::Vector2f& target) {
     for (auto& enemy : activeEnemies) {
-        if (enemy->isAlive()) {
+        if (enemy->alive) {
             enemy->update(target);
         }
     }
-}
-
-bool EnemyPool::allDead() const {
-    for (const auto& enemy : activeEnemies) {
-        if (enemy->isAlive()) {
-            return false;
-        }
-    }
-    return true;
 }
 
 void EnemyPool::applyMovement() {
@@ -62,17 +53,19 @@ void EnemyPool::applyMovement() {
 
 void EnemyPool::render(sf::RenderWindow& window) const {
     for (const auto& enemy : activeEnemies) {
-        if (enemy->isAlive()) {
-            enemy->render(window);
-        }
+        enemy->render(window);
     }
 }
 
 void EnemyPool::resetEnemies() {
-    for (auto& enemy : activeEnemies) {
-        pool.push_back(std::move(enemy));
+    for (auto it = activeEnemies.begin(); it != activeEnemies.end(); ) {
+        if (!(*it)->alive) {
+            pool.push_back(std::move(*it));
+            it = activeEnemies.erase(it);
+        } else {
+            ++it;
+        }
     }
-    activeEnemies.clear();
 }
 
 //---------
@@ -104,7 +97,7 @@ void ObstaclePool::resetObjects() {
 
 void ObstaclePool::render(sf::RenderWindow& window) const {
     for (const auto& object : activeObstacle) {
-        if (object->isAlive()) {
+        if (object->alive) {
             object->render(window);
         }
     }

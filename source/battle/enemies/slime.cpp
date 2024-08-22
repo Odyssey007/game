@@ -9,7 +9,7 @@ Slime::Slime() :
     leapDistance(150.0f), totalLeapDistance(0.0f)
 {
     //preliminaries
-    enemyType = SLIME; collisionType = CIRCLE;
+    enemyType = SLIME; collisionType = CIRCLE; attackCooldown = 2.0f;
     sprite.setTexture(*textures["slime"]);
     //hit box
     hitBox = CircleCollision();
@@ -21,6 +21,7 @@ Slime::Slime() :
 }
 
 void Slime::update(const sf::Vector2f& target) {
+    checkAlive();
     // Check if recovery buffer is needed for attack  
     if (needToRecover) {
         if (recoveryTimer > 0) {
@@ -36,17 +37,10 @@ void Slime::update(const sf::Vector2f& target) {
     if (distance(target, sprite.getPosition()) >= canLeap && !leaping) {
         meleeMovement(target);
     } else { //attacks
-        attacks();
+        normalAttack();
     }
     //!problem with hitbox when leap attack it doesn't track for a sec
     hitBox.followEntity(sprite.getPosition());
-}
-
-void Slime::attacks() {
-    // if (firstAttack) {
-    //     leapAttack();
-    // }
-    normalAttack();
 }
 
 void Slime::normalAttack() {
@@ -79,15 +73,12 @@ void Slime::leapAttack() {
     }
 }
 
-//static function
-void Slime::playerContact(Player& player, Entity& slime) {
-    player.takeDebuffs(5.0f, 0.0f);
-    // size_t ability = slime.getState();
-    // if (ability == 1) {
-    //     player.takeDebuffs(5.0f, 0.0f);
-    // } else if (ability == 2) {
-    //     player.takeDebuffs(10.0f, 50.0f);
-    // }
+sf::Vector2f Slime::attack() {
+    return sf::Vector2f(5.0f, 0.0f);
+}
+
+float Slime::getAttackCooldown() const {
+    return attackCooldown;
 }
 
 //ENTITY FUNCTIONS
@@ -102,5 +93,5 @@ sf::Vector2f Slime::getPosition() const {
 
 void Slime::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    window.draw(hitBox.body);
+    // window.draw(hitBox.body);
 }

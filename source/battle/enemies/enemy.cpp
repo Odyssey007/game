@@ -3,7 +3,7 @@
 Enemy::Enemy() {
     //preliminaries
     health = 100;
-    entityType = ENEMY; alive = true; currentAbility = 0;
+    entityType = ENEMY; currentAbility = 0;
     loadTexture("slime", "assets/enemies/slime.png");
     loadTexture("goblin", "assets/enemies/goblinSheet.png");
     //movement set up
@@ -83,11 +83,9 @@ void Enemy::setInitialPosition(const sf::FloatRect& screenBounds) {
     sprite.setPosition(spawnPosition.x, spawnPosition.y);
 }
 
-//ENTITY FUNCTIONS
+//!make a checkALive
 
-bool Enemy::isAlive() const {
-    return alive;
-}
+//ENTITY FUNCTIONS
 
 const sf::Vector2f& Enemy::getVelocity() const {
     return moveDistance;
@@ -97,14 +95,51 @@ void Enemy::setVelocity(const sf::Vector2f& velocity) {
     moveDistance = velocity;
 }
 
+void Enemy::checkAlive() {
+    if (health <= 0) {
+        alive = false;
+    }
+}
 
 void Enemy::applyMovement() {
     sprite.move(moveDistance);
     moveDistance = sf::Vector2f(0.0f, 0.0f);
 }
 
+float Enemy::getAttackTimer() const {
+    return attackTimer.getElapsedTime().asSeconds();
+}
+
+void Enemy::restartAttackTimer() {
+    attackTimer.restart();
+}
 
 void Enemy::handleCollision(Entity& entity) {
+    EntityType otherEntity = entity.entityType;
+    if (otherEntity == PLAYER || otherEntity == OBSTACLE) {
+        return;
+    } else if (otherEntity == ENEMY) {
+        stopEnemyOverlap(entity);
+    } else if (otherEntity == BLAST) {
+        handleAbilityCollisions(entity);
+    }
+}
+
+void Enemy::handleAbilityCollisions(Entity& entity) {
+    Ability* ability = dynamic_cast<Ability*>(&entity);
+    if (ability->getBufferTime() >= 0.05f) {
+        takeDebuff(ability->hitEnemy(), ability->stun);
+        ability->restartBufferTime();
+    }
+}
+
+//x = hp | y = ms
+void Enemy::takeDebuff(sf::Vector2f debuff, bool stun) {
+    health -= debuff.x;
+    movementSpeed -= debuff.y; //!will not work with stun
+}
+
+void Enemy::stopEnemyOverlap(Entity& entity) {
     if (this->collisionType == BOX && entity.collisionType == BOX) {
         boxOverlap(entity, *this);
         return;
@@ -170,6 +205,7 @@ void Enemy::boxOverlap(Entity& entity1, Entity& entity2) {
     entity2.setVelocity(velocity2);
 }
 
+//!need to fix
 void Enemy::boxCircleOverlap(Entity& box, Entity& circle) {
     sf::FloatRect boxBounds = box.getBounds();
     sf::Vector2f circleCenter = circle.getPosition();

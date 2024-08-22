@@ -15,8 +15,7 @@ Pillar::Pillar() {
     loadTexture("assets/obstacles/pillar2.png");
     bounds = sprite.getGlobalBounds();
     selectProperties();
-
-    alive = true;
+    
     if (spawn() == 11) {
         alive = false;
     } else {
@@ -149,6 +148,18 @@ void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
 
 void Pillar::handleCollision(Entity& entity) {
     if (this->alive == false) return;
+    
+    EntityType otherEntity = entity.entityType;
+    if (otherEntity == PLAYER || otherEntity == ENEMY) {
+        stopEntities(entity);
+    } else if (otherEntity == OBSTACLE) {
+        return;
+    } else if (otherEntity == BLAST) {
+        return;
+    }
+}
+
+void Pillar::stopEntities(Entity& entity) {
     sf::FloatRect entityBounds = entity.getBounds();
     sf::Vector2f moveDistance = entity.getVelocity();
     currentBounds = this->sprite.getGlobalBounds();
@@ -228,6 +239,4 @@ void Pillar::render(sf::RenderWindow& window) const {
     window.draw(sprite);
 }
 
-bool Pillar::isAlive() const {
-    return alive;
-}
+//!MAKE A FUCNTION THAT RETURN ALIVE

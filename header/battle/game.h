@@ -15,6 +15,11 @@
 
 class Game {
 private:
+    sf::Texture backgroundTexture;
+    sf::Sprite backgroundSprite;
+    //
+    sf::Texture cursorTexture;
+    sf::Cursor cursor;
     //window reset up
     std::unique_ptr<sf::RenderWindow> window; 
     sf::Vector2u resolution;
@@ -57,6 +62,6 @@ public:
     Menu menu;
     GameState gameState;
 
-    sf::Clock fireCooldown;
+
     BlastPool blastPool;
 };

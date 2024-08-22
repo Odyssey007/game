@@ -3,8 +3,7 @@
 #include "../header/battle/entity.h"
 #include "../header/battle/collision.h"
 #include "../header/battle/entity.h"
-
-
+#include "../header/battle/player/abilities/ability.h"
 
 class Pillar : public Entity {
 private:
@@ -14,8 +13,6 @@ private:
     //hitbox
     sf::FloatRect bounds;
     sf::FloatRect currentBounds;
-
-    bool alive;
 
     void selectProperties();
     int typePicker();
@@ -28,13 +25,13 @@ private:
     bool timerRunning = false;
     int pickSide();
 
+    void stopEntities(Entity& entity);
     void resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
     void resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
 public:
     Pillar();
     //functions
     void respawn(const sf::FloatRect& screenBounds);
-    virtual bool isAlive() const override; //?idk
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
     //

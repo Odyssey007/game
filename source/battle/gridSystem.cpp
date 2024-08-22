@@ -126,8 +126,14 @@ void GridSystem::addEntity(Entity& entity) {
 }
 
 //!horror optimization
-void GridSystem::removeEntity() {
-
+void GridSystem::removeDeadEntities() {
+    for (auto it = entities.begin(); it != entities.end(); ) {
+        if (!it->get().alive && it->get().entityType != EntityType::OBSTACLE) {
+            it = entities.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 //!horror optimization
@@ -139,6 +145,7 @@ void GridSystem::populateQuadTree() {
                 quadTree.insertObject(entity.get());
             }
         }
+        // quadTree.removeDead();
     }
 }
 

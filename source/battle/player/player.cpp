@@ -4,7 +4,7 @@ Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
-    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f), alive(true),
+    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f),
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
@@ -110,11 +110,9 @@ Direction Player::getDirection() const {
     return direction;
 }
 
-//ENTITY FUNCTIONS
+//!MAKE A FUNCTION THAT RETURN ALIVE
 
-bool Player::isAlive() const {
-    return alive;
-}
+//ENTITY FUNCTIONS
 
 sf::FloatRect Player::getBounds() const {
     return hitBox.body.getGlobalBounds();
@@ -138,13 +136,19 @@ void Player::setInitialPosition(const sf::FloatRect& screenBounds) {
 }
 
 void Player::handleCollision(Entity& other) {
-    return;
-
     EntityType otherEntity = other.entityType;
     if (otherEntity == ENEMY) {
         handleEnemyCollisions(other);
-    } else if (otherEntity == OBSTACLE) {
-        handleObjectCollisions(other);
+    } else if (otherEntity == OBSTACLE || otherEntity == BLAST) {
+        return;
+    }
+}
+
+void Player::handleEnemyCollisions(Entity& entity) {
+    Enemy* enemy = dynamic_cast<Enemy*>(&entity);
+    if (enemy->getAttackTimer() >= enemy->getAttackCooldown()) {
+        takeDebuffs(enemy->attack());
+        enemy->restartAttackTimer();
     }
 }
 
@@ -156,33 +160,10 @@ void Player::render(sf::RenderWindow& window) const {
     }
 }
 
-//stores each enemy cooldown for attacking buffer
-bool Player::canAttack(Entity& enemy) {
-    auto it = enemyCooldown.find(&enemy);
-    if (it == enemyCooldown.end()) {
-        enemyCooldown[&enemy].restart();
-        return true;
-    }
-    return it->second.getElapsedTime() >= sf::seconds(1);
-}
-
-void Player::handleEnemyCollisions(Entity& enemy) {
-    if (canAttack(enemy)) {
-        switch (enemy.enemyType) {
-            case SLIME:
-                Slime::playerContact(*this, enemy);
-        }
-        enemyCooldown[&enemy].restart();
-    }
-}
-
-void Player::handleObjectCollisions(Entity& object) {
-    
-}
-
-void Player::takeDebuffs(float hpHit, float speedHit) {
-    health -= hpHit;
-    battleSpeed -= speedHit;  
+//x = hp | y = ms
+void Player::takeDebuffs(const sf::Vector2f& debuff) {
+    health -= debuff.x;
+    battleSpeed -= debuff.y; //!will not work
 }
 
 //fetchers

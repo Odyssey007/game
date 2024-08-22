@@ -8,7 +8,7 @@ private:
     std::unique_ptr<sf::RenderWindow> window; 
     sf::Event event; 
 
-    BattleState battle; 
+    // BattleState battle; 
     KingdomState kingdom;  
 public: 
     Screen(); 

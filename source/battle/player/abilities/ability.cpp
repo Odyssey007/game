@@ -8,25 +8,28 @@ Ability::Ability() :
 }
 
 void Ability::loadTexture(const std::string& name, const std::string& filePath) {
-    auto texture = std::make_shared<sf::Texture>(); 
-    if (texture->loadFromFile(filePath)) {
-        textures[name] = texture;
-    } else {
-        throw std::runtime_error("Failed to load enemy texture");
+    auto texture = std::make_unique<sf::Texture>();
+    if (!texture->loadFromFile(filePath)) {
+        throw std::runtime_error("Failed to load enemy texture: " + filePath);
     }
+    textures.emplace(name, std::move(texture));
 }
 
-bool Ability::isAlive() const {
-    return alive;
+float Ability::getBufferTime() const {
+    return bufferTimer.getElapsedTime().asSeconds();
+}
+
+void Ability::restartBufferTime() {
+    bufferTimer.restart();
+}
+
+sf::Vector2f Ability::hitEnemy() {
+    return sf::Vector2f(0.0f, 0.0f);
 }
 
 // void Ability::render(sf::RenderWindow& window) const {
 //     window.draw(sprite);
 // }
-
-sf::FloatRect Ability::getBounds() const {
-    return bounds;
-}
 
 sf::Vector2f Ability::getPosition() const {
     return sprite.getPosition();
@@ -37,5 +40,14 @@ void Ability::setInitialPosition(const sf::FloatRect& screenBounds) {
 }
 
 void Ability::handleCollision(Entity& entity) {
-    return;
+    EntityType otherEntity = entity.entityType;
+    if (otherEntity == PLAYER || otherEntity == BLAST) {
+        return;
+    } else if (otherEntity == ENEMY) {
+        kill();
+    } else if (otherEntity == OBSTACLE) {
+        if (entity.alive) {
+            kill();
+        }
+    }
 }

@@ -1,20 +1,20 @@
 #pragma once 
 #include "../header/utility.h"
 
-enum EntityType { PLAYER, ENEMY, OBSTACLE };
+enum EntityType { PLAYER, ENEMY, OBSTACLE, BLAST };
 enum EnemyType { SLIME, GOBLIN };
 enum CollisionType { BOX, CIRCLE };
 
 class Entity {
 protected:
 public:
-    Entity() = default;
-    virtual ~Entity() = default;
+    Entity();
+    // virtual ~Entity() = default;
     EntityType entityType;
     CollisionType collisionType;
     EnemyType enemyType;
+    bool alive = true;
     //fetchers
-    virtual bool isAlive() const = 0;
     virtual sf::FloatRect getBounds() const = 0; //gets the globalBounds()
     virtual sf::Vector2f getPosition() const = 0; //gets position
     virtual const sf::Vector2f& getVelocity() const;  //gets movement speed

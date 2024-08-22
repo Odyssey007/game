@@ -15,7 +15,7 @@ Goblin::Goblin() {
 }
 
 void Goblin::update(const sf::Vector2f& target) {
-    
+    checkAlive();
     if (distance(target, sprite.getPosition()) >= 100.0f) {
         meleeMovement(target);
         isMoving = true;
@@ -39,12 +39,12 @@ void Goblin::update(const sf::Vector2f& target) {
     hitBox.followEntity(sprite.getPosition());
 }
 
-void Goblin::attacks() {
-    return;
+sf::Vector2f Goblin::attack() {
+    return sf::Vector2f(15.0f, 0.0f);
 }
 
-void Goblin::playerContact(Player& player, Entity& slime) {
-
+float Goblin::getAttackCooldown() const {
+    return attackCooldown;
 }
 
 //ENTITY FUNCTIONS
@@ -59,5 +59,5 @@ sf::Vector2f Goblin::getPosition() const {
 
 void Goblin::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    window.draw(hitBox.body);
+    // window.draw(hitBox.body);
 }

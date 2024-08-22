@@ -7,8 +7,8 @@ Game::Game() :
     //entities
     player(std::make_unique<Player>()), 
     enemyPool(std::make_unique<EnemyPool>(100)),
-    obstaclePool(std::make_unique<ObstaclePool>(4)),
-    currentWave(2), waveTimer(sf::seconds(50)),
+    obstaclePool(std::make_unique<ObstaclePool>(5)),
+    currentWave(1), waveTimer(sf::seconds(50)),
     blastPool(100)
 {
     //preliminaries
@@ -32,10 +32,31 @@ void Game::currentWindow() {
     resolution = window->getSize();
     window->setFramerateLimit(120);
     screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
+    //!shit don't work
+    // window->setMouseCursorVisible(false);
+    //
+    backgroundTexture.loadFromFile("assets/background.png");
+    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setScale(sf::Vector2f(1.8f, 1.8f));
 }
 
 bool Game::winRunning() const {
     return window->isOpen();
+}
+
+void Game::handleEvents() {
+    while(window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            window->close();
+        } else if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Escape) window->close();
+            if (event.key.code == sf::Keyboard::LAlt) gameState = MENU;
+        } else if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                    blastPool.currentBlasts(mousePosition, playerPosition, grid);
+            }
+         }
+    }
 }
 
 void Game::update() {
@@ -50,6 +71,8 @@ void Game::update() {
     
     handleEvents();
     menu.setPosition(view);
+
+    backgroundSprite.setPosition(screenBounds.left, screenBounds.top);
     
     if (gameState == MENU) {
         menu.handleEvent(event, gameState, mousePosition);
@@ -65,13 +88,18 @@ void Game::update() {
     player->update(mousePosition);
     enemyPool->update(playerPosition);
     obstaclePool->update(screenBounds);
+    //ability
+    blastPool.update(screenBounds);
+
 
     grid.checkCollision();
     player->applyMovement();
     enemyPool->applyMovement();
     obstaclePool->update(screenBounds);
     
-
+    blastPool.resetBlasts();
+    enemyPool->resetEnemies();
+    grid.removeDeadEntities();
 
     grid.bufferRegion(playerPosition); 
     grid.activeGrids(player->getBounds()); 
@@ -80,29 +108,11 @@ void Game::update() {
     
 
 
-    //collision check
-
-    if (fireCooldown.getElapsedTime().asSeconds() >= 0.15) {
-        blastPool.currentBlasts(mousePosition, playerPosition);
-        fireCooldown.restart();
-    }
-    blastPool.resetBlasts(screenBounds);
-
+    //abilities
  
     checkWave();
     checkGameEnd();
 }
-
-void Game::handleEvents() {
-    while(window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) window->close();
-        else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Escape) window->close();
-            if (event.key.code == sf::Keyboard::LAlt) gameState = MENU;
-        }
-    }
-}
-
 
 void Game::checkWave() {
     // std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
@@ -119,7 +129,7 @@ void Game::checkWave() {
 }
 
 void Game::checkGameEnd() {
-    //std::cout << player->getHealth() << std::endl;
+    // std::cout << player->getHealth() << std::endl;
     // if (player->getHealth() == 0) {
     //     throw std::runtime_error("Game Over\n");
     // }
@@ -131,6 +141,8 @@ void Game::render() {
     } else {
         window->setView(view);
         window->clear();
+        //background
+        window->draw(backgroundSprite);
         //entities
         enemyPool->render(*window);//enemies
         player->render(*window);//player

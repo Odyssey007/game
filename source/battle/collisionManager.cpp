@@ -1,12 +1,13 @@
 #include "../header/battle/collisionManager.h"
 
+//each entity locally evaluates what it should do after colliding with another entity
 void CollisionManager::update(const std::vector<std::reference_wrapper<Entity>>& entities) {
     for (size_t i = 0; i < entities.size(); i++) {
         // entities-entities collisions
         for (size_t j = i + 1; j < entities.size(); j++) {
             Entity& entityA = entities[i].get(); 
             Entity& entityB = entities[j].get(); 
-            if (entityB.entityType == OBSTACLE) {
+            if (entityB.entityType == OBSTACLE || entityB.entityType == OBSTACLE) {
                 handleObjectCollision(entityA, entityB);
             } else {
                 handleEntityCollision(entityA, entityB);
@@ -15,6 +16,7 @@ void CollisionManager::update(const std::vector<std::reference_wrapper<Entity>>&
     }
 }
 
+//handle entities after colliding
 void CollisionManager::handleEntityCollision(Entity& entity1, Entity& entity2) {
     bool collided = false;
 
@@ -29,12 +31,15 @@ void CollisionManager::handleEntityCollision(Entity& entity1, Entity& entity2) {
     }
     if (collided) {
         entity1.handleCollision(entity2);
+        entity2.handleCollision(entity1);
     }
 }
 
+//handles entities before actually colliding
 void CollisionManager::handleObjectCollision(Entity& entity1, Entity& entity2) {
     if (entity1.entityType == OBSTACLE) {
         entity1.handleCollision(entity2);
+    } else {
+        entity2.handleCollision(entity1);
     }
-    entity2.handleCollision(entity1);
 }

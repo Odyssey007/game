@@ -25,7 +25,7 @@ private:
     CollisionManager collisionManager;
 public:
     void addEntity(Entity& entity);
-    void removeEntity();
+    void removeDeadEntities();
 
     GridSystem();
     GridSystem(sf::FloatRect bounds);

@@ -14,4 +14,6 @@ public:
 
 
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) override;
+
+    virtual void kill() override;
 };

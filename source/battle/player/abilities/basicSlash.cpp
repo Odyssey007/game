@@ -13,6 +13,10 @@ Slash::Slash() :
     mouseKey = sf::Mouse::Button::Right;
 }
 
+void Slash::kill() {
+    alive = false;
+};
+
 void Slash::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) { 
     if (sf::Mouse::isButtonPressed(mouseKey) || sf::Keyboard::isKeyPressed(key)) {
         slashVisible = true;

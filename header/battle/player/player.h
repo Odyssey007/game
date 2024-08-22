@@ -21,7 +21,6 @@ private:
     float health;
     float battleSpeed;
     const float kingdomSpeed;
-    bool alive;
     Direction direction;
     std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
@@ -31,9 +30,6 @@ private:
     sf::Vector2f moveDistance;
     bool isMoving;
     bool facingRight;
-    //enemy cooldown
-    std::unordered_map<Entity*, sf::Clock> enemyCooldown;
-    bool canAttack(Entity& entity);
     //collision handling
     void handleEnemyCollisions(Entity& other);
     void handleObjectCollisions(Entity& other);
@@ -44,10 +40,9 @@ public:
     float getHealth();
     //functions
     void update(const sf::Vector2f& mousePosition);
-    void takeDebuffs(float hpHit, float speedHit);
+    void takeDebuffs(const sf::Vector2f& debuff);
     Direction getDirection() const;
     //ENTITY fetchers
-    virtual bool isAlive() const override;
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
     virtual const sf::Vector2f& getVelocity() const override;
