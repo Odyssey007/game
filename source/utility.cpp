@@ -23,7 +23,7 @@ float dotProduct(const sf::Vector2f& one, const sf::Vector2f& two) {
 }
 
 //creates a box around the furthest pixels in x && y directions
-sf::IntRect calcImageBounds(const sf::Image& image) {
+sf::FloatRect calcImageBounds(const sf::Image& image) {
     size_t left = image.getSize().x, right = 0;
     size_t top = image.getSize().y, bottom = 0;
 
@@ -38,7 +38,7 @@ sf::IntRect calcImageBounds(const sf::Image& image) {
         }
     }
 
-    return sf::IntRect(left, top, right-left, bottom-top);
+    return sf::FloatRect(left, top, right-left, bottom-top);
 }
 
 //returns an signed int between range
@@ -66,4 +66,23 @@ float radianToDegrees(float radians) {
 bool containsWithTolerance(const sf::FloatRect& bounds, float x, float y, float tolerance) {
     return (x >= bounds.left - tolerance && x <= bounds.left + bounds.width + tolerance &&
             y >= bounds.top - tolerance && y <= bounds.top + bounds.height + tolerance);
+}
+
+//!not used
+std::string generateID(std::string type) {
+    static unsigned int enemyCounter = 0;
+    static unsigned int obstacleCounter = 0;
+    static unsigned int abilityCounter = 0;
+
+    std::string id;
+    if (type == "enemy") {
+        id = "ENEMY_" + std::to_string(++enemyCounter);
+    } else if (type == "obstacle") {
+        id = "OBSTACLE_" + std::to_string(++obstacleCounter);
+    } else if (type == "ability") {
+        id = "ABILITY_" + std::to_string(++abilityCounter);
+    } else {
+        throw std::runtime_error("id bye bye");
+    }
+    return id;
 }

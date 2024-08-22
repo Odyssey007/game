@@ -22,10 +22,11 @@ private:
     float leapDistance; //leap distance
     float totalLeapDistance;
 
-    virtual void attacks() override;
     void normalAttack();
     void leapAttack();
 public:
+    virtual sf::Vector2f attack() override;
+    virtual float getAttackCooldown() const override;
     //constructor
     Slime();
     //functions

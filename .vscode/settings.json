@@ -83,7 +83,8 @@
         "cfenv": "cpp",
         "unordered_set": "cpp",
         "__functional_base": "cpp",
-        "__locale": "cpp"
+        "__locale": "cpp",
+        "__mutex_base": "cpp"
     },
     "cSpell.words": [
         "AABB",

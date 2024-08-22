@@ -6,6 +6,8 @@
 #include "../header/battle/player/abilities/basicSlash.h"
 #include "../header/battle/player/abilities/dash.h"
 
+enum Direction { UP, DOWN, LEFT, RIGHT };
+
 class Player : public Entity {
 private:
     //texture
@@ -19,8 +21,8 @@ private:
     float health;
     float battleSpeed;
     const float kingdomSpeed;
-    bool alive;
-    std::vector<std::shared_ptr<Abilities>> abilities;
+    Direction direction;
+    std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
     BoxCollision hitBox;
     sf::FloatRect bounds;
@@ -28,9 +30,6 @@ private:
     sf::Vector2f moveDistance;
     bool isMoving;
     bool facingRight;
-    //enemy cooldown
-    std::unordered_map<Entity*, sf::Clock> enemyCooldown;
-    bool canAttack(Entity& entity);
     //collision handling
     void handleEnemyCollisions(Entity& other);
     void handleObjectCollisions(Entity& other);
@@ -41,21 +40,20 @@ public:
     float getHealth();
     //functions
     void update(const sf::Vector2f& mousePosition);
-    void takeDebuffs(float hpHit, float speedHit);
-    
+    void takeDebuffs(const sf::Vector2f& debuff);
+    Direction getDirection() const;
     //ENTITY fetchers
-    virtual bool isAlive() const override;
-    virtual int getState() const override;
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
-    virtual void setInitialPosition(const sf::View& view) override;
+    virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
     //ENTITY functions
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
     virtual void render(sf::RenderWindow& window) const override;
+
 
 
     bool isDashing = false;
@@ -67,6 +65,4 @@ public:
 
     PlayerAbilityType ability;
     void movement();
-    void acquireAbility();
-    void activateAbility(const sf::Vector2f& mousePosition);
 };

@@ -2,7 +2,7 @@
 #include "../header/utility.h"
 #include "../header/battle/player/abilities/ability.h"
 
-class Slash : public Abilities {
+class Slash : public Ability {
 private: 
     SlashShape hitBoxSlash;
 
@@ -20,4 +20,6 @@ public:
     //functions
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) override;
     virtual void render(sf::RenderWindow& window) const override;
+
+     virtual void kill() override;
 };

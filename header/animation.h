@@ -12,7 +12,8 @@ public:
     
     //constructors
     Animation();
-    Animation(sf::Texture* texture, sf::Vector2u frameDimension, float frameDuration);
+    Animation(const sf::Texture& texture, const sf::Vector2u& frameDimension, float frameDuration);
     //function 
-    void animationUpdate(int row, bool faceRight, sf::Sprite& sprite, sf::Vector2f scaleNum);
+    void update(sf::Sprite& sprite, int row, bool faceRight, const sf::Vector2f& scaleNum);
+    void resetToFirst(sf::Sprite& sprite, bool faceRight, const sf::Vector2f& scaleNum);
 };

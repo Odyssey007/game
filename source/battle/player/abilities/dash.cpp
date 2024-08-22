@@ -10,6 +10,10 @@ void Dash::reset() {
     dashDistance = 150;
 }
 
+void Dash::kill() {
+    alive = false;
+};
+
 // void Dash::activate(sf::Sprite& player, const sf::Vector2f velocity 
 //                     const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
 //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
@@ -28,6 +32,6 @@ void Dash::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playe
     return;
 }
 
-void Dash::render(sf::RenderWindow& window) const {
-    return;
-}
+// void Dash::render(sf::RenderWindow& window) const {
+//     return;
+// }

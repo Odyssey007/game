@@ -3,39 +3,41 @@
 #include "../header/battle/entity.h"
 #include "../header/battle/collision.h"
 #include "../header/battle/entity.h"
+#include "../header/battle/player/abilities/ability.h"
 
-//obstacleType: 0 - non-dmg | 1 - dmg
-
-class Object : public Entity {
+class Pillar : public Entity {
 private:
     //texture
-    sf::Texture texture;
+    std::vector<std::unique_ptr<sf::Texture>> textures;
     sf::Sprite sprite;
     //hitbox
-    BoxCollision hitBox;
     sf::FloatRect bounds;
     sf::FloatRect currentBounds;
-    //functions
+
+    void selectProperties();
+    int typePicker();
+    float scalePicker();
+    int rotationAngle();
+    void loadTexture(const std::string& filePath);
+
+    int spawn();
+    sf::Clock timer;
+    bool timerRunning = false;
+    int pickSide();
+
+    void stopEntities(Entity& entity);
     void resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
     void resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
 public:
-    sf::RectangleShape obstacle; //?temporary
-
-    Object();
+    Pillar();
     //functions
-
-    //sf::FloatRect getGlobalBounds();
-    //
-    virtual bool isAlive() const override; //?idk
-    virtual int getState() const override; //?might need
+    void respawn(const sf::FloatRect& screenBounds);
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
-    virtual const sf::Vector2f& getVelocity() const override; //!nope
     //
-    virtual void setVelocity(const sf::Vector2f& velocity) override; //!nope
-    virtual void setInitialPosition(const sf::View& view) override;
+    void startPos(const sf::FloatRect& screenBounds);
+    virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
     //
-    virtual void applyMovement() override; //!nope
     virtual void handleCollision(Entity& entity) override;
     virtual void render(sf::RenderWindow& window) const override;
 };

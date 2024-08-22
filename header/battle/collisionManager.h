@@ -2,7 +2,6 @@
 #include "../header/utility.h"
 #include "../header/battle/entity.h"
 #include "../header/battle/collision.h"
-#include "../header/battle/obstacles/object.h"
 
 class CollisionManager {
 private:
@@ -14,5 +13,5 @@ public:
     CollisionManager() = default;
     ~CollisionManager() = default;
     //functions 
-    void update(const std::vector<std::shared_ptr<Entity>> entities);
+    void update(const std::vector<std::reference_wrapper<Entity>>& entities);
 };

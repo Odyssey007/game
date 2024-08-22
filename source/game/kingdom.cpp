@@ -9,7 +9,7 @@ void KingdomState::enter(sf::RenderWindow& window) {
     view = window.getDefaultView();
     resolution = window.getSize(); 
 
-    player->setInitialPosition(view); 
+    player->setInitialPosition(sf::FloatRect(0.0f, 0.0f, 0.0f, 0.0f)); 
 
     // dynamicAsset.kingCastle();
     // dynamicAsset.huts(); 

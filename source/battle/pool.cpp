@@ -1,43 +1,48 @@
 #include "../header/battle/pool.h"
 
-EnemyPool::EnemyPool(EnemyType type, size_t totalEnemies) : 
+EnemyPool::EnemyPool(size_t totalEnemies) : 
     totalEnemies(totalEnemies), currentNumEnemies(0)
 {
-    std::shared_ptr<Enemy> enemy;
+    std::unique_ptr<Enemy> enemy;
     for (size_t i = 0; i < totalEnemies; ++i) {
-        if (type == EnemyType::SLIME) {
-            enemy = std::make_shared<Slime>();
-        } //!more types
-        pool.emplace_back(enemy);
+        EnemyType type = getEnemyType();
+        switch (type) {
+            case EnemyType::SLIME:
+                enemy = std::make_unique<Slime>();
+                break;
+            case EnemyType::GOBLIN:
+                enemy = std::make_unique<Goblin>();
+                break;
+        }
+        pool.emplace_back(std::move(enemy));
     }
 }
 
-void EnemyPool::currentEnemies(size_t numEnemies, const sf::View& view, CollisionManager& manager) {
+EnemyType EnemyPool::getEnemyType() {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 1);
+
+    return static_cast<EnemyType>(dis(gen));
+}
+
+void EnemyPool::currentEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid) {
     currentNumEnemies = std::min(numEnemies, pool.size());
     for (size_t i = 0; i < currentNumEnemies && !pool.empty(); ++i) {
-        std::shared_ptr<Enemy> enemy = pool.back();
+        auto enemy = std::move(pool.back());
         pool.pop_back();
-        enemy->setInitialPosition(view);
-        activeEnemies.push_back(enemy);
-        // manager.addEntity(enemy);
+        enemy->setInitialPosition(screenBounds);
+        grid.addEntity(*enemy);
+        activeEnemies.push_back(std::move(enemy));
     }
 }
 
 void EnemyPool::update(const sf::Vector2f& target) {
     for (auto& enemy : activeEnemies) {
-        if (enemy->isAlive()) {
+        if (enemy->alive) {
             enemy->update(target);
         }
     }
-}
-
-bool EnemyPool::allDead() const {
-    for (const auto& enemy : activeEnemies) {
-        if (enemy->isAlive()) {
-            return false;
-        }
-    }
-    return true;
 }
 
 void EnemyPool::applyMovement() {
@@ -48,56 +53,52 @@ void EnemyPool::applyMovement() {
 
 void EnemyPool::render(sf::RenderWindow& window) const {
     for (const auto& enemy : activeEnemies) {
-        if (enemy->isAlive()) {
-            enemy->render(window);
+        enemy->render(window);
+    }
+}
+
+void EnemyPool::resetEnemies() {
+    for (auto it = activeEnemies.begin(); it != activeEnemies.end(); ) {
+        if (!(*it)->alive) {
+            pool.push_back(std::move(*it));
+            it = activeEnemies.erase(it);
+        } else {
+            ++it;
         }
     }
 }
 
-void EnemyPool::resetEnemies(CollisionManager& manager) {
-    for (auto& enemy : activeEnemies) {
-        // manager.removeEntity(enemy);
-        pool.push_back(enemy);
-    }
-    activeEnemies.clear();
-}
+//---------
 
-//----------------
-
-ObjectPool::ObjectPool(size_t totalObjects) :
-    totalObjects(totalObjects), currentNumObjects(0) 
+ObstaclePool::ObstaclePool(size_t totalObjects) :
+    totalObstacle(totalObjects) 
 {
     for (size_t i = 0; i < totalObjects; ++i) {
-        pool.emplace_back(std::make_shared<Object>());
+        activeObstacle.emplace_back(std::make_unique<Pillar>()); 
     }
 }
 
-void ObjectPool::currentObjects(size_t numObjects, const sf::View& view, CollisionManager& manager) {
-    activeObjects.clear();
-    currentNumObjects = std::min(numObjects, pool.size());
-    for (size_t i = 0; i < currentNumObjects && !pool.empty(); ++i) {
-        std::shared_ptr<Object> object = pool.back();
-        pool.pop_back();
-        object->setInitialPosition(view);
-        activeObjects.push_back(object);
-        // manager.addObject(object);
+void ObstaclePool::currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid) {
+    for (auto& object : activeObstacle) {
+        object->startPos(screenBounds);
+        grid.addEntity(*object);
     }
 }
 
-void ObjectPool::update() {
-    //
-}
-
-void ObjectPool::resetObjects(CollisionManager& manager) {
-    for (auto& object : activeObjects) {
-        // manager.removeObject(object);
-        pool.push_back(object);
+void ObstaclePool::update(const sf::FloatRect& screenBounds) {
+    for (auto& obstacle : activeObstacle) {
+        obstacle->respawn(screenBounds);
     }
-    activeObjects.clear();
 }
 
-void ObjectPool::render(sf::RenderWindow& window) const {
-    for (const auto& object : activeObjects) {
-        object->render(window);
+void ObstaclePool::resetObjects() {
+    // 
+}
+
+void ObstaclePool::render(sf::RenderWindow& window) const {
+    for (const auto& object : activeObstacle) {
+        if (object->alive) {
+            object->render(window);
+        }
     }
 }
