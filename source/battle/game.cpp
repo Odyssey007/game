@@ -49,6 +49,7 @@ void Game::update() {
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
     
+    std::cout << player->getPosition().x << ", " << player->getPosition().y << std::endl;
     handleEvents();
     menu.setPosition(view);
     

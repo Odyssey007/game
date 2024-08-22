@@ -7,47 +7,51 @@ KingdomState::KingdomState() :
 
 void KingdomState::enter(sf::RenderWindow& window) {
     view = window.getDefaultView();
-    resolution - window.getSize(); 
+    resolution = window.getSize(); 
 
     player->setInitialPosition(view); 
 
-    dynamicAsset.kingCastle();
-    dynamicAsset.huts(); 
-    dynamicAsset.multipurpose(); 
-    dynamicAsset.scienceTech(); 
-    dynamicAsset.blacksmithWeapon(); 
-    dynamicAsset.farms();
-    dynamicAsset.paths(); 
-    dynamicAsset.animalFarms();
+    // dynamicAsset.kingCastle();
+    // dynamicAsset.huts(); 
+    // dynamicAsset.multipurpose(); 
+    // dynamicAsset.scienceTech(); 
+    // dynamicAsset.blacksmithWeapon(); 
+    // dynamicAsset.farms();
+    // dynamicAsset.animalFarms();
 
-    staticAsset.kingdomWall(); 
-    staticAsset.trees();
-    staticAsset.civilians(); 
+     staticAsset.kingdomWall(); 
+    // staticAsset.trees();
+    // staticAsset.civilians(); 
+}
+
+void KingdomState::handleEvents(sf::RenderWindow& window, sf::Event& event) {
+    mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    if (event.type == sf::Event::MouseButtonPressed) {
+        // if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        //     if (castle.castleRect.contains(mousePos)) {
+        //         castle.moveBuilding(mousePos.x, mousePos.y); 
+        //     }
+        // }
+        menu.handleEvent(window, event); 
+    }
 }
 
 void KingdomState::update(sf::RenderWindow& window, sf::Event& event) {
     view.setCenter(player->getBounds().left + player->getBounds().width/2.0f, 
                 player->getBounds().top + player->getBounds().height/2.0f);
     
-    mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
     player->update(mousePos); 
-    player->applyMovement(); 
-}
-
-void KingdomState::handleEvents(sf::RenderWindow& window, sf::Event& event) {
-    while(window.pollEvent(event)) {
-        if(event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Escape) window.close();
-        }
-    }
+    player->applyMovement();
+    menu.positionMenu(view.getCenter(), resolution);  
 }
 
 void KingdomState::render(sf::RenderWindow& window) {
     window.setView(view);
     player->render(window); 
-    dynamicAsset.render(window); 
-    staticAsset.render(window); 
+    //dynamicAsset.render(window); 
+    staticAsset.render(window);
+    castle.render(window);  
+    menu.render(window); 
 }
 
 void KingdomState::exit() {

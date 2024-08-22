@@ -4,6 +4,8 @@
 #include "../header/game/states.h"
 #include "../header/kingdom/dynamicAsset.h"
 #include "../header/kingdom/staticAsset.h"
+#include "../header/kingdom/menu/menu.h"
+#include "../header/kingdom/buildings/dynamic/castle.h"
 
 class KingdomState : public States {
 private: 
@@ -13,8 +15,10 @@ private:
 
     //Entity instance 
     std::shared_ptr<Player> player; 
-    DynamicAsset dynamicAsset;
-    StaticAsset staticAsset;  
+    //DynamicAsset dynamicAsset;
+    StaticAsset staticAsset; 
+    Castle castle;  
+    KingdomMenu menu; 
 public:
     //Constructor 
     KingdomState(); 

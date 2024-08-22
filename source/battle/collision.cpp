@@ -24,7 +24,7 @@ sf::Vector2f Collision::calcDistance(sf::FloatRect boxBounds, sf::Vector2f circl
 BoxCollision::BoxCollision() {
     //visual
     body.setOutlineColor(sf::Color::Red);
-    body.setOutlineThickness(0.0f);
+    body.setOutlineThickness(1.0f);
     body.setFillColor(sf::Color::Transparent);
 }
 

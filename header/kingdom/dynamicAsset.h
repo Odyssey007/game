@@ -2,6 +2,9 @@
 
 class DynamicAsset {
 private:
+    float left; 
+    float top; 
+    
     //Pool
     std::vector<sf::FloatRect> hutPool; 
     std::vector<sf::FloatRect> farmPool;
@@ -25,7 +28,6 @@ public:
     void scienceTech(); 
     void blacksmithWeapon(); 
     void farms(); 
-    void paths();
     void animalFarms();
     void render(sf::RenderWindow& window); 
 }; 
