@@ -42,6 +42,14 @@ bool BoxCollision::checkCollision(const sf::FloatRect& bounds1, const sf::FloatR
     return bounds1.intersects(bounds2);
 }
 
+sf::Vector2f BoxCollision::getPosition() const {
+    return body.getPosition();
+}
+
+sf::FloatRect BoxCollision::getBounds() const {
+    return body.getGlobalBounds();
+}
+
 //CIRCLE HITBOX
 CircleCollision::CircleCollision() {
     //visual
@@ -65,6 +73,15 @@ bool CircleCollision::checkCollision(const sf::FloatRect& bounds1, const sf::Flo
     return bounds1.intersects(bounds2);
 }
 
+sf::Vector2f CircleCollision::getPosition() const {
+    return body.getPosition();
+}
+
+sf::FloatRect CircleCollision::getBounds() const {
+    return body.getGlobalBounds();
+}
+
+// *not used -----------------
 //SLASH
 SlashShape::SlashShape() 
     :theta(0.0f),

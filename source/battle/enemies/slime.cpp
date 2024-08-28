@@ -84,11 +84,11 @@ float Slime::getAttackCooldown() const {
 //ENTITY FUNCTIONS
 
 sf::FloatRect Slime::getBounds() const {
-    return hitBox.body.getGlobalBounds();
+    return hitBox.getBounds();
 }
 
 sf::Vector2f Slime::getPosition() const {
-    return hitBox.body.getPosition();
+    return hitBox.getPosition();
 }
 
 void Slime::render(sf::RenderWindow& window) const {

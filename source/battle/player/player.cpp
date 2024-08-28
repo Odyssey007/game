@@ -52,13 +52,14 @@ void Player::dash(const sf::Vector2f& mousePosition) {
 }
 
 
-void Player::update(const sf::Vector2f& mousePosition) {
+void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds) {
     dash(mousePosition);
 
-    movement();
+    // mouseDirection = (screenBounds.left + screenBounds.width/2.0f);
+    // movement(mousePosition, mouseDirection);
 
     for (auto& ability : abilities) {
-        ability->activate(mousePosition, hitBox.body.getPosition());
+        ability->activate(mousePosition, hitBox.getPosition());
     }
 }
 
@@ -71,11 +72,14 @@ void Player::applyMovement() {
     }
 }
 
-void Player::movement() {
-    //reset each after each movement
+void Player::movement(const sf::Vector2f& mousePosition, float mouseDirection, bool abilityActive) {
     isMoving = false;
     moveDistance = sf::Vector2f(0.0f, 0.0f);
-    //Capture keyboard input for movement
+    if (abilityActive) {
+        idle(mousePosition, mouseDirection);
+        return;
+    }
+    //capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
         direction = UP;
         moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
@@ -102,8 +106,17 @@ void Player::movement() {
     if (isMoving) {
         animation.update(sprite, 1, facingRight, {1.0f, 1.0f});//moving animation
     } else {
-        animation.update(sprite, 0, facingRight, {0.93f, 0.93f});//idle animation
+        idle(mousePosition, mouseDirection);
     }
+}
+
+void Player::idle(const sf::Vector2f& mousePosition, float mouseDirection) {
+    if (mousePosition.x >= this->getPosition().x) { //right side
+        facingRight = true;
+    } else {
+        facingRight = false;
+    }
+    animation.update(sprite, 0, facingRight, {0.93f, 0.93f});
 }
 
 Direction Player::getDirection() const {
@@ -115,11 +128,11 @@ Direction Player::getDirection() const {
 //ENTITY FUNCTIONS
 
 sf::FloatRect Player::getBounds() const {
-    return hitBox.body.getGlobalBounds();
+    return hitBox.getBounds();
 }
 
 sf::Vector2f Player::getPosition() const {
-    return hitBox.body.getPosition();
+    return hitBox.getPosition();
 } 
 
 const sf::Vector2f& Player::getVelocity() const {
@@ -132,7 +145,7 @@ void Player::setVelocity(const sf::Vector2f& velocity) {
 
 void Player::setInitialPosition(const sf::FloatRect& screenBounds) { 
     sprite.setPosition(screenBounds.width/2, screenBounds.height/2);
-    hitBox.body.setPosition(screenBounds.width/2, screenBounds.height/2);
+    hitBox.followEntity(sf::Vector2f(screenBounds.width/2, screenBounds.height/2));
 }
 
 void Player::handleCollision(Entity& other) {

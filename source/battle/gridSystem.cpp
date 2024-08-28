@@ -188,6 +188,7 @@ void GridSystem::getNeighbors() {
     }
 }
 
+// *not used
 void GridSystem::draw(sf::RenderWindow& window) {
     for (const auto& grid : totalGrids) {
         sf::RectangleShape gridShape;

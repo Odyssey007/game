@@ -15,34 +15,28 @@
 
 class Game {
 private:
-    sf::Texture backgroundTexture;
-    sf::Sprite backgroundSprite;
-    //
-    sf::Texture cursorTexture;
-    sf::Cursor cursor;
-    //window reset up
+    //set up
     std::unique_ptr<sf::RenderWindow> window; 
     sf::Vector2u resolution;
     sf::View view;
     sf::Event event;
-    //collision
-    CollisionManager collisionManager;
     GridSystem grid; 
-    //PLAYER
+    //entities
     std::unique_ptr<Player> player;
-    //ENEMY
-    //EnemyPool enemyPool; 
     std::unique_ptr<EnemyPool> enemyPool;
     std::unique_ptr<ObstaclePool> obstaclePool;
+    //wave
     size_t currentWave;
     sf::Clock waveClock;
     sf::Time waveTimer;
-    //OBJECTS
-    //ObjectPool objectPool;
+    //info storage
+    sf::FloatRect screenBounds;
+    sf::Vector2f mousePosition;
+    sf::Vector2f playerPosition;
+    sf::FloatRect playerBounds;
     //functions
     void currentWindow();
     void handleEvents();
-    void checkGameEnd();
 public:
     //constructor
     Game();
@@ -51,17 +45,16 @@ public:
     void render();
     bool winRunning() const;
 
+
+    //!not finalized
+
+    //wave
     void checkWave();
-
-    sf::FloatRect screenBounds;
-    sf::Vector2f mousePosition;
-    sf::Vector2f playerPosition;
-    sf::FloatRect playerBounds;
-
-
+    void checkGameEnd();
+    //menu
     Menu menu;
     GameState gameState;
-
-
-    BlastPool blastPool;
+    //ability
+    bool abilityActive = false;
+    BlastPool blastPool; //blast
 };

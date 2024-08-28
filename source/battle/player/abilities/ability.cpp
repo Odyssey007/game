@@ -15,21 +15,24 @@ void Ability::loadTexture(const std::string& name, const std::string& filePath) 
     textures.emplace(name, std::move(texture));
 }
 
-float Ability::getBufferTime() const {
-    return bufferTimer.getElapsedTime().asSeconds();
-}
-
 void Ability::restartBufferTime() {
     bufferTimer.restart();
 }
 
-sf::Vector2f Ability::hitEnemy() {
-    return sf::Vector2f(0.0f, 0.0f);
+float Ability::getBufferTime() const {
+    return bufferTimer.getElapsedTime().asSeconds();
 }
 
-// void Ability::render(sf::RenderWindow& window) const {
-//     window.draw(sprite);
-// }
+void Ability::kill() {
+    alive = false;
+};
+
+//base debuff by all ability
+sf::Vector2f Ability::hitEnemy() {
+    return sf::Vector2f(10.0f, 10.0f);
+}
+
+// ENTITY
 
 sf::Vector2f Ability::getPosition() const {
     return sprite.getPosition();
@@ -50,4 +53,8 @@ void Ability::handleCollision(Entity& entity) {
             kill();
         }
     }
+}
+
+void Ability::render(sf::RenderWindow& window) const {
+    window.draw(sprite);
 }

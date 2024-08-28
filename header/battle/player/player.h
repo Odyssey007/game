@@ -32,14 +32,13 @@ private:
     bool facingRight;
     //collision handling
     void handleEnemyCollisions(Entity& other);
-    void handleObjectCollisions(Entity& other);
 public:
     //constructor
     Player(); 
     //fetchers
     float getHealth();
     //functions
-    void update(const sf::Vector2f& mousePosition);
+    void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds);
     void takeDebuffs(const sf::Vector2f& debuff);
     Direction getDirection() const;
     //ENTITY fetchers
@@ -56,13 +55,15 @@ public:
 
 
 
+    void movement(const sf::Vector2f& mousePosition, float mouseDirection, bool abilityActive);
+    void idle(const sf::Vector2f& mousePosition, float mouseDirection);
+
+
+
     bool isDashing = false;
     float dashCooldown = 0.5f;
     sf::Clock dashClock;
     float totalDashDistance = 0;
     float dashDistance = 300;
     void dash(const sf::Vector2f& mousePosition);
-
-    PlayerAbilityType ability;
-    void movement();
 };

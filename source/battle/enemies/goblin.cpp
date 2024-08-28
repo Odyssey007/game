@@ -50,11 +50,11 @@ float Goblin::getAttackCooldown() const {
 //ENTITY FUNCTIONS
 
 sf::FloatRect Goblin::getBounds() const {
-    return hitBox.body.getGlobalBounds();
+    return hitBox.getBounds();
 }
 
 sf::Vector2f Goblin::getPosition() const {
-    return hitBox.body.getPosition();
+    return hitBox.getPosition();
 }
 
 void Goblin::render(sf::RenderWindow& window) const {

@@ -114,7 +114,7 @@ void Pillar::respawn(const sf::FloatRect& screenBounds) {
 
 void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
     std::pair<int, int> rangeX, rangeY;
-    int offset = 200; 
+    int offset = 350; 
     int side = pickSide(); 
     switch (side) {
         case 0: //left

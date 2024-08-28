@@ -12,32 +12,24 @@ Game::Game() :
     blastPool(100)
 {
     //preliminaries
-    currentWindow();
+    currentWindow(); gameState = GAME;
     grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
     //entities
-    gameState = GAME;
-    player->setInitialPosition(screenBounds); //player
+    player->setInitialPosition(screenBounds); 
     grid.addEntity(*player);
-    // obstaclePool = std::make_unique<ObstaclePool>(grid, screenBounds);
     enemyPool->currentEnemies(currentWave, screenBounds, grid);
     obstaclePool->currentObjects(screenBounds, grid);
 }
 
-//sets up the window
+//window set up
 void Game::currentWindow() {
-    //window set up
     sf::VideoMode screen = sf::VideoMode::getDesktopMode();
     window = std::make_unique<sf::RenderWindow>(screen, "Project-AA", sf::Style::Fullscreen);
     view = window->getDefaultView();
     resolution = window->getSize();
     window->setFramerateLimit(120);
     screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
-    //!shit don't work
-    // window->setMouseCursorVisible(false);
-    //
-    backgroundTexture.loadFromFile("assets/background.png");
-    backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setScale(sf::Vector2f(1.8f, 1.8f));
+    // window->setMouseCursorVisible(false); //!shit don't work
 }
 
 bool Game::winRunning() const {
@@ -53,8 +45,10 @@ void Game::handleEvents() {
             if (event.key.code == sf::Keyboard::LAlt) gameState = MENU;
         } else if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
-                    blastPool.currentBlasts(mousePosition, playerPosition, grid);
+                blastPool.spawnBlasts(grid, abilityActive, mousePosition, playerPosition);
             }
+         } else if (event.type == sf::Event::MouseButtonReleased) {
+            abilityActive = false;
          }
     }
 }
@@ -72,8 +66,6 @@ void Game::update() {
     handleEvents();
     menu.setPosition(view);
 
-    backgroundSprite.setPosition(screenBounds.left, screenBounds.top);
-    
     if (gameState == MENU) {
         menu.handleEvent(event, gameState, mousePosition);
         return;
@@ -85,11 +77,16 @@ void Game::update() {
         
 
     //update entities
-    player->update(mousePosition);
+    float mouseDirection = (screenBounds.left + screenBounds.width/2.0f);
+    player->movement(mousePosition, mouseDirection, abilityActive);
+    // player->update(mousePosition, screenBounds);
+
+
+    
     enemyPool->update(playerPosition);
     obstaclePool->update(screenBounds);
     //ability
-    blastPool.update(screenBounds);
+    blastPool.onScreen(screenBounds);
 
 
     grid.checkCollision();
@@ -97,13 +94,14 @@ void Game::update() {
     enemyPool->applyMovement();
     obstaclePool->update(screenBounds);
     
-    blastPool.resetBlasts();
+
+    blastPool.update();
     enemyPool->resetEnemies();
     grid.removeDeadEntities();
 
     grid.bufferRegion(playerPosition); 
     grid.activeGrids(player->getBounds()); 
-    grid.updateGrids(); 
+    grid.updateGrids();     
     grid.populateQuadTree(); 
     
 
@@ -142,7 +140,6 @@ void Game::render() {
         window->setView(view);
         window->clear();
         //background
-        window->draw(backgroundSprite);
         //entities
         enemyPool->render(*window);//enemies
         player->render(*window);//player

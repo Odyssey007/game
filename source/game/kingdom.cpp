@@ -31,7 +31,8 @@ void KingdomState::update(sf::RenderWindow& window, sf::Event& event) {
     
     mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-    player->update(mousePos); 
+    sf::FloatRect screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
+    player->update(mousePos, screenBounds); 
     player->applyMovement(); 
 }
 
