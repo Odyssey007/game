@@ -26,7 +26,6 @@ private:
     void leapAttack();
 public:
     virtual sf::Vector2f attack() override;
-    virtual float getAttackCooldown() const override;
     //constructor
     Slime();
     //functions

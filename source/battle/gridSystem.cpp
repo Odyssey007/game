@@ -128,7 +128,7 @@ void GridSystem::addEntity(Entity& entity) {
 //!horror optimization
 void GridSystem::removeDeadEntities() {
     for (auto it = entities.begin(); it != entities.end(); ) {
-        if (!it->get().alive && it->get().entityType != EntityType::OBSTACLE) {
+        if (!it->get().isAlive() && it->get().entityType != EntityType::OBSTACLE) {
             it = entities.erase(it);
         } else {
             ++it;
@@ -163,13 +163,12 @@ void GridSystem::checkCollision() {
 void GridSystem::getNeighbors() {
     std::unordered_set<Entity*> uniqueEntities;
     std::vector<Entity*> enemyNeighbors;
-
     // Store unique enemies
     for (const auto& quadEntities : gridEntities) {
         for (const auto& entityRef : quadEntities) {
             Entity& entity = entityRef.get();
-            if (entity.entityType == ENEMY) {
-                if (uniqueEntities.insert(&entity).second) {
+            if (uniqueEntities.insert(&entity).second) {
+                if (entity.entityType == ENEMY) {
                     enemyNeighbors.push_back(&entity); 
                 }
             }
@@ -178,12 +177,7 @@ void GridSystem::getNeighbors() {
     // Store the neighbors
     for (Entity* entity : enemyNeighbors) {
         if (Enemy* enemy = dynamic_cast<Enemy*>(entity)) {
-            enemy->neighbors.clear();
-            for (Entity* neighbor : enemyNeighbors) {
-                if (entity != neighbor) { // Stop self-neighboring
-                    enemy->neighbors.push_back(neighbor); 
-                }
-            }
+            enemy->setNeighbors(enemyNeighbors);
         }
     }
 }

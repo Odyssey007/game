@@ -8,7 +8,7 @@ Game::Game() :
     player(std::make_unique<Player>()), 
     enemyPool(std::make_unique<EnemyPool>(100)),
     obstaclePool(std::make_unique<ObstaclePool>(5)),
-    currentWave(1), waveTimer(sf::seconds(50)),
+    currentWave(10), waveTimer(sf::seconds(50)),
     blastPool(100)
 {
     //preliminaries
@@ -17,8 +17,8 @@ Game::Game() :
     //entities
     player->setInitialPosition(screenBounds); 
     grid.addEntity(*player);
-    enemyPool->currentEnemies(currentWave, screenBounds, grid);
-    obstaclePool->currentObjects(screenBounds, grid);
+    enemyPool->spawnEnemies(currentWave, screenBounds, grid);
+    obstaclePool->spawnObjects(screenBounds, grid);
 }
 
 //window set up
@@ -29,7 +29,7 @@ void Game::currentWindow() {
     resolution = window->getSize();
     window->setFramerateLimit(120);
     screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
-    // window->setMouseCursorVisible(false); //!shit don't work
+    // window->setMouseCursorVisible(false); //!don't work
 }
 
 bool Game::winRunning() const {

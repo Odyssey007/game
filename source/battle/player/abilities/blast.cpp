@@ -28,7 +28,7 @@ void BlastPool::onScreen(const sf::FloatRect screenBounds) {
 
 void BlastPool::update() {
     for (auto it = activeBlasts.begin(); it != activeBlasts.end(); ) {
-        if (!(*it)->alive) {
+        if (!(*it)->isAlive()) {
             allBlasts.push_back(std::move(*it));
             it = activeBlasts.erase(it);
         } else {

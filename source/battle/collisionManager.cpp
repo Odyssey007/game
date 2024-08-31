@@ -38,8 +38,10 @@ void CollisionManager::handleEntityCollision(Entity& entity1, Entity& entity2) {
 //handles entities before actually colliding
 void CollisionManager::handleObjectCollision(Entity& entity1, Entity& entity2) {
     if (entity1.entityType == OBSTACLE) {
+        if (!entity1.isAlive()) return;
         entity1.handleCollision(entity2);
     } else {
+        if (!entity2.isAlive()) return;
         entity2.handleCollision(entity1);
     }
 }

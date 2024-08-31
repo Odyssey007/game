@@ -14,7 +14,7 @@ private:
     EnemyType getEnemyType();
 public:
     EnemyPool(size_t totalEnemies); 
-    void currentEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid);
+    void spawnEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::Vector2f& target);
     void applyMovement();
     void render(sf::RenderWindow& window) const;
@@ -27,7 +27,7 @@ private:
     std::vector<std::unique_ptr<Pillar>> activeObstacle;
 public:
     ObstaclePool(size_t totalObstacle); 
-    void currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid);
+    void spawnObjects(const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::FloatRect& screenBounds);
     void render(sf::RenderWindow& window) const;
     void resetObjects();

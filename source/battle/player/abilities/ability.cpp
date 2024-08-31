@@ -49,7 +49,7 @@ void Ability::handleCollision(Entity& entity) {
     } else if (otherEntity == ENEMY) {
         kill();
     } else if (otherEntity == OBSTACLE) {
-        if (entity.alive) {
+        if (entity.isAlive()) {
             kill();
         }
     }

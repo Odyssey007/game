@@ -26,7 +26,7 @@ EnemyType EnemyPool::getEnemyType() {
     return static_cast<EnemyType>(dis(gen));
 }
 
-void EnemyPool::currentEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid) {
+void EnemyPool::spawnEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid) {
     currentNumEnemies = std::min(numEnemies, pool.size());
     for (size_t i = 0; i < currentNumEnemies && !pool.empty(); ++i) {
         auto enemy = std::move(pool.back());
@@ -39,7 +39,8 @@ void EnemyPool::currentEnemies(size_t numEnemies, const sf::FloatRect& screenBou
 
 void EnemyPool::update(const sf::Vector2f& target) {
     for (auto& enemy : activeEnemies) {
-        if (enemy->alive) {
+        enemy->checkAlive();
+        if (enemy->isAlive()) {
             enemy->update(target);
         }
     }
@@ -59,7 +60,7 @@ void EnemyPool::render(sf::RenderWindow& window) const {
 
 void EnemyPool::resetEnemies() {
     for (auto it = activeEnemies.begin(); it != activeEnemies.end(); ) {
-        if (!(*it)->alive) {
+        if (!(*it)->isAlive()) {
             pool.push_back(std::move(*it));
             it = activeEnemies.erase(it);
         } else {
@@ -78,9 +79,9 @@ ObstaclePool::ObstaclePool(size_t totalObjects) :
     }
 }
 
-void ObstaclePool::currentObjects(const sf::FloatRect& screenBounds, GridSystem& grid) {
+void ObstaclePool::spawnObjects(const sf::FloatRect& screenBounds, GridSystem& grid) {
     for (auto& object : activeObstacle) {
-        object->startPos(screenBounds);
+        object->setInitialPosition(screenBounds);
         grid.addEntity(*object);
     }
 }
@@ -97,7 +98,7 @@ void ObstaclePool::resetObjects() {
 
 void ObstaclePool::render(sf::RenderWindow& window) const {
     for (const auto& object : activeObstacle) {
-        if (object->alive) {
+        if (object->isAlive()) {
             object->render(window);
         }
     }

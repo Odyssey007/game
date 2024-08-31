@@ -9,7 +9,7 @@ Slime::Slime() :
     leapDistance(150.0f), totalLeapDistance(0.0f)
 {
     //preliminaries
-    enemyType = SLIME; collisionType = CIRCLE; attackCooldown = 2.0f;
+    enemyType = SLIME; collisionType = CIRCLE;
     sprite.setTexture(*textures["slime"]);
     //hit box
     hitBox = CircleCollision();
@@ -21,7 +21,6 @@ Slime::Slime() :
 }
 
 void Slime::update(const sf::Vector2f& target) {
-    checkAlive();
     // Check if recovery buffer is needed for attack  
     if (needToRecover) {
         if (recoveryTimer > 0) {
@@ -44,11 +43,9 @@ void Slime::update(const sf::Vector2f& target) {
 }
 
 void Slime::normalAttack() {
-    currentAbility = 1;
 }
 
 void Slime::leapAttack() {
-    currentAbility = 2;
     if (!leaping) {
         chargeTimer -= DeltaTime::getInstance()->getDeltaTime();
         if (chargeTimer <= 0) {
@@ -75,10 +72,6 @@ void Slime::leapAttack() {
 
 sf::Vector2f Slime::attack() {
     return sf::Vector2f(5.0f, 0.0f);
-}
-
-float Slime::getAttackCooldown() const {
-    return attackCooldown;
 }
 
 //ENTITY FUNCTIONS

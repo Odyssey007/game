@@ -7,20 +7,20 @@ enum CollisionType { BOX, CIRCLE };
 
 class Entity {
 protected:
+    bool alive;
 public:
     Entity();
-    // virtual ~Entity() = default;
     EntityType entityType;
     CollisionType collisionType;
     EnemyType enemyType;
-    bool alive = true;
     //fetchers
-    virtual sf::FloatRect getBounds() const = 0; //gets the globalBounds()
-    virtual sf::Vector2f getPosition() const = 0; //gets position
-    virtual const sf::Vector2f& getVelocity() const;  //gets movement speed
+    virtual sf::FloatRect getBounds() const = 0; //gets globalBounds()
+    virtual sf::Vector2f getPosition() const = 0;
+    virtual const sf::Vector2f& getVelocity() const;
+    virtual bool isAlive() const;
     //setters
-    virtual void setVelocity(const sf::Vector2f& velocity); //changes movement speed
-    virtual void setInitialPosition(const sf::FloatRect& screenBounds) = 0; //sets inital position 
+    virtual void setVelocity(const sf::Vector2f& velocity);
+    virtual void setInitialPosition(const sf::FloatRect& screenBounds) = 0;
     //functions
     virtual void applyMovement(); 
     virtual void handleCollision(Entity& entity) = 0;
