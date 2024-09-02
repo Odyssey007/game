@@ -1,7 +1,7 @@
 #pragma once 
 #include "../header/utility.h"
 
-enum EntityType { PLAYER, ENEMY, OBSTACLE, BLAST };
+enum EntityType { PLAYER, ENEMY, OBSTACLE, EXP, BLAST };
 enum EnemyType { SLIME, GOBLIN };
 enum CollisionType { BOX, CIRCLE };
 
@@ -14,10 +14,10 @@ public:
     CollisionType collisionType;
     EnemyType enemyType;
     //fetchers
+    virtual bool isAlive() const;
     virtual sf::FloatRect getBounds() const = 0; //gets globalBounds()
     virtual sf::Vector2f getPosition() const = 0;
     virtual const sf::Vector2f& getVelocity() const;
-    virtual bool isAlive() const;
     //setters
     virtual void setVelocity(const sf::Vector2f& velocity);
     virtual void setInitialPosition(const sf::FloatRect& screenBounds) = 0;

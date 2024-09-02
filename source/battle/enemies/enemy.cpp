@@ -201,11 +201,9 @@ void Enemy::applyMovement() {
 
 void Enemy::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
-    if (otherEntity == PLAYER) {
-        return;
-    } else if (otherEntity == OBSTACLE) {
-        return;
-    } else if (otherEntity == ENEMY) {
+    if (otherEntity == PLAYER || otherEntity == OBSTACLE || 
+        otherEntity == EXP) return;
+    if (otherEntity == ENEMY) {
         handleEnemyCollision(entity);
     } else if (otherEntity == BLAST) {
         handleAbilityCollision(entity);

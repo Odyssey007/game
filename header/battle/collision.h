@@ -17,8 +17,8 @@ public:
 //AABB
 class BoxCollision : public Collision {
 private:
-    sf::RectangleShape body;
 public:
+    sf::RectangleShape body;
     //constructor
     BoxCollision();
     //functions

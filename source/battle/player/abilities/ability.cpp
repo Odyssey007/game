@@ -44,9 +44,9 @@ void Ability::setInitialPosition(const sf::FloatRect& screenBounds) {
 
 void Ability::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
-    if (otherEntity == PLAYER || otherEntity == BLAST) {
-        return;
-    } else if (otherEntity == ENEMY) {
+    if (otherEntity == PLAYER || otherEntity == EXP ||
+        otherEntity == BLAST) return;
+    if (otherEntity == ENEMY) {
         kill();
     } else if (otherEntity == OBSTACLE) {
         if (entity.isAlive()) {

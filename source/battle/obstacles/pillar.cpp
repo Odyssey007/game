@@ -127,12 +127,10 @@ void Pillar::respawnPosition(const sf::FloatRect& screenBounds) {
 
 void Pillar::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
+    if (otherEntity == OBSTACLE || otherEntity == EXP || 
+        otherEntity == BLAST) return;
     if (otherEntity == PLAYER || otherEntity == ENEMY) {
         stopEntities(entity);
-    } else if (otherEntity == OBSTACLE) {
-        return;
-    } else if (otherEntity == BLAST) {
-        return;
     }
 }
 
@@ -222,5 +220,3 @@ sf::Vector2f Pillar::getPosition() const {
 void Pillar::render(sf::RenderWindow& window) const {
     window.draw(sprite);
 }
-
-//!MAKE A FUCNTION THAT RETURN ALIVE

@@ -134,6 +134,15 @@ void GridSystem::removeDeadEntities() {
             ++it;
         }
     }
+
+    // for (const auto& entity : entities) {
+    //     std::cout << entity.get().entityType;
+    //     if (!entity.get().isAlive()) {
+    //         std::cout << "--" << std::endl;
+    //     }
+    //     std::cout << std::endl;
+    // }
+    // std::cout << std::endl;
 }
 
 //!horror optimization

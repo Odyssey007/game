@@ -48,7 +48,7 @@ void BlastPool::render(sf::RenderWindow& window) const {
 
 Blast::Blast() : 
     move(sf::Vector2f(0.0f, 0.0f)),
-    blastSpeed(800.0f), debuff(10.0f, 0.0f)
+    blastSpeed(800.0f), debuff(100.0f, 0.0f)
 {
     //preliminaries
     collisionType = CIRCLE; entityType = BLAST; stun = false;

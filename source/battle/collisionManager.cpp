@@ -6,14 +6,23 @@ void CollisionManager::update(const std::vector<std::reference_wrapper<Entity>>&
         // entities-entities collisions
         for (size_t j = i + 1; j < entities.size(); j++) {
             Entity& entityA = entities[i].get(); 
-            Entity& entityB = entities[j].get(); 
-            if (entityB.entityType == OBSTACLE || entityB.entityType == OBSTACLE) {
-                handleObjectCollision(entityA, entityB);
+            Entity& entityB = entities[j].get();
+            if (isObstacleCheck(entityA, entityB)) {
+                continue;
             } else {
                 handleEntityCollision(entityA, entityB);
             }
         }
     }
+}
+
+bool CollisionManager::isObstacleCheck(Entity& entityA, Entity& entityB) {
+    if ((entityA.entityType == OBSTACLE && (entityB.entityType == PLAYER || entityB.entityType == ENEMY)) ||
+    (entityB.entityType == OBSTACLE && (entityA.entityType == PLAYER || entityA.entityType == ENEMY))) { 
+        handleObjectCollision(entityA, entityB);
+        return true;
+    }
+    return false;
 }
 
 //handle entities after colliding
@@ -40,7 +49,7 @@ void CollisionManager::handleObjectCollision(Entity& entity1, Entity& entity2) {
     if (entity1.entityType == OBSTACLE) {
         if (!entity1.isAlive()) return;
         entity1.handleCollision(entity2);
-    } else {
+    } else if (entity2.entityType == OBSTACLE) {
         if (!entity2.isAlive()) return;
         entity2.handleCollision(entity1);
     }

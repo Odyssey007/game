@@ -1,6 +1,6 @@
-wave system
+wave system/fix up player
 
-enemy movement : make em not all clump up together and avoid obstacles
+ability menu/lvl up menu
 
 fix up old abilities
 --dash

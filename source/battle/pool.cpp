@@ -16,6 +16,10 @@ EnemyPool::EnemyPool(size_t totalEnemies) :
         }
         pool.emplace_back(std::move(enemy));
     }
+
+    for (size_t i = 0; i < 300; ++i) {
+        expPool.emplace_back(std::make_unique<Exp>());
+    }
 }
 
 EnemyType EnemyPool::getEnemyType() {
@@ -44,6 +48,11 @@ void EnemyPool::update(const sf::Vector2f& target) {
             enemy->update(target);
         }
     }
+    //exp
+    for (auto& exp : expDrops) {
+        exp->update(target);
+        exp->applyMovement();
+    }
 }
 
 void EnemyPool::applyMovement() {
@@ -56,13 +65,39 @@ void EnemyPool::render(sf::RenderWindow& window) const {
     for (const auto& enemy : activeEnemies) {
         enemy->render(window);
     }
+    //exp
+    for (const auto& exp : expDrops) {
+        exp->render(window);
+    }
 }
 
-void EnemyPool::resetEnemies() {
+void EnemyPool::resetEnemies(GridSystem& grid) {
     for (auto it = activeEnemies.begin(); it != activeEnemies.end(); ) {
         if (!(*it)->isAlive()) {
+            expDrop(grid, (*it)->getBounds());
             pool.push_back(std::move(*it));
             it = activeEnemies.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
+void EnemyPool::expDrop(GridSystem& grid, const sf::FloatRect& enemy) {
+    if (!expPool.empty()) {
+        auto exp = std::move(expPool.back());
+        expPool.pop_back();
+        exp->setInitialPosition(enemy);
+        grid.addEntity(*exp);
+        expDrops.push_back(std::move(exp));
+    }
+}
+
+void EnemyPool::resetExp() {
+    for (auto it = expDrops.begin(); it != expDrops.end(); ) {
+        if (!(*it)->isAlive()) {
+            expPool.push_back(std::move(*it));
+            it = expDrops.erase(it);
         } else {
             ++it;
         }

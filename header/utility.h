@@ -18,4 +18,6 @@ float rotationAngle(float centerX, float centerY, float mouseX, float mouseY);
 float radianToDegrees(float radians);
 sf::Vector2i randomGenerator(const std::pair<int, int>& xRange, const std::pair<int, int>& yRange);
 bool containsWithTolerance(const sf::FloatRect& bounds, float x, float y, float tolerance=0.0001f);
+sf::Vector2f interpolate(const sf::Vector2f& cur, const sf::Vector2f& target, float alpha);
+//!not used
 std::string generateID(std::string type);

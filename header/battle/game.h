@@ -12,6 +12,7 @@
 #include "../header/battle/menu.h"
 
 #include "../header/battle/player/abilities/blast.h"
+#include "../header/battle/enemies/exp.h"
 
 class Game {
 private:

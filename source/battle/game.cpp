@@ -8,7 +8,7 @@ Game::Game() :
     player(std::make_unique<Player>()), 
     enemyPool(std::make_unique<EnemyPool>(100)),
     obstaclePool(std::make_unique<ObstaclePool>(5)),
-    currentWave(10), waveTimer(sf::seconds(50)),
+    currentWave(12), waveTimer(sf::seconds(50)),
     blastPool(100)
 {
     //preliminaries
@@ -63,6 +63,10 @@ void Game::update() {
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
     
+    
+
+
+
     handleEvents();
     menu.setPosition(view);
 
@@ -96,7 +100,8 @@ void Game::update() {
     
 
     blastPool.update();
-    enemyPool->resetEnemies();
+    enemyPool->resetEnemies(grid);
+    enemyPool->resetExp();
     grid.removeDeadEntities();
 
     grid.bufferRegion(playerPosition); 
@@ -147,7 +152,7 @@ void Game::render() {
         //quadTree.draw(*window);
 
         blastPool.render(*window);
-        
+
         obstaclePool->render(*window);//objects
         // grid.draw(*window); 
     }

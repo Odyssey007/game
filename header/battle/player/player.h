@@ -6,8 +6,6 @@
 #include "../header/battle/player/abilities/basicSlash.h"
 #include "../header/battle/player/abilities/dash.h"
 
-enum Direction { UP, DOWN, LEFT, RIGHT };
-
 class Player : public Entity {
 private:
     //texture
@@ -21,7 +19,9 @@ private:
     float health;
     float battleSpeed;
     const float kingdomSpeed;
-    Direction direction;
+    float exp;
+    float expRequired;
+    unsigned int level;
     std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
     BoxCollision hitBox;
@@ -32,15 +32,16 @@ private:
     bool facingRight;
     //collision handling
     void handleEnemyCollisions(Entity& other);
+    void handleExpCollision(Entity& other);
 public:
     //constructor
     Player(); 
     //fetchers
     float getHealth();
     //functions
+    void checkLevelUp(float exp);
     void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds);
     void takeDebuffs(const sf::Vector2f& debuff);
-    Direction getDirection() const;
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;

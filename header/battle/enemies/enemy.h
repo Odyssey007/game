@@ -4,6 +4,7 @@
 #include "../header/animation.h"
 #include "../header/battle/collision.h"
 #include "../header/battle/player/abilities/ability.h"
+#include "../header/battle/enemies/exp.h"
 
 class Enemy : public Entity {
 protected:
@@ -15,6 +16,7 @@ protected:
     sf::Vector2u animationSheetDim;
     float frameDuration;
     //atributes 
+    Exp exp;
     int health;
     int movementSpeed;
     int baseDamage;

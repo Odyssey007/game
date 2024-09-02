@@ -5,6 +5,7 @@ Player::Player() :
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
     health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f),
+    exp(0.0f), expRequired(100.0f), level(0),
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
@@ -31,8 +32,7 @@ void Player::dash(const sf::Vector2f& mousePosition) {
 
         // Calculate move distance
         sf::Vector2f direction = mousePosition - sprite.getPosition();
-        float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-        moveDistance = direction / length;
+        moveDistance = normalize(direction);
         totalDashDistance = 0; 
     }
 
@@ -81,24 +81,20 @@ void Player::movement(const sf::Vector2f& mousePosition, float mouseDirection, b
     }
     //capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
-        direction = UP;
         moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { //down
-        direction = DOWN;
         moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
         isMoving = true;
     } 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { //left
         if (facingRight) facingRight = false;
-        direction = LEFT;
         moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { //right
         if (!facingRight) facingRight = true;
-        direction = RIGHT;
         moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     };
@@ -118,12 +114,6 @@ void Player::idle(const sf::Vector2f& mousePosition, float mouseDirection) {
     }
     animation.update(sprite, 0, facingRight, {0.93f, 0.93f});
 }
-
-Direction Player::getDirection() const {
-    return direction;
-}
-
-//!MAKE A FUNCTION THAT RETURN ALIVE
 
 //ENTITY FUNCTIONS
 
@@ -150,17 +140,34 @@ void Player::setInitialPosition(const sf::FloatRect& screenBounds) {
 
 void Player::handleCollision(Entity& other) {
     EntityType otherEntity = other.entityType;
+    if (otherEntity == OBSTACLE || otherEntity == BLAST) return;
     if (otherEntity == ENEMY) {
         handleEnemyCollisions(other);
-    } else if (otherEntity == OBSTACLE || otherEntity == BLAST) {
-        return;
+    } else if (otherEntity == EXP) {
+        handleExpCollision(other);
+    }
+}
+
+void Player::handleExpCollision(Entity& entity) {
+    if (entity.isAlive()) {
+        Exp* exp = dynamic_cast<Exp*>(&entity);
+        this->checkLevelUp(exp->drop());
+    }
+}
+
+void Player::checkLevelUp(float exp) {
+    this->exp += exp;
+    if (this->exp >= expRequired) {
+        level++;
+        this->exp -= expRequired;
+        expRequired = 100*std::pow(level, 1.5);
     }
 }
 
 void Player::handleEnemyCollisions(Entity& entity) {
     Enemy* enemy = dynamic_cast<Enemy*>(&entity);
     if (enemy->getAttackTimer() >= enemy->getAttackCooldown()) {
-        takeDebuffs(enemy->attack());
+        this->takeDebuffs(enemy->attack());
         enemy->restartAttackTimer();
     }
 }
