@@ -16,11 +16,13 @@ private:
     bool active;
     //
     float amount;
+    virtual void setInitialPosition(const sf::FloatRect& entityBounds) override;
 public:
     Exp();
     ~Exp() = default;
     //
     float drop() const;
+    void spawn(const sf::FloatRect& entityBounds);
     void update(const sf::Vector2f& target);
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
@@ -28,7 +30,6 @@ public:
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
-    virtual void setInitialPosition(const sf::FloatRect& entityBounds) override;
     //ENTITY fuctions
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& entity) override;

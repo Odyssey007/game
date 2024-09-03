@@ -16,9 +16,9 @@ protected:
     sf::Vector2u animationSheetDim;
     float frameDuration;
     //atributes 
-    Exp exp;
     int health;
-    int movementSpeed;
+    int fullHealth;
+    float movementSpeed;
     int baseDamage;
     sf::Clock attackTimer;
     float attackCooldown;
@@ -45,6 +45,10 @@ protected:
     //
     void loadTexture(const std::string& name, const std::string& filePath);
     void takeDebuff(sf::Vector2f debuff, bool stun); //!implement stun
+    //
+    virtual void checkLvlUp(const size_t level) = 0;
+    //ENTITY setter
+    virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
 public:
     Enemy();
     virtual ~Enemy() = default; //TODO
@@ -55,6 +59,7 @@ public:
     virtual float getAttackCooldown() const;
     //functions
     void checkAlive();
+    void spawn(const size_t level, const sf::FloatRect& screenBounds);
     void restartAttackTimer();
     virtual sf::Vector2f attack() = 0; //!not used currently
     virtual void update(const sf::Vector2f& target) = 0;
@@ -62,7 +67,6 @@ public:
     virtual const sf::Vector2f& getVelocity() const override;
     //ENTITY setters
     virtual void setVelocity(const sf::Vector2f& velocity) override;
-    virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
     //ENTITY functions 
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& entity) override;

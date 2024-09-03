@@ -33,13 +33,13 @@ private:
     //collision handling
     void handleEnemyCollisions(Entity& other);
     void handleExpCollision(Entity& other);
+    void checkLevelUp(float exp);
 public:
     //constructor
     Player(); 
     //fetchers
     float getHealth();
     //functions
-    void checkLevelUp(float exp);
     void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds);
     void takeDebuffs(const sf::Vector2f& debuff);
     //ENTITY fetchers

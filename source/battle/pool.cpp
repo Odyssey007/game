@@ -1,6 +1,6 @@
 #include "../header/battle/pool.h"
 
-EnemyPool::EnemyPool(size_t totalEnemies) : 
+EnemyPool::EnemyPool(const size_t totalEnemies) : 
     totalEnemies(totalEnemies), currentNumEnemies(0)
 {
     std::unique_ptr<Enemy> enemy;
@@ -16,8 +16,8 @@ EnemyPool::EnemyPool(size_t totalEnemies) :
         }
         pool.emplace_back(std::move(enemy));
     }
-
-    for (size_t i = 0; i < 300; ++i) {
+    //change amount....maybe
+    for (size_t i = 0; i < 150; ++i) {
         expPool.emplace_back(std::make_unique<Exp>());
     }
 }
@@ -30,12 +30,13 @@ EnemyType EnemyPool::getEnemyType() {
     return static_cast<EnemyType>(dis(gen));
 }
 
-void EnemyPool::spawnEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid) {
+void EnemyPool::spawnEnemies(const size_t numEnemies, const size_t level, 
+                             const sf::FloatRect& screenBounds, GridSystem& grid) {
     currentNumEnemies = std::min(numEnemies, pool.size());
     for (size_t i = 0; i < currentNumEnemies && !pool.empty(); ++i) {
         auto enemy = std::move(pool.back());
         pool.pop_back();
-        enemy->setInitialPosition(screenBounds);
+        enemy->spawn(level, screenBounds);
         grid.addEntity(*enemy);
         activeEnemies.push_back(std::move(enemy));
     }
@@ -55,6 +56,10 @@ void EnemyPool::update(const sf::Vector2f& target) {
     }
 }
 
+bool EnemyPool::isAllDead() {
+    return activeEnemies.empty();
+}
+
 void EnemyPool::applyMovement() {
     for (auto& enemy : activeEnemies) {
         enemy->applyMovement();
@@ -62,12 +67,13 @@ void EnemyPool::applyMovement() {
 }
 
 void EnemyPool::render(sf::RenderWindow& window) const {
-    for (const auto& enemy : activeEnemies) {
-        enemy->render(window);
-    }
     //exp
     for (const auto& exp : expDrops) {
         exp->render(window);
+    }
+    //enemies
+    for (const auto& enemy : activeEnemies) {
+        enemy->render(window);
     }
 }
 
@@ -87,7 +93,7 @@ void EnemyPool::expDrop(GridSystem& grid, const sf::FloatRect& enemy) {
     if (!expPool.empty()) {
         auto exp = std::move(expPool.back());
         expPool.pop_back();
-        exp->setInitialPosition(enemy);
+        exp->spawn(enemy);
         grid.addEntity(*exp);
         expDrops.push_back(std::move(exp));
     }
@@ -106,18 +112,13 @@ void EnemyPool::resetExp() {
 
 //---------
 
-ObstaclePool::ObstaclePool(size_t totalObjects) :
+ObstaclePool::ObstaclePool(const size_t totalObjects, const sf::FloatRect& screenBounds, GridSystem& grid) :
     totalObstacle(totalObjects) 
 {
     for (size_t i = 0; i < totalObjects; ++i) {
-        activeObstacle.emplace_back(std::make_unique<Pillar>()); 
-    }
-}
-
-void ObstaclePool::spawnObjects(const sf::FloatRect& screenBounds, GridSystem& grid) {
-    for (auto& object : activeObstacle) {
-        object->setInitialPosition(screenBounds);
-        grid.addEntity(*object);
+        activeObstacle.emplace_back(std::make_unique<Pillar>());
+        activeObstacle[i]->setInitialPosition(screenBounds);
+        grid.addEntity(*activeObstacle[i]);
     }
 }
 

@@ -4,7 +4,7 @@ Enemy::Enemy() :
     //animation
     animationSheetDim(sf::Vector2u(0, 0)), frameDuration(0.18f),
     //attributes
-    health(100), movementSpeed(150), baseDamage(10), attackCooldown(1.5f),
+    fullHealth(100), movementSpeed(150.0f), baseDamage(10), attackCooldown(1.5f),
     //movement
     totalDirections(32), bestDirection(sf::Vector2f(0.0f, 0.0f)), 
     moveDistance(sf::Vector2f(0.0f, 0.0f)), bounds(sf::FloatRect(0.0f, 0.0f, 0.0f, 0.0f))
@@ -153,6 +153,13 @@ void Enemy::restartAttackTimer() {
 void Enemy::takeDebuff(sf::Vector2f debuff, bool stun) {
     health -= debuff.x;
     movementSpeed -= debuff.y; //!will not work with stun
+}
+
+void Enemy::spawn(const size_t level, const sf::FloatRect& screenBounds) {
+    this->alive = true; 
+    checkLvlUp(level);
+    health = fullHealth;
+    setInitialPosition(screenBounds);
 }
 
 //ENTITY FUNCTIONS

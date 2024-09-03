@@ -6,10 +6,16 @@
 
 class Goblin : public Enemy {
 private:
+    //
+    int dmg;
+    int slow;
+    //
     BoxCollision hitBox;
     bool isMoving;
     bool facingRight;
     void isFacingRight();
+
+    virtual void checkLvlUp(const size_t level) override;
 public:
     Goblin();
     //ENEMY functions

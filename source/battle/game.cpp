@@ -7,18 +7,15 @@ Game::Game() :
     //entities
     player(std::make_unique<Player>()), 
     enemyPool(std::make_unique<EnemyPool>(100)),
-    obstaclePool(std::make_unique<ObstaclePool>(5)),
-    currentWave(12), waveTimer(sf::seconds(50)),
     blastPool(100)
 {
     //preliminaries
     currentWindow(); gameState = GAME;
     grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
     //entities
-    player->setInitialPosition(screenBounds); 
-    grid.addEntity(*player);
-    enemyPool->spawnEnemies(currentWave, screenBounds, grid);
-    obstaclePool->spawnObjects(screenBounds, grid);
+    player->setInitialPosition(screenBounds); grid.addEntity(*player);
+    enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
+    obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
 }
 
 //window set up
@@ -63,8 +60,10 @@ void Game::update() {
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
     
-    
 
+    if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
+        enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
+    }
 
 
     handleEvents();
@@ -113,22 +112,7 @@ void Game::update() {
 
     //abilities
  
-    checkWave();
     checkGameEnd();
-}
-
-void Game::checkWave() {
-    // std::cout << waveClock.getElapsedTime().asSeconds() << std::endl;
-    // if (enemyPool->allDead()) {
-    //     currentWave++;
-    //     enemyPool->resetEnemies(collisionManager);
-    //     enemyPool->currentEnemies(currentWave*2, view, collisionManager);
-    //     waveClock.restart();
-    // } else if (waveClock.getElapsedTime() >= waveTimer) {
-    //     currentWave++;
-    //     enemyPool->currentEnemies(currentWave*2, view, collisionManager);
-    //     waveClock.restart();
-    // }
 }
 
 void Game::checkGameEnd() {
@@ -154,6 +138,7 @@ void Game::render() {
         blastPool.render(*window);
 
         obstaclePool->render(*window);//objects
+        
         // grid.draw(*window); 
     }
     window->display();

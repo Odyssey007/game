@@ -1,7 +1,21 @@
-wave system/fix up player
+UI **
+ -player health/exp
+ -ability menu/lvl up menu
 
-ability menu/lvl up menu
+abilities
+ -ability center? **
+ -dash (fix) **
+ -new abilities
+ -scaling implementation
 
-fix up old abilities
---dash
-new abilities implementations
+enemies
+ -mini bosses
+ -boss
+
+balancing
+ -wave timing
+    -enemy lvl|spawn
+ -player lvl(Exp)
+    -ability-scale
+
+save sys

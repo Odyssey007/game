@@ -2,7 +2,7 @@
 
 Goblin::Goblin() {
     //update parent
-    movementSpeed = 250;
+    movementSpeed = 250.0f; dmg = 15; slow = 0;
     bounds = sf::FloatRect(8, 2, 25, 40);
     sprite.setTexture(*textures["goblin"]);
     animationSheetDim = sf::Vector2u(4, 1);
@@ -48,7 +48,14 @@ void Goblin::isFacingRight() {
 }
 
 sf::Vector2f Goblin::attack() {
-    return sf::Vector2f(15.0f, 0.0f);
+    return sf::Vector2f(dmg, slow);
+}
+
+void Goblin::checkLvlUp(const size_t level) {
+    if (level == 0) return;
+    fullHealth += 100*level*0.1f;
+    dmg += 15*level*0.05f;
+    movementSpeed += 250*level*0.005f;
 }
 
 //ENTITY FUNCTIONS

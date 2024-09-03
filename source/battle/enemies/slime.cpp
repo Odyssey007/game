@@ -8,6 +8,7 @@ Slime::Slime() :
     //leap distance
     leapDistance(150.0f), totalLeapDistance(0.0f)
 {
+    dmg = 5; slow = 0;
     //preliminaries
     enemyType = SLIME; collisionType = CIRCLE;
     sprite.setTexture(*textures["slime"]);
@@ -71,7 +72,14 @@ void Slime::leapAttack() {
 }
 
 sf::Vector2f Slime::attack() {
-    return sf::Vector2f(5.0f, 0.0f);
+    return sf::Vector2f(dmg, slow);
+}
+
+void Slime::checkLvlUp(const size_t level) {
+    if (level == 0) return;
+    fullHealth += 100*level*0.1f;
+    dmg += 15*level*0.05f;
+    movementSpeed += 250*level*0.005f;
 }
 
 //ENTITY FUNCTIONS

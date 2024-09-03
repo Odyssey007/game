@@ -9,6 +9,8 @@
 #include "../header/battle/gridSystem.h"
 #include "../header/battle/pool.h"
 
+#include "../header/battle/waveSystem.h"
+
 #include "../header/battle/menu.h"
 
 #include "../header/battle/player/abilities/blast.h"
@@ -26,10 +28,6 @@ private:
     std::unique_ptr<Player> player;
     std::unique_ptr<EnemyPool> enemyPool;
     std::unique_ptr<ObstaclePool> obstaclePool;
-    //wave
-    size_t currentWave;
-    sf::Clock waveClock;
-    sf::Time waveTimer;
     //info storage
     sf::FloatRect screenBounds;
     sf::Vector2f mousePosition;
@@ -49,8 +47,6 @@ public:
 
     //!not finalized
 
-    //wave
-    void checkWave();
     void checkGameEnd();
     //menu
     Menu menu;
@@ -58,4 +54,17 @@ public:
     //ability
     bool abilityActive = false;
     BlastPool blastPool; //blast
+
+    sf::Clock worldTime;  
+/*
+sf::Time elapsed = worldTime.getElapsedTime();
+
+int minutes = static_cast<int>(elapsed.asSeconds()) / 60;
+int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
+*/
+    //wave
+    WaveSystem waveSystem;
+    size_t enemiesSpawning = 3;
+    size_t enemyLevel = 0;
+
 };

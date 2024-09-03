@@ -1,7 +1,7 @@
 #include "../header/battle/enemies/exp.h"
 
 Exp::Exp() :
-    moveSpeed(250), moveDistance(sf::Vector2f(0.0f, 0.0f)), 
+    moveSpeed(400), moveDistance(sf::Vector2f(0.0f, 0.0f)), 
     active(false), amount(10.0f)
 {
     entityType = EXP; collisionType = BOX;
@@ -49,6 +49,11 @@ float Exp::drop() const {
     return amount;
 }
 
+void Exp::spawn(const sf::FloatRect& entityBounds) {
+    this->alive = true; this->active = false;
+    setInitialPosition(entityBounds);
+}
+
 //ENTITY
 
 sf::FloatRect Exp::getBounds() const {
@@ -68,8 +73,6 @@ void Exp::setVelocity(const sf::Vector2f& velocity) {
 }
 
 void Exp::setInitialPosition(const sf::FloatRect& entityBounds) {
-    this->alive = true;
-
     float posX = entityBounds.left + entityBounds.width/2.0f;
     float posY = entityBounds.top + entityBounds.height/2.0f;
 

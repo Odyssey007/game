@@ -17,9 +17,11 @@ private:
     std::vector<std::unique_ptr<Exp>> expDrops;
     EnemyType getEnemyType();
 public:
-    EnemyPool(size_t totalEnemies); 
-    void spawnEnemies(size_t numEnemies, const sf::FloatRect& screenBounds, GridSystem& grid);
+    EnemyPool(const size_t totalEnemies); 
+    void spawnEnemies(const size_t numEnemies, const size_t level, 
+                      const sf::FloatRect& screenBounds, GridSystem& grid);
     void update(const sf::Vector2f& target);
+    bool isAllDead();
     void applyMovement();
     void render(sf::RenderWindow& window) const;
     void resetEnemies(GridSystem& grid);
@@ -33,8 +35,7 @@ private:
     size_t totalObstacle; 
     std::vector<std::unique_ptr<Pillar>> activeObstacle;
 public:
-    ObstaclePool(size_t totalObstacle); 
-    void spawnObjects(const sf::FloatRect& screenBounds, GridSystem& grid);
+    ObstaclePool(const size_t totalObjects, const sf::FloatRect& screenBounds, GridSystem& grid); 
     void update(const sf::FloatRect& screenBounds);
     void render(sf::RenderWindow& window) const;
     void resetObjects();
