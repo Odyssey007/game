@@ -11,6 +11,7 @@ WaveSystem::WaveSystem() {
 
 //need to give numEnemies && enemyLevel
 bool WaveSystem::isUpdated(bool allDead, size_t& numEnemies, size_t& enemyLvl) {
+    if (numEnemies == 0) return false; //!
     if (allDead || spawnClock.getElapsedTime() >= waveDuration) {
         nextWave(numEnemies, enemyLvl);
         spawnClock.restart();

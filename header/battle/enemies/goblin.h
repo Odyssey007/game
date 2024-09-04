@@ -19,7 +19,7 @@ private:
 public:
     Goblin();
     //ENEMY functions
-    virtual sf::Vector2f attack() override;
+    virtual sf::Vector2u attack() override;
     virtual void update(const sf::Vector2f& target) override;
 
     //ENTITY fetchers

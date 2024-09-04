@@ -16,12 +16,13 @@ private:
     sf::Vector2u animationSheetDim;
     float frameDuration;
     //stats
-    float health;
+    int healthMax;
+    int health;
     float battleSpeed;
     const float kingdomSpeed;
-    float exp;
-    float expRequired;
-    unsigned int level;
+    int exp;
+    int expRequired;
+    uint8_t level;
     std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
     BoxCollision hitBox;
@@ -38,10 +39,12 @@ public:
     //constructor
     Player(); 
     //fetchers
-    float getHealth();
+    uint8_t getLevel() const;
+    float getHpPercentage() const;
+    float getExpPercentage() const;
     //functions
     void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds);
-    void takeDebuffs(const sf::Vector2f& debuff);
+    void takeDebuffs(const sf::Vector2u& debuff);
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;

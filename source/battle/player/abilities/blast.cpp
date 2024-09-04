@@ -48,7 +48,7 @@ void BlastPool::render(sf::RenderWindow& window) const {
 
 Blast::Blast() : 
     move(sf::Vector2f(0.0f, 0.0f)),
-    blastSpeed(800.0f), debuff(100.0f, 0.0f)
+    blastSpeed(800.0f), debuff(100, 0)
 {
     //preliminaries
     collisionType = CIRCLE; entityType = BLAST; stun = false;
@@ -101,6 +101,6 @@ sf::FloatRect Blast::getBounds() const {
 }
 
 //returns dmg blast will deal
-sf::Vector2f Blast::hitEnemy() {
+sf::Vector2u Blast::hitEnemy() {
     return debuff;
 }

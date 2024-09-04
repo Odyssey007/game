@@ -4,18 +4,21 @@
 Game::Game() : 
     //window setup
     window(nullptr), resolution(sf::Vector2u(0, 0)),
-    //entities
-    player(std::make_unique<Player>()), 
-    enemyPool(std::make_unique<EnemyPool>(100)),
+    //?temp
     blastPool(100)
 {
     //preliminaries
     currentWindow(); gameState = GAME;
     grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
-    //entities
+    //entity construction
+    player = std::make_unique<Player>();
+    enemyPool = std::make_unique<EnemyPool>(100);
+    obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
+    //entity starting update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
-    obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
+    //UI
+    playerUI = std::make_unique<PlayerUI>(screenBounds.width);
 }
 
 //window set up
@@ -55,15 +58,23 @@ void Game::update() {
         window->close();
         return;
     }
+
+    //centering camera to player
+    view.setCenter(playerBounds.left + playerBounds.width/2.0f, 
+                playerBounds.top + playerBounds.height/2.0f);
+
     screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     playerBounds = player->getBounds();
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
     
-
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
         enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
     }
+
+    playerUI->update(screenBounds, player->getHpPercentage(), 
+                    player->getExpPercentage(), player->getLevel());
+
 
 
     handleEvents();
@@ -73,10 +84,6 @@ void Game::update() {
         menu.handleEvent(event, gameState, mousePosition);
         return;
     }
-
-    //centering camera to player
-    view.setCenter(playerBounds.left + playerBounds.width/2.0f, 
-                playerBounds.top + playerBounds.height/2.0f);
         
 
     //update entities
@@ -139,6 +146,7 @@ void Game::render() {
 
         obstaclePool->render(*window);//objects
         
+        playerUI->render(*window);
         // grid.draw(*window); 
     }
     window->display();

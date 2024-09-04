@@ -44,7 +44,7 @@ protected:
     void handleAbilityCollision(Entity& entity);
     //
     void loadTexture(const std::string& name, const std::string& filePath);
-    void takeDebuff(sf::Vector2f debuff, bool stun); //!implement stun
+    void takeDebuff(sf::Vector2u debuff, bool stun); //!implement stun
     //
     virtual void checkLvlUp(const size_t level) = 0;
     //ENTITY setter
@@ -61,7 +61,7 @@ public:
     void checkAlive();
     void spawn(const size_t level, const sf::FloatRect& screenBounds);
     void restartAttackTimer();
-    virtual sf::Vector2f attack() = 0; //!not used currently
+    virtual sf::Vector2u attack() = 0; //!not used currently
     virtual void update(const sf::Vector2f& target) = 0;
     //ENTITY fetchers
     virtual const sf::Vector2f& getVelocity() const override;

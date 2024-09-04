@@ -4,8 +4,8 @@ Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
-    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f),
-    exp(0.0f), expRequired(100.0f), level(0),
+    healthMax(100), health(100), battleSpeed(300.0f), kingdomSpeed(300.0f),
+    exp(0), expRequired(100), level(1),
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
@@ -160,7 +160,7 @@ void Player::checkLevelUp(float exp) {
     if (this->exp >= expRequired) {
         level++;
         this->exp -= expRequired;
-        expRequired = 100*std::pow(level, 1.5);
+        expRequired = 100*std::pow(level-1, 1.5);
     }
 }
 
@@ -181,13 +181,24 @@ void Player::render(sf::RenderWindow& window) const {
 }
 
 //x = hp | y = ms
-void Player::takeDebuffs(const sf::Vector2f& debuff) {
+void Player::takeDebuffs(const sf::Vector2u& debuff) {
     health -= debuff.x;
     battleSpeed -= debuff.y; //!will not work
 }
 
 //fetchers
 
-float Player::getHealth() {
-    return health;
+uint8_t Player::getLevel() const {
+    return level;
+}
+
+float Player::getHpPercentage() const {
+    if (health < 0) {
+        return 0.0f;
+    }
+    return static_cast<float>(health)/healthMax;
+}
+
+float Player::getExpPercentage() const {
+    return static_cast<float>(exp)/expRequired;
 }

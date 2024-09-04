@@ -71,8 +71,8 @@ void Slime::leapAttack() {
     }
 }
 
-sf::Vector2f Slime::attack() {
-    return sf::Vector2f(dmg, slow);
+sf::Vector2u Slime::attack() {
+    return sf::Vector2u(dmg, slow);
 }
 
 void Slime::checkLvlUp(const size_t level) {

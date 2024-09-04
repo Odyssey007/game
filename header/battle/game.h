@@ -9,13 +9,12 @@
 #include "../header/battle/gridSystem.h"
 #include "../header/battle/pool.h"
 
-#include "../header/battle/waveSystem.h"
-
 #include "../header/battle/menu.h"
-
 #include "../header/battle/player/abilities/blast.h"
-#include "../header/battle/enemies/exp.h"
 
+#include "../header/battle/enemies/exp.h"
+#include "../header/battle/waveSystem.h"
+#include "../header/battle/player/playerUI.h"
 class Game {
 private:
     //set up
@@ -24,15 +23,17 @@ private:
     sf::View view;
     sf::Event event;
     GridSystem grid; 
-    //entities
-    std::unique_ptr<Player> player;
-    std::unique_ptr<EnemyPool> enemyPool;
-    std::unique_ptr<ObstaclePool> obstaclePool;
     //info storage
     sf::FloatRect screenBounds;
     sf::Vector2f mousePosition;
     sf::Vector2f playerPosition;
     sf::FloatRect playerBounds;
+    //entities
+    std::unique_ptr<Player> player;
+    std::unique_ptr<EnemyPool> enemyPool;
+    std::unique_ptr<ObstaclePool> obstaclePool;
+    //UI
+    std::unique_ptr<PlayerUI> playerUI;
     //functions
     void currentWindow();
     void handleEvents();
@@ -64,7 +65,9 @@ int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
 */
     //wave
     WaveSystem waveSystem;
-    size_t enemiesSpawning = 3;
+    size_t enemiesSpawning = 1;
     size_t enemyLevel = 0;
+
+    //player UI
 
 };

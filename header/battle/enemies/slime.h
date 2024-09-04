@@ -30,7 +30,7 @@ private:
 
     virtual void checkLvlUp(const size_t level) override;
 public:
-    virtual sf::Vector2f attack() override;
+    virtual sf::Vector2u attack() override;
     //constructor
     Slime();
     //functions

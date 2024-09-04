@@ -150,7 +150,7 @@ void Enemy::restartAttackTimer() {
 }
 
 //x = hp | y = ms
-void Enemy::takeDebuff(sf::Vector2f debuff, bool stun) {
+void Enemy::takeDebuff(sf::Vector2u debuff, bool stun) {
     health -= debuff.x;
     movementSpeed -= debuff.y; //!will not work with stun
 }

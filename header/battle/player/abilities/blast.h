@@ -8,7 +8,7 @@ private:
     CircleCollision hitBox;
     sf::Vector2f move;
     float blastSpeed;
-    sf::Vector2f debuff; //x=hp | y=others
+    sf::Vector2u debuff; //x=hp | y=others
 public:
     Blast();
     void startPosition(const sf::Vector2f& playerPosition, const sf::Vector2f& mousePosition);
@@ -16,7 +16,7 @@ public:
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) override;
     void update();
     //ABILITY
-    virtual sf::Vector2f hitEnemy() override; //returns dmg
+    virtual sf::Vector2u hitEnemy() override; //returns dmg
     //ENTITY
     virtual sf::FloatRect getBounds() const override;
 };

@@ -25,7 +25,7 @@ public:
     void restartBufferTime();
     float getBufferTime() const;
     virtual void kill();
-    virtual sf::Vector2f hitEnemy();
+    virtual sf::Vector2u hitEnemy();
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) = 0;
     // ENTITY
     virtual sf::Vector2f getPosition() const override; 

@@ -47,8 +47,8 @@ void Goblin::isFacingRight() {
     }
 }
 
-sf::Vector2f Goblin::attack() {
-    return sf::Vector2f(dmg, slow);
+sf::Vector2u Goblin::attack() {
+    return sf::Vector2u(dmg, slow);
 }
 
 void Goblin::checkLvlUp(const size_t level) {
