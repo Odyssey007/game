@@ -9,7 +9,9 @@ Player::Player() :
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
-    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
+    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true),
+
+    blastPool(100)
 {
     //preliminaries
     entityType = PLAYER; collisionType = BOX;
@@ -53,14 +55,33 @@ void Player::dash(const sf::Vector2f& mousePosition) {
 
 
 void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds) {
-    dash(mousePosition);
+    movement(mousePosition);
+    
 
-    // mouseDirection = (screenBounds.left + screenBounds.width/2.0f);
-    // movement(mousePosition, mouseDirection);
+
+    //ability
+    dash(mousePosition);
+    blastPool.update(screenBounds);
+
+
 
     for (auto& ability : abilities) {
         ability->activate(mousePosition, hitBox.getPosition());
     }
+}
+
+void Player::checkAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid) {
+    if (button == sf::Mouse::Left) {
+        abilityActive = blastPool.spawnBlast(mousePos, getPosition(), grid);
+    }
+}
+
+void Player::setAbilityInactive() {
+    abilityActive = false;
+}
+
+void Player::reset() {
+    blastPool.reset();
 }
 
 void Player::applyMovement() {
@@ -72,11 +93,11 @@ void Player::applyMovement() {
     }
 }
 
-void Player::movement(const sf::Vector2f& mousePosition, float mouseDirection, bool abilityActive) {
+void Player::movement(const sf::Vector2f& mousePosition) {    
     isMoving = false;
     moveDistance = sf::Vector2f(0.0f, 0.0f);
     if (abilityActive) {
-        idle(mousePosition, mouseDirection);
+        idle(mousePosition);
         return;
     }
     //capture keyboard input for movement
@@ -102,11 +123,11 @@ void Player::movement(const sf::Vector2f& mousePosition, float mouseDirection, b
     if (isMoving) {
         animation.update(sprite, 1, facingRight, {1.0f, 1.0f});//moving animation
     } else {
-        idle(mousePosition, mouseDirection);
+        idle(mousePosition);
     }
 }
 
-void Player::idle(const sf::Vector2f& mousePosition, float mouseDirection) {
+void Player::idle(const sf::Vector2f& mousePosition) {
     if (mousePosition.x >= this->getPosition().x) { //right side
         facingRight = true;
     } else {
@@ -174,10 +195,11 @@ void Player::handleEnemyCollisions(Entity& entity) {
 
 void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
+    blastPool.render(window);
     // window.draw(hitBox.body);
-    for (auto& ability : abilities) {
-        ability->render(window);
-    }
+    // for (auto& ability : abilities) {
+    //     ability->render(window);
+    // }
 }
 
 //x = hp | y = ms

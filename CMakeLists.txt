@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(
     header
     header/battle
+    header/battle/gameStates
     header/battle/player
     header/battle/player/abilities
     header/battle/enemies
@@ -20,6 +21,7 @@ include_directories(
 file(GLOB SOURCES 
     "source/*.cpp"
     "source/battle/*.cpp"
+    "source/battle/gameStates/*.cpp"
     "source/battle/player/*.cpp"
     "source/battle/player/abilities/*.cpp"
     "source/battle/enemies/*.cpp"

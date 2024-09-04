@@ -62,10 +62,10 @@ void Menu::handleEvent(const sf::Event& event, GameState& state, const sf::Vecto
             if (resumeBounds.contains(static_cast<sf::Vector2f>(mousePos))) {
                 state = GAME; 
             }
-            sf::FloatRect exitBounds = text[1].getGlobalBounds();
-            if (exitBounds.contains(mousePos)) {
-                state = EXIT;
-            } 
+            // sf::FloatRect exitBounds = text[1].getGlobalBounds();
+            // if (exitBounds.contains(mousePos)) {
+            //     state = EXIT;
+            // } 
         }
     }
 }

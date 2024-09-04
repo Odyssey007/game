@@ -1,5 +1,4 @@
 UI **
- -player health/exp
  -ability menu/lvl up menu
 
 abilities

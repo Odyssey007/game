@@ -29,9 +29,8 @@ private:
     sf::Clock fireCooldown;
 public:
     BlastPool(size_t totalBlasts);
-    void spawnBlasts(GridSystem& grid, bool& abilityActive, //!fix parameter
-                       const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);
-    void onScreen(const sf::FloatRect screenBounds);
-    void update();
+    bool spawnBlast(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos, GridSystem& grid);
+    void update(const sf::FloatRect screenBounds);
+    void reset();
     void render(sf::RenderWindow& window) const;
 };

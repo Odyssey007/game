@@ -5,6 +5,7 @@
 #include "../header/battle/enemies/slime.h"
 #include "../header/battle/player/abilities/basicSlash.h"
 #include "../header/battle/player/abilities/dash.h"
+#include "../header/battle/player/abilities/blast.h"
 
 class Player : public Entity {
 private:
@@ -59,10 +60,12 @@ public:
 
 
 
-    void movement(const sf::Vector2f& mousePosition, float mouseDirection, bool abilityActive);
-    void idle(const sf::Vector2f& mousePosition, float mouseDirection);
+    void movement(const sf::Vector2f& mousePosition);
+    void idle(const sf::Vector2f& mousePosition);
 
 
+    //ability
+    bool abilityActive = false;
 
     bool isDashing = false;
     float dashCooldown = 0.5f;
@@ -70,4 +73,11 @@ public:
     float totalDashDistance = 0;
     float dashDistance = 300;
     void dash(const sf::Vector2f& mousePosition);
+
+
+
+    BlastPool blastPool; //blast
+    void reset();
+    void checkAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid);
+    void setAbilityInactive();
 };

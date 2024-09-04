@@ -6,27 +6,27 @@ BlastPool::BlastPool(size_t totalBlasts) : totalBlasts(totalBlasts) {
     }
 }
 
-void BlastPool::spawnBlasts(GridSystem& grid, bool& abilityActive, 
-                              const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
+bool BlastPool::spawnBlast(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos, GridSystem& grid) {
     if (fireCooldown.getElapsedTime().asSeconds() >= 0.15f) {
-        abilityActive = true;
         auto blast = std::move(allBlasts.back());
         allBlasts.pop_back();
-        blast->startPosition(playerPosition, mousePosition);
-        blast->activate(mousePosition, playerPosition);
+        blast->startPosition(playerPos, mousePos);
+        blast->activate(mousePos, playerPos);
         grid.addEntity(*blast);
         activeBlasts.push_back(std::move(blast));
         fireCooldown.restart();
+        return true;
     }
+    return false;
 }
 
-void BlastPool::onScreen(const sf::FloatRect screenBounds) {
+void BlastPool::update(const sf::FloatRect screenBounds) {
     for (const auto& blast : activeBlasts) {
         blast->isActive(screenBounds);
     }
 }
 
-void BlastPool::update() {
+void BlastPool::reset() {
     for (auto it = activeBlasts.begin(); it != activeBlasts.end(); ) {
         if (!(*it)->isAlive()) {
             allBlasts.push_back(std::move(*it));

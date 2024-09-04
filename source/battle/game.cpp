@@ -3,9 +3,8 @@
 //preset values into setting up window
 Game::Game() : 
     //window setup
-    window(nullptr), resolution(sf::Vector2u(0, 0)),
+    window(nullptr), resolution(sf::Vector2u(0, 0))
     //?temp
-    blastPool(100)
 {
     //preliminaries
     currentWindow(); gameState = GAME;
@@ -19,6 +18,7 @@ Game::Game() :
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
     //UI
     playerUI = std::make_unique<PlayerUI>(screenBounds.width);
+    abilitySelectionUI = std::make_unique<AbilitySelectionUI>();
 }
 
 //window set up
@@ -42,83 +42,98 @@ void Game::handleEvents() {
             window->close();
         } else if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Escape) window->close();
-            if (event.key.code == sf::Keyboard::LAlt) gameState = MENU;
+        }
+        if (gameState == GAME) {
+            handleGameEvents();
+        } else if (gameState == LEVEL_UP_MENU) {
+            handleAbilityUIEvents();
+        } else if (gameState == PAUSE_MENU) {
+            handlePauseMenuEvents();
+        }
+    }
+}
+
+void Game::handleEvents() {
+    while(window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            window->close();
+        } else if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Escape) window->close();
+            if (event.key.code == sf::Keyboard::LAlt) gameState = PAUSE_MENU;
         } else if (event.type == sf::Event::MouseButtonPressed) {
+            sf::Mouse::Button button;
             if (event.mouseButton.button == sf::Mouse::Left) {
-                blastPool.spawnBlasts(grid, abilityActive, mousePosition, playerPosition);
+                button = sf::Mouse::Left;
             }
+            player->checkAbility(button, mousePosition, grid);
          } else if (event.type == sf::Event::MouseButtonReleased) {
-            abilityActive = false;
+            player->setAbilityInactive();
          }
     }
 }
 
 void Game::update() {
-    if (gameState == EXIT) {
-        window->close();
-        return;
+    if (gameState == GAME) {
+        gameUpdate();
+    } else if (gameState == LEVEL_UP_MENU) {
+        abilityUIUpdate();
+    } else if (gameState == PAUSE_MENU) {
+        pauseMenuUpdate();
     }
 
+
+
+
+    if (gameState != GAME) return; 
+    handleEvents();
     //centering camera to player
     view.setCenter(playerBounds.left + playerBounds.width/2.0f, 
                 playerBounds.top + playerBounds.height/2.0f);
-
+    //save info for the frame
     screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     playerBounds = player->getBounds();
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-    
+    //enemy spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
         enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
     }
-
+    //UI updates
     playerUI->update(screenBounds, player->getHpPercentage(), 
                     player->getExpPercentage(), player->getLevel());
+    
+    abilitySelectionUI->update(player->getLevel(), lastLvl, gameState);
 
-
-
-    handleEvents();
+    //menu
     menu.setPosition(view);
-
-    if (gameState == MENU) {
+    if (gameState == PAUSE_MENU) {
         menu.handleEvent(event, gameState, mousePosition);
         return;
     }
         
 
     //update entities
-    float mouseDirection = (screenBounds.left + screenBounds.width/2.0f);
-    player->movement(mousePosition, mouseDirection, abilityActive);
-    // player->update(mousePosition, screenBounds);
-
-
-    
+    player->update(mousePosition, screenBounds);
     enemyPool->update(playerPosition);
     obstaclePool->update(screenBounds);
-    //ability
-    blastPool.onScreen(screenBounds);
-
-
+    //collision check
     grid.checkCollision();
     player->applyMovement();
     enemyPool->applyMovement();
     obstaclePool->update(screenBounds);
-    
-
-    blastPool.update();
-    enemyPool->resetEnemies(grid);
+    //clean up 
+    player->reset();
     enemyPool->resetExp();
+    enemyPool->resetEnemies(grid);
     grid.removeDeadEntities();
-
+    //update gridSys
     grid.bufferRegion(playerPosition); 
     grid.activeGrids(player->getBounds()); 
     grid.updateGrids();     
     grid.populateQuadTree(); 
-    
-
-
-    //abilities
- 
+    //
+    if (gameState == LEVEL_UP_MENU) abilitySelectionUI->spawnCards(screenBounds);
+    //end game
     checkGameEnd();
 }
 
@@ -130,24 +145,22 @@ void Game::checkGameEnd() {
 }
 
 void Game::render() {
-    if (gameState == MENU) {
-        menu.render(*window);
-    } else {
+    if (gameState == GAME) {
         window->setView(view);
         window->clear();
-        //background
         //entities
-        enemyPool->render(*window);//enemies
-        player->render(*window);//player
-        
-        //quadTree.draw(*window);
-
-        blastPool.render(*window);
-
-        obstaclePool->render(*window);//objects
-        
+        enemyPool->render(*window);
+        player->render(*window);
+        // blastPool.render(*window);
+        obstaclePool->render(*window);
+        //UI
         playerUI->render(*window);
+        //quadTree.draw(*window);
         // grid.draw(*window); 
+    } else if (gameState == LEVEL_UP_MENU) {
+        abilitySelectionUI->render(*window);
+    } else if (gameState == PAUSE_MENU) {
+        menu.render(*window);
     }
     window->display();
 }

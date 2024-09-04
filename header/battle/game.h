@@ -10,11 +10,15 @@
 #include "../header/battle/pool.h"
 
 #include "../header/battle/menu.h"
-#include "../header/battle/player/abilities/blast.h"
 
 #include "../header/battle/enemies/exp.h"
 #include "../header/battle/waveSystem.h"
+
+
 #include "../header/battle/player/playerUI.h"
+#include "../header/battle/player/abilities/abilitySelectionUI.h"
+
+
 class Game {
 private:
     //set up
@@ -47,27 +51,25 @@ public:
 
 
     //!not finalized
+    uint8_t lastLvl = 1;
+    std::unique_ptr<AbilitySelectionUI> abilitySelectionUI;
 
     void checkGameEnd();
-    //menu
+    //pause menu
     Menu menu;
     GameState gameState;
-    //ability
-    bool abilityActive = false;
-    BlastPool blastPool; //blast
 
-    sf::Clock worldTime;  
+
+    //wave
+    WaveSystem waveSystem;
+    size_t enemiesSpawning = 1;
+    size_t enemyLevel = 0;
+};
+
 /*
+sf::Clock worldTime;  
 sf::Time elapsed = worldTime.getElapsedTime();
 
 int minutes = static_cast<int>(elapsed.asSeconds()) / 60;
 int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
 */
-    //wave
-    WaveSystem waveSystem;
-    size_t enemiesSpawning = 1;
-    size_t enemyLevel = 0;
-
-    //player UI
-
-};
