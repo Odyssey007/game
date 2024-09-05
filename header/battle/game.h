@@ -23,10 +23,10 @@ class Game {
 private:
     //set up
     std::unique_ptr<sf::RenderWindow> window; 
-    sf::Vector2u resolution;
     sf::View view;
     sf::Event event;
-    GridSystem grid; 
+    GridSystem grid;
+    GameState gameState;
     //info storage
     sf::FloatRect screenBounds;
     sf::Vector2f mousePosition;
@@ -38,9 +38,24 @@ private:
     std::unique_ptr<ObstaclePool> obstaclePool;
     //UI
     std::unique_ptr<PlayerUI> playerUI;
+    uint8_t lastLvl; bool skipFrame;
+    std::unique_ptr<AbilitySelectionUI> abilitySelectionUI;
+    //wave
+    size_t enemiesSpawning; size_t enemyLevel;
+    WaveSystem waveSystem;
     //functions
     void currentWindow();
     void handleEvents();
+    //game states
+    void handleEventsPlaying();
+    void handleEventsLevelUp();
+    void handleEventsPause();
+    void updatePlaying();
+    void updateLevelUp();
+    void updatePause();
+    void renderPlaying();
+    void renderLevelUp();
+    void renderPause();
 public:
     //constructor
     Game();
@@ -48,22 +63,12 @@ public:
     void update();
     void render();
     bool winRunning() const;
+    void isGameOver() const;
 
 
     //!not finalized
-    uint8_t lastLvl = 1;
-    std::unique_ptr<AbilitySelectionUI> abilitySelectionUI;
-
-    void checkGameEnd();
     //pause menu
     Menu menu;
-    GameState gameState;
-
-
-    //wave
-    WaveSystem waveSystem;
-    size_t enemiesSpawning = 1;
-    size_t enemyLevel = 0;
 };
 
 /*

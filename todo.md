@@ -1,8 +1,5 @@
-UI **
- -ability menu/lvl up menu
-
 abilities
- -ability center? **
+ -ability center? ** ---- implement how to store and 
  -dash (fix) **
  -new abilities
  -scaling implementation

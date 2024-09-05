@@ -40,6 +40,7 @@ public:
     //constructor
     Player(); 
     //fetchers
+    int getCurHealth() const;
     uint8_t getLevel() const;
     float getHpPercentage() const;
     float getExpPercentage() const;

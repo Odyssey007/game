@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include "../header/deltaTime.h"
 
-enum GameState { GAME, LEVEL_UP_MENU, PAUSE_MENU };
+enum GameState { PLAYING, LEVEL_UP_MENU, PAUSE_MENU };
 
 float magnitude(const sf::Vector2f& vector);
 sf::Vector2f normalize(const sf::Vector2f& one);

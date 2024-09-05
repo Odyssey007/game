@@ -1,23 +1,22 @@
 #include "../header/battle/game.h"
 
 //preset values into setting up window
-Game::Game() : 
-    //window setup
-    window(nullptr), resolution(sf::Vector2u(0, 0))
-    //?temp
-{
+Game::Game() {
     //preliminaries
-    currentWindow(); gameState = GAME;
-    grid = GridSystem(sf::FloatRect(0, 0, resolution.x * 2, resolution.y * 2)); 
+    window = nullptr; gameState = PLAYING; currentWindow();
+    grid = GridSystem(sf::FloatRect(0, 0, screenBounds.width * 2, screenBounds.height * 2)); 
     //entity construction
     player = std::make_unique<Player>();
     enemyPool = std::make_unique<EnemyPool>(100);
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
-    //entity starting update
+    //wave set up
+    enemiesSpawning = 1; enemyLevel = 0;
+    //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
     //UI
     playerUI = std::make_unique<PlayerUI>(screenBounds.width);
+    lastLvl = 1; skipFrame = false;
     abilitySelectionUI = std::make_unique<AbilitySelectionUI>();
 }
 
@@ -26,7 +25,6 @@ void Game::currentWindow() {
     sf::VideoMode screen = sf::VideoMode::getDesktopMode();
     window = std::make_unique<sf::RenderWindow>(screen, "Project-AA", sf::Style::Fullscreen);
     view = window->getDefaultView();
-    resolution = window->getSize();
     window->setFramerateLimit(120);
     screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     // window->setMouseCursorVisible(false); //!don't work
@@ -38,80 +36,78 @@ bool Game::winRunning() const {
 
 void Game::handleEvents() {
     while(window->pollEvent(event)) {
+        //valid across each state
         if (event.type == sf::Event::Closed) {
             window->close();
         } else if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Escape) window->close();
         }
-        if (gameState == GAME) {
-            handleGameEvents();
-        } else if (gameState == LEVEL_UP_MENU) {
-            handleAbilityUIEvents();
-        } else if (gameState == PAUSE_MENU) {
-            handlePauseMenuEvents();
+        //
+        switch (gameState) {
+            case PLAYING:
+                handleEventsPlaying();
+                break;
+            case LEVEL_UP_MENU:
+                handleEventsLevelUp();
+                break;
+            case PAUSE_MENU:
+                handleEventsPause();
+                break;
         }
     }
 }
 
-void Game::handleEvents() {
-    while(window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            window->close();
-        } else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Escape) window->close();
-            if (event.key.code == sf::Keyboard::LAlt) gameState = PAUSE_MENU;
-        } else if (event.type == sf::Event::MouseButtonPressed) {
-            sf::Mouse::Button button;
-            if (event.mouseButton.button == sf::Mouse::Left) {
-                button = sf::Mouse::Left;
-            }
-            player->checkAbility(button, mousePosition, grid);
-         } else if (event.type == sf::Event::MouseButtonReleased) {
-            player->setAbilityInactive();
-         }
+void Game::handleEventsPlaying() {
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::LAlt) gameState = PAUSE_MENU;
+    } else if (event.type == sf::Event::MouseButtonPressed) {
+        sf::Mouse::Button button = event.mouseButton.button;
+        player->checkAbility(button, mousePosition, grid);
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+        player->setAbilityInactive();
     }
+}
+
+void Game::handleEventsLevelUp() {
+    if (event.type == sf::Event::MouseButtonPressed) {
+        sf::Mouse::Button button = event.mouseButton.button;
+        abilitySelectionUI->confirmAbility(button, mousePosition, gameState);
+    }
+}
+
+void Game::handleEventsPause() {
+    return;
 }
 
 void Game::update() {
-    if (gameState == GAME) {
-        gameUpdate();
-    } else if (gameState == LEVEL_UP_MENU) {
-        abilityUIUpdate();
-    } else if (gameState == PAUSE_MENU) {
-        pauseMenuUpdate();
-    }
-
-
-
-
-    if (gameState != GAME) return; 
-    handleEvents();
-    //centering camera to player
-    view.setCenter(playerBounds.left + playerBounds.width/2.0f, 
-                playerBounds.top + playerBounds.height/2.0f);
-    //save info for the frame
+    //preliminaries
+    view.setCenter(playerBounds.left + playerBounds.width/2.0f, //centering camera to player 
+                   playerBounds.top + playerBounds.height/2.0f);
+        //save info for the frame
     screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     playerBounds = player->getBounds();
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+    handleEvents();
+    //
+    switch (gameState) {
+        case PLAYING:
+            updatePlaying();
+            break;
+        case LEVEL_UP_MENU:
+            updateLevelUp();
+            break;
+        case PAUSE_MENU:
+            updatePause();
+            break;
+    }
+}
+
+void Game::updatePlaying() {
     //enemy spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
         enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
     }
-    //UI updates
-    playerUI->update(screenBounds, player->getHpPercentage(), 
-                    player->getExpPercentage(), player->getLevel());
-    
-    abilitySelectionUI->update(player->getLevel(), lastLvl, gameState);
-
-    //menu
-    menu.setPosition(view);
-    if (gameState == PAUSE_MENU) {
-        menu.handleEvent(event, gameState, mousePosition);
-        return;
-    }
-        
-
     //update entities
     player->update(mousePosition, screenBounds);
     enemyPool->update(playerPosition);
@@ -130,37 +126,61 @@ void Game::update() {
     grid.bufferRegion(playerPosition); 
     grid.activeGrids(player->getBounds()); 
     grid.updateGrids();     
-    grid.populateQuadTree(); 
-    //
-    if (gameState == LEVEL_UP_MENU) abilitySelectionUI->spawnCards(screenBounds);
-    //end game
-    checkGameEnd();
+    grid.populateQuadTree();
+    //UI updates
+    playerUI->update(screenBounds, player->getHpPercentage(), 
+                    player->getExpPercentage(), player->getLevel());    
+    abilitySelectionUI->update(player->getLevel(), lastLvl, gameState);
+    if (gameState == LEVEL_UP_MENU) {
+        abilitySelectionUI->spawnCards(screenBounds);
+        skipFrame = true;
+    }
 }
 
-void Game::checkGameEnd() {
-    // std::cout << player->getHealth() << std::endl;
-    // if (player->getHealth() == 0) {
-    //     throw std::runtime_error("Game Over\n");
-    // }
+void Game::updateLevelUp() {
+    // abilitySelectionUI->spawnCards(screenBounds);
+    // skipFrame = true;
+}
+
+void Game::updatePause() {
+    menu.setPosition(view);
+    menu.handleEvent(event, gameState, mousePosition);
+}
+
+void Game::isGameOver() const {
+    if (player->getCurHealth() <= 0) {
+        std::cout << "ni hao\n"; // throw std::runtime_error("Game Over\n");
+    }
 }
 
 void Game::render() {
-    if (gameState == GAME) {
-        window->setView(view);
-        window->clear();
-        //entities
-        enemyPool->render(*window);
-        player->render(*window);
-        // blastPool.render(*window);
-        obstaclePool->render(*window);
-        //UI
-        playerUI->render(*window);
-        //quadTree.draw(*window);
-        // grid.draw(*window); 
+    if (gameState == PLAYING || skipFrame == true) {
+        renderPlaying();
     } else if (gameState == LEVEL_UP_MENU) {
-        abilitySelectionUI->render(*window);
+        renderLevelUp();
     } else if (gameState == PAUSE_MENU) {
-        menu.render(*window);
+        renderPause();
     }
     window->display();
+}
+
+void Game::renderPlaying() {
+    skipFrame = false; //in case needs to update
+    window->clear();
+    window->setView(view);
+    //entities
+    enemyPool->render(*window);
+    player->render(*window);
+    obstaclePool->render(*window);
+    //UI
+    playerUI->render(*window);
+    // grid.draw(*window); 
+}
+
+void Game::renderLevelUp() {
+    abilitySelectionUI->render(*window);
+}
+
+void Game::renderPause() {
+    menu.render(*window);
 }

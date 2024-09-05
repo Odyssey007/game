@@ -5,7 +5,7 @@ Player::Player() :
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
     healthMax(100), health(100), battleSpeed(300.0f), kingdomSpeed(300.0f),
-    exp(0), expRequired(100), level(1),
+    exp(0), expRequired(1), level(1),
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
@@ -223,4 +223,8 @@ float Player::getHpPercentage() const {
 
 float Player::getExpPercentage() const {
     return static_cast<float>(exp)/expRequired;
+}
+
+int Player::getCurHealth() const {
+    return health;
 }
