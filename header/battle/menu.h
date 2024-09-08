@@ -1,11 +1,6 @@
 #pragma once
 #include "../header/utility.h"
 
-
-enum GameState { GAME, MENU, EXIT };
-
-
-
 class Menu {
 private:
     sf::RectangleShape background;

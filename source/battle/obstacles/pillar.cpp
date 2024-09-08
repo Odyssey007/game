@@ -1,5 +1,15 @@
 #include "../header/battle/obstacles/pillar.h"
 
+Pillar::Pillar() {
+    //preliminaries
+    entityType = OBSTACLE; collisionType = BOX;
+    loadTexture("assets/obstacles/pillar1.png");
+    loadTexture("assets/obstacles/pillar2.png");
+    selectProperties();
+    bounds = sprite.getGlobalBounds();
+    sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
+}
+
 void Pillar::loadTexture(const std::string& filePath) {
     auto texture = std::make_unique<sf::Texture>(); 
     if (!texture->loadFromFile(filePath)) {
@@ -8,57 +18,27 @@ void Pillar::loadTexture(const std::string& filePath) {
     textures.emplace_back(std::move(texture));
 }
 
-Pillar::Pillar() {
-    //preliminaries
-    entityType = OBSTACLE; collisionType = BOX;
-    loadTexture("assets/obstacles/pillar1.png");
-    loadTexture("assets/obstacles/pillar2.png");
-    bounds = sprite.getGlobalBounds();
-    selectProperties();
-    
-    if (spawn() == 11) {
-        alive = false;
-    } else {
-        alive = true;
-    }
-}
-
-void Pillar::startPos(const sf::FloatRect& screenBounds) {
-    std::pair<int, int> rangeX, rangeY;
-
-    rangeX.first = static_cast<int>(screenBounds.left) + bounds.width/2;
-    rangeX.second = static_cast<int>(screenBounds.left + screenBounds.width) - bounds.width/2;
-
-    rangeY.first = static_cast<int>(screenBounds.top) + bounds.height/2;
-    rangeY.second = static_cast<int>(screenBounds.top + screenBounds.height) - bounds.height/2;
-
-    sf::Vector2i pos = randomGenerator(rangeX, rangeY);
-    
-    sprite.setPosition(pos.x, pos.y);
-}
-
 void Pillar::selectProperties() {
-    int type = typePicker();
+    int type = attributeSelectorI(0, 1);
     sprite.setTexture(*textures[type]);
     int angle = rotationAngle();
     sprite.rotate(angle);
-    float scale = scalePicker();
+    float scale = attributeSelectorF(1.5f, 2.5f);
     sprite.setScale(scale, scale);
+    alive = (attributeSelectorI(10, 11) != 11);
 }
 
-//picks an int between [0, 1]
-int Pillar::typePicker() {
+int Pillar::attributeSelectorI(int first, int second) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 1); 
-    return dis(gen); 
+    std::uniform_int_distribution<> dis(first, second);
+    return dis(gen);
 }
 
-//picks a float between [1.5, 2.5]
-float Pillar::scalePicker() {
+float Pillar::attributeSelectorF(float first, float second) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(1.5f, 2.5f);
+    std::uniform_real_distribution<float> dis(first, second);
     return dis(gen);
 }
 
@@ -72,19 +52,18 @@ int Pillar::rotationAngle() {
     return angles[randomIndex];
 }
 
-//picks an int between [10, 11]
-int Pillar::spawn() {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(10, 11); 
-    return dis(gen);
-}
+void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
+    std::pair<int, int> rangeX, rangeY;
 
-int Pillar::pickSide() {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 3); 
-    return dis(gen);
+    rangeX.first = static_cast<int>(screenBounds.left) + bounds.width/2;
+    rangeX.second = static_cast<int>(screenBounds.left + screenBounds.width) - bounds.width/2;
+
+    rangeY.first = static_cast<int>(screenBounds.top) + bounds.height/2;
+    rangeY.second = static_cast<int>(screenBounds.top + screenBounds.height) - bounds.height/2;
+
+    sf::Vector2i pos = randomGenerator(rangeX, rangeY);
+    
+    sprite.setPosition(pos.x, pos.y);
 }
 
 void Pillar::respawn(const sf::FloatRect& screenBounds) {
@@ -98,24 +77,24 @@ void Pillar::respawn(const sf::FloatRect& screenBounds) {
             return;
         }
         timerRunning = false;
-        if (spawn() == 11) { // 10 - true | 11 - false
+        if (attributeSelectorI(10, 11) == 11) { // 10 - true | 11 - false
             alive = false;
             return;
         } 
         alive = true;
         
         this->selectProperties();
-        this->setInitialPosition(screenBounds);
+        this->respawnPosition(screenBounds);
     } else if (timerRunning) {
         timer.restart();
         timerRunning = false;
     }
 }
 
-void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
+void Pillar::respawnPosition(const sf::FloatRect& screenBounds) {
     std::pair<int, int> rangeX, rangeY;
-    int offset = 200; 
-    int side = pickSide(); 
+    int offset = 350; 
+    int side = attributeSelectorI(0, 3); 
     switch (side) {
         case 0: //left
             rangeX.first = static_cast<int>(screenBounds.left) - bounds.width - offset;
@@ -147,15 +126,11 @@ void Pillar::setInitialPosition(const sf::FloatRect& screenBounds) {
 }
 
 void Pillar::handleCollision(Entity& entity) {
-    if (this->alive == false) return;
-    
     EntityType otherEntity = entity.entityType;
+    if (otherEntity == OBSTACLE || otherEntity == EXP || 
+        otherEntity == BLAST) return;
     if (otherEntity == PLAYER || otherEntity == ENEMY) {
         stopEntities(entity);
-    } else if (otherEntity == OBSTACLE) {
-        return;
-    } else if (otherEntity == BLAST) {
-        return;
     }
 }
 
@@ -164,23 +139,27 @@ void Pillar::stopEntities(Entity& entity) {
     sf::Vector2f moveDistance = entity.getVelocity();
     currentBounds = this->sprite.getGlobalBounds();
 
+    bool hit;
     switch (entity.collisionType) {
         case BOX:
-            resolveBoxCollision(moveDistance, entityBounds);
+            hit = resolveBoxCollision(moveDistance, entityBounds);
             break;
         case CIRCLE:
-            resolveCircleCollision(moveDistance, entityBounds);
+            hit = resolveCircleCollision(moveDistance, entityBounds);
             break;
     }
-    entity.setVelocity(moveDistance);
+    if (hit) {
+        entity.setVelocity(moveDistance);
+        entity.handleCollision(*this);
+    }
 }
 
-void Pillar::resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds) {
+bool Pillar::resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds) {
     sf::FloatRect nextMovement = entityBounds;
     nextMovement.left += velocity.x; 
     nextMovement.top += velocity.y;
 
-    if (!currentBounds.intersects(nextMovement)) return;
+    if (!currentBounds.intersects(nextMovement)) return false;
 
     bool horizontalIntersect = entityBounds.left + entityBounds.width > currentBounds.left &&
                                entityBounds.left < currentBounds.left + currentBounds.width;
@@ -203,9 +182,10 @@ void Pillar::resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& en
             velocity.x = 0; //left
         }
     }
+    return true;
 }
 
-void Pillar::resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds) {
+bool Pillar::resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds) {
     float radius = entityBounds.width / 2.0f;
     sf::Vector2f currentCenter(entityBounds.left + radius, entityBounds.top + radius);
     
@@ -223,8 +203,10 @@ void Pillar::resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect&
         float overlap = radius - distance;
         sf::Vector2f correction = distanceVector * overlap;
         nextCenter += correction;
-        velocity = nextCenter - currentCenter;    
+        velocity = nextCenter - currentCenter;
+        return true;
     }
+    return false;
 }
 
 sf::FloatRect Pillar::getBounds() const {
@@ -238,5 +220,3 @@ sf::Vector2f Pillar::getPosition() const {
 void Pillar::render(sf::RenderWindow& window) const {
     window.draw(sprite);
 }
-
-//!MAKE A FUCNTION THAT RETURN ALIVE

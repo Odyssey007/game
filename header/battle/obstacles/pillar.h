@@ -13,31 +13,30 @@ private:
     //hitbox
     sf::FloatRect bounds;
     sf::FloatRect currentBounds;
-
-    void selectProperties();
-    int typePicker();
-    float scalePicker();
-    int rotationAngle();
-    void loadTexture(const std::string& filePath);
-
-    int spawn();
+    //respawn
     sf::Clock timer;
     bool timerRunning = false;
-    int pickSide();
-
+    void respawnPosition(const sf::FloatRect& screenBounds);
+    //attribute selectors
+    void selectProperties();
+    int attributeSelectorI(int first, int second);
+    float attributeSelectorF(float first, float second);
+    int rotationAngle();
+    //handleCollision
     void stopEntities(Entity& entity);
-    void resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
-    void resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
+    bool resolveBoxCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
+    bool resolveCircleCollision(sf::Vector2f& velocity, const sf::FloatRect& entityBounds);
+    //
+    void loadTexture(const std::string& filePath);
 public:
     Pillar();
-    //functions
     void respawn(const sf::FloatRect& screenBounds);
+    //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
-    //
-    void startPos(const sf::FloatRect& screenBounds);
+    //ENTITY setters
     virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
-    //
+    //ENTITY functions
     virtual void handleCollision(Entity& entity) override;
     virtual void render(sf::RenderWindow& window) const override;
 };

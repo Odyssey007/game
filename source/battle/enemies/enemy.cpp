@@ -1,14 +1,19 @@
 #include "../header/battle/enemies/enemy.h"
 
-Enemy::Enemy() {
-    //preliminaries
-    health = 100;
-    entityType = ENEMY; currentAbility = 0;
+Enemy::Enemy() :
+    //animation
+    animationSheetDim(sf::Vector2u(0, 0)), frameDuration(0.18f),
+    //attributes
+    fullHealth(100), movementSpeed(150.0f), baseDamage(10), attackCooldown(1.5f),
+    //movement
+    totalDirections(32), bestDirection(sf::Vector2f(0.0f, 0.0f)), 
+    moveDistance(sf::Vector2f(0.0f, 0.0f)), bounds(sf::FloatRect(0.0f, 0.0f, 0.0f, 0.0f))
+{
+    //update parent
+    entityType = ENEMY;
+    //
     loadTexture("slime", "assets/enemies/slime.png");
     loadTexture("goblin", "assets/enemies/goblinSheet.png");
-    //movement set up
-    movementSpeed = 150; baseDamage = 5;
-    bestDirection = sf::Vector2f(0.0f, 0.0f);
     generateDirections();
 }
 
@@ -35,21 +40,126 @@ void Enemy::generateDirections(int numDirections) {
 }
 
 void Enemy::meleeMovement(const sf::Vector2f& target) {
-    sf::Vector2f toTarget = target - sprite.getPosition();
-    toTarget = normalize(toTarget);
-    //finds the optimal direction toward target 
+    sf::Vector2f rawToTarget = target - this->getPosition();
+    sf::Vector2f toTarget = normalize(rawToTarget);
+    sf::Vector2f whereBlocked = toTarget;
+    //determines best direction towards player
     float maxDot = -1.0f;
-    for (int i = 0; i < 32; i++) {
+    bestDirection = directions[0]; //default direction
+    for (int i = 0; i < totalDirections; i++) {
         float dot = dotProduct(directions[i], toTarget);
         if (dot > maxDot) {
             maxDot = dot;
             bestDirection = directions[i];
         }
     }
-    //separation force from neighbors
-    
-    //move
-    moveDistance = bestDirection*static_cast<float>(movementSpeed)*DeltaTime::getInstance()->getDeltaTime();
+    //check if path is blocked by neighbor
+    bool isCircling = false;
+    float speed = movementSpeed;
+    if (isPathBlocked(target, whereBlocked)) {
+        if (magnitude(rawToTarget) < 145.0f) { //hovers around target
+            if (!isCircling) {
+                bestDirection = sf::Vector2f(-toTarget.y, toTarget.x); //perpendicular to target
+                isCircling = true;
+            }
+            speed /= 1.5f;
+        } else if (magnitude(whereBlocked) < 200.0f) { //avoid blocked paths
+            if (!isCircling) {
+                avoidBlocking(toTarget, whereBlocked);
+                speed /= 1.5f;
+            }
+        }
+    } else {
+        isCircling = false;
+    }
+    //update next movement
+    moveDistance = bestDirection*speed*DeltaTime::getInstance()->getDeltaTime();
+}
+
+
+//check if path blocked; if so, updates whereBlocked 
+bool Enemy::isPathBlocked(const sf::Vector2f& target, sf::Vector2f& whereBlocked) {
+    bool pathBlocked = false;
+    for (Entity* neighbor : neighbors) {
+        if (neighbor != this) { //stop self neighboring
+            //create a line segment from cur to future position
+            sf::Vector2f myPos = this->getPosition();
+            sf::Vector2f playerPos = target;
+            sf::FloatRect neighborBounds = neighbor->getBounds();
+            if (moveDistance.x >= 0.0f) { //stops line from meeting target center
+                playerPos.x = target.x + 100.0f; //right
+            } else {
+                playerPos.x = target.x - 100.0f; //left
+            }
+            sf::FloatRect pathBounds(std::min(myPos.x, playerPos.x), std::min(myPos.y, playerPos.y),
+                                     std::abs(myPos.x - playerPos.x), std::abs(myPos.y - playerPos.y));
+            pathBounds.left -= neighborBounds.width/2;
+            pathBounds.top -= neighborBounds.height/2;
+            pathBounds.width += neighborBounds.width;
+            pathBounds.height += neighborBounds.height;
+            //check if path collides with neighbor
+            if ((neighbor->collisionType == BOX && BoxCollision::checkCollision(pathBounds, neighborBounds)) ||
+            (neighbor->collisionType == CIRCLE && Collision::checkCollision(pathBounds, neighborBounds))) {
+                pathBlocked = true;
+                whereBlocked = neighbor->getPosition() - myPos;
+                // whereBlocked.x = abs(whereBlocked.x); whereBlocked.y = abs(whereBlocked.y);
+                break;
+            }
+        }
+    }
+    return pathBlocked;
+}
+
+//best direction to avoid blocked path and still move towards target
+void Enemy::avoidBlocking(const sf::Vector2f& toTarget, const sf::Vector2f& whereBlocked) {
+    float maxDot = -std::numeric_limits<float>::max();
+    for (const auto& direction : directions) {
+        float dotToBlocked = dotProduct(direction, whereBlocked);
+        //get direction away from whereBlocked
+        if (dotToBlocked < 0.0f) {
+            float dotToTarget = dotProduct(direction, toTarget);
+            if (dotToTarget > maxDot) {
+                maxDot = dotToTarget;
+                bestDirection = direction;
+            }
+        }
+    }
+}
+
+float Enemy::getAttackCooldown() const {
+    return attackCooldown;
+}
+
+void Enemy::setNeighbors(const std::vector<Entity*>& newNeighbors) {
+    neighbors.clear();
+    neighbors.insert(neighbors.end(), newNeighbors.begin(), newNeighbors.end());
+}
+
+void Enemy::checkAlive() {
+    if (health <= 0) {
+        alive = false;
+    }
+}
+
+float Enemy::getAttackTimer() const {
+    return attackTimer.getElapsedTime().asSeconds();
+}
+
+void Enemy::restartAttackTimer() {
+    attackTimer.restart();
+}
+
+//x = hp | y = ms
+void Enemy::takeDebuff(sf::Vector2u debuff, bool stun) {
+    health -= debuff.x;
+    movementSpeed -= debuff.y; //!will not work with stun
+}
+
+void Enemy::spawn(const size_t level, const sf::FloatRect& screenBounds) {
+    this->alive = true; 
+    checkLvlUp(level);
+    health = fullHealth;
+    setInitialPosition(screenBounds);
 }
 
 //ENTITY FUNCTIONS
@@ -83,10 +193,6 @@ void Enemy::setInitialPosition(const sf::FloatRect& screenBounds) {
     sprite.setPosition(spawnPosition.x, spawnPosition.y);
 }
 
-//!make a checkALive
-
-//ENTITY FUNCTIONS
-
 const sf::Vector2f& Enemy::getVelocity() const {
     return moveDistance;
 }
@@ -95,37 +201,23 @@ void Enemy::setVelocity(const sf::Vector2f& velocity) {
     moveDistance = velocity;
 }
 
-void Enemy::checkAlive() {
-    if (health <= 0) {
-        alive = false;
-    }
-}
-
 void Enemy::applyMovement() {
     sprite.move(moveDistance);
     moveDistance = sf::Vector2f(0.0f, 0.0f);
 }
 
-float Enemy::getAttackTimer() const {
-    return attackTimer.getElapsedTime().asSeconds();
-}
-
-void Enemy::restartAttackTimer() {
-    attackTimer.restart();
-}
-
 void Enemy::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
-    if (otherEntity == PLAYER || otherEntity == OBSTACLE) {
-        return;
-    } else if (otherEntity == ENEMY) {
-        stopEnemyOverlap(entity);
+    if (otherEntity == PLAYER || otherEntity == OBSTACLE || 
+        otherEntity == EXP) return;
+    if (otherEntity == ENEMY) {
+        handleEnemyCollision(entity);
     } else if (otherEntity == BLAST) {
-        handleAbilityCollisions(entity);
+        handleAbilityCollision(entity);
     }
 }
 
-void Enemy::handleAbilityCollisions(Entity& entity) {
+void Enemy::handleAbilityCollision(Entity& entity) {
     Ability* ability = dynamic_cast<Ability*>(&entity);
     if (ability->getBufferTime() >= 0.05f) {
         takeDebuff(ability->hitEnemy(), ability->stun);
@@ -133,13 +225,7 @@ void Enemy::handleAbilityCollisions(Entity& entity) {
     }
 }
 
-//x = hp | y = ms
-void Enemy::takeDebuff(sf::Vector2f debuff, bool stun) {
-    health -= debuff.x;
-    movementSpeed -= debuff.y; //!will not work with stun
-}
-
-void Enemy::stopEnemyOverlap(Entity& entity) {
+void Enemy::handleEnemyCollision(Entity& entity) {
     if (this->collisionType == BOX && entity.collisionType == BOX) {
         boxOverlap(entity, *this);
         return;
@@ -205,43 +291,34 @@ void Enemy::boxOverlap(Entity& entity1, Entity& entity2) {
     entity2.setVelocity(velocity2);
 }
 
-//!need to fix
 void Enemy::boxCircleOverlap(Entity& box, Entity& circle) {
     sf::FloatRect boxBounds = box.getBounds();
     sf::Vector2f circleCenter = circle.getPosition();
     float circleRadius = circle.getBounds().width / 2.0f;
 
-    // Calculate the separation vector between the box and the circle
     sf::Vector2f separationVec = Collision::calcDistance(boxBounds, circleCenter, circleRadius);    
     float distance = magnitude(separationVec);
 
     if (distance < circleRadius) {
         sf::Vector2f direction = normalize(separationVec);
         float correction = circleRadius - distance;
-
-        // Apply a fraction of the correction as position adjustment to reduce jitter
-        const float positionCorrectionFactor = 0.3f; // Lower factor to reduce pushback
+        //reduce pushback
+        const float positionCorrectionFactor = 0.3f;
         sf::Vector2f positionAdjustment = direction * (correction * positionCorrectionFactor);
-
-        // Apply the position adjustment directly to prevent fast pushback
         circleCenter += positionAdjustment;
-
-        // Optionally apply a small velocity adjustment
-        const float velocityCorrectionFactor = 0.1f; // Smaller correction to avoid jitter
+        //to reduce jitter
+        const float velocityCorrectionFactor = 0.1f; 
         sf::Vector2f velocityAdjustment = direction * (correction * velocityCorrectionFactor);
-
+        //set new 
         sf::Vector2f circleVelocity = circle.getVelocity();
         circleVelocity += velocityAdjustment;
-
         sf::Vector2f boxVelocity = box.getVelocity();
         boxVelocity -= velocityAdjustment;
-
-        // Apply damping to smooth out any residual jitter
+        // dampening for residual jitter
         const float dampingFactor = 0.9f;
         circleVelocity *= dampingFactor;
         boxVelocity *= dampingFactor;
 
-        // Update velocities
         circle.setVelocity(circleVelocity);
         box.setVelocity(boxVelocity);
     }

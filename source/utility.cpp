@@ -68,6 +68,11 @@ bool containsWithTolerance(const sf::FloatRect& bounds, float x, float y, float 
             y >= bounds.top - tolerance && y <= bounds.top + bounds.height + tolerance);
 }
 
+sf::Vector2f interpolate(const sf::Vector2f& cur, const sf::Vector2f& target, float alpha) {
+    return cur*(1 - alpha) + target*alpha;
+}
+
+
 //!not used
 std::string generateID(std::string type) {
     static unsigned int enemyCounter = 0;

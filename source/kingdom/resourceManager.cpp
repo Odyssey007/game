@@ -11,6 +11,7 @@ ResourceManager::ResourceManager() {
 }
 
 bool ResourceManager::canAfford() const {
+    return true; 
     //logic
 }
 
@@ -23,5 +24,6 @@ void ResourceManager::addResources() {
 }
 
 int ResourceManager::getAmount(ResourceType type) const {
+    return 7;
     //logic
 }

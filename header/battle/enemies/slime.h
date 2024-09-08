@@ -10,6 +10,9 @@ class Player;
 
 class Slime : public Enemy {
 private:
+    //
+    int dmg;
+    int slow;
     //hit box
     CircleCollision hitBox;
     //current ability in use
@@ -24,9 +27,10 @@ private:
 
     void normalAttack();
     void leapAttack();
+
+    virtual void checkLvlUp(const size_t level) override;
 public:
-    virtual sf::Vector2f attack() override;
-    virtual float getAttackCooldown() const override;
+    virtual sf::Vector2u attack() override;
     //constructor
     Slime();
     //functions

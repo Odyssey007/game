@@ -5,8 +5,7 @@
 #include "../header/battle/enemies/slime.h"
 #include "../header/battle/player/abilities/basicSlash.h"
 #include "../header/battle/player/abilities/dash.h"
-
-enum Direction { UP, DOWN, LEFT, RIGHT };
+#include "../header/battle/player/abilities/blast.h"
 
 class Player : public Entity {
 private:
@@ -18,10 +17,13 @@ private:
     sf::Vector2u animationSheetDim;
     float frameDuration;
     //stats
-    float health;
+    int healthMax;
+    int health;
     float battleSpeed;
     const float kingdomSpeed;
-    Direction direction;
+    int exp;
+    int expRequired;
+    uint8_t level;
     std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
     BoxCollision hitBox;
@@ -32,16 +34,19 @@ private:
     bool facingRight;
     //collision handling
     void handleEnemyCollisions(Entity& other);
-    void handleObjectCollisions(Entity& other);
+    void handleExpCollision(Entity& other);
+    void checkLevelUp(float exp);
 public:
     //constructor
     Player(); 
     //fetchers
-    float getHealth();
+    int getCurHealth() const;
+    uint8_t getLevel() const;
+    float getHpPercentage() const;
+    float getExpPercentage() const;
     //functions
-    void update(const sf::Vector2f& mousePosition);
-    void takeDebuffs(const sf::Vector2f& debuff);
-    Direction getDirection() const;
+    void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds);
+    void takeDebuffs(const sf::Vector2u& debuff);
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
@@ -56,6 +61,13 @@ public:
 
 
 
+    void movement(const sf::Vector2f& mousePosition);
+    void idle(const sf::Vector2f& mousePosition);
+
+
+    //ability
+    bool abilityActive = false;
+
     bool isDashing = false;
     float dashCooldown = 0.5f;
     sf::Clock dashClock;
@@ -63,6 +75,10 @@ public:
     float dashDistance = 300;
     void dash(const sf::Vector2f& mousePosition);
 
-    PlayerAbilityType ability;
-    void movement();
+
+
+    BlastPool blastPool; //blast
+    void reset();
+    void checkAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid);
+    void setAbilityInactive();
 };

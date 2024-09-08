@@ -91,5 +91,6 @@
         "BASICSLASH",
         "Debuffs",
         "Fullscreen"
-    ]
+    ],
+    "C_Cpp.errorSquiggles": "disabled"
 }

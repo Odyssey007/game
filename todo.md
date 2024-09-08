@@ -1,9 +1,17 @@
--look into slime intersection with blast
+abilities
+ -ability center? ** ---- implement how to store and 
+ -dash (fix) **
+ -new abilities
+ -scaling implementation
 
-wave system
+enemies
+ -mini bosses
+ -boss
 
-enemy movement : make em not all clump up together and avoid obstacles
+balancing
+ -wave timing
+    -enemy lvl|spawn
+ -player lvl(Exp)
+    -ability-scale
 
-fix up old abilities
---dash
-new abilities implementations
+save sys

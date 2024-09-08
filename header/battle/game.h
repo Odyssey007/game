@@ -11,38 +11,51 @@
 
 #include "../header/battle/menu.h"
 
-#include "../header/battle/player/abilities/blast.h"
+#include "../header/battle/enemies/exp.h"
+#include "../header/battle/waveSystem.h"
+
+
+#include "../header/battle/player/playerUI.h"
+#include "../header/battle/player/abilities/abilitySelectionUI.h"
+
 
 class Game {
 private:
-    sf::Texture backgroundTexture;
-    sf::Sprite backgroundSprite;
-    //
-    sf::Texture cursorTexture;
-    sf::Cursor cursor;
-    //window reset up
+    //set up
     std::unique_ptr<sf::RenderWindow> window; 
-    sf::Vector2u resolution;
     sf::View view;
     sf::Event event;
-    //collision
-    CollisionManager collisionManager;
-    GridSystem grid; 
-    //PLAYER
+    GridSystem grid;
+    GameState gameState;
+    //info storage
+    sf::FloatRect screenBounds;
+    sf::Vector2f mousePosition;
+    sf::Vector2f playerPosition;
+    sf::FloatRect playerBounds;
+    //entities
     std::unique_ptr<Player> player;
-    //ENEMY
-    //EnemyPool enemyPool; 
     std::unique_ptr<EnemyPool> enemyPool;
     std::unique_ptr<ObstaclePool> obstaclePool;
-    size_t currentWave;
-    sf::Clock waveClock;
-    sf::Time waveTimer;
-    //OBJECTS
-    //ObjectPool objectPool;
+    //UI
+    std::unique_ptr<PlayerUI> playerUI;
+    uint8_t lastLvl; bool skipFrame;
+    std::unique_ptr<AbilitySelectionUI> abilitySelectionUI;
+    //wave
+    size_t enemiesSpawning; size_t enemyLevel;
+    WaveSystem waveSystem;
     //functions
     void currentWindow();
     void handleEvents();
-    void checkGameEnd();
+    //game states
+    void handleEventsPlaying();
+    void handleEventsLevelUp();
+    void handleEventsPause();
+    void updatePlaying();
+    void updateLevelUp();
+    void updatePause();
+    void renderPlaying();
+    void renderLevelUp();
+    void renderPause();
 public:
     //constructor
     Game();
@@ -50,18 +63,18 @@ public:
     void update();
     void render();
     bool winRunning() const;
-
-    void checkWave();
-
-    sf::FloatRect screenBounds;
-    sf::Vector2f mousePosition;
-    sf::Vector2f playerPosition;
-    sf::FloatRect playerBounds;
+    void isGameOver() const;
 
 
+    //!not finalized
+    //pause menu
     Menu menu;
-    GameState gameState;
-
-
-    BlastPool blastPool;
 };
+
+/*
+sf::Clock worldTime;  
+sf::Time elapsed = worldTime.getElapsedTime();
+
+int minutes = static_cast<int>(elapsed.asSeconds()) / 60;
+int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
+*/

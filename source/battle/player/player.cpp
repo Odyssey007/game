@@ -4,11 +4,14 @@ Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
-    health(100.0f), battleSpeed(300.0f), kingdomSpeed(300.0f),
+    healthMax(100), health(100), battleSpeed(300.0f), kingdomSpeed(300.0f),
+    exp(0), expRequired(1), level(1),
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
-    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
+    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true),
+
+    blastPool(100)
 {
     //preliminaries
     entityType = PLAYER; collisionType = BOX;
@@ -31,8 +34,7 @@ void Player::dash(const sf::Vector2f& mousePosition) {
 
         // Calculate move distance
         sf::Vector2f direction = mousePosition - sprite.getPosition();
-        float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-        moveDistance = direction / length;
+        moveDistance = normalize(direction);
         totalDashDistance = 0; 
     }
 
@@ -52,14 +54,34 @@ void Player::dash(const sf::Vector2f& mousePosition) {
 }
 
 
-void Player::update(const sf::Vector2f& mousePosition) {
-    dash(mousePosition);
+void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds) {
+    movement(mousePosition);
+    
 
-    movement();
+
+    //ability
+    dash(mousePosition);
+    blastPool.update(screenBounds);
+
+
 
     for (auto& ability : abilities) {
-        ability->activate(mousePosition, hitBox.body.getPosition());
+        ability->activate(mousePosition, hitBox.getPosition());
     }
+}
+
+void Player::checkAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid) {
+    if (button == sf::Mouse::Left) {
+        abilityActive = blastPool.spawnBlast(mousePos, getPosition(), grid);
+    }
+}
+
+void Player::setAbilityInactive() {
+    abilityActive = false;
+}
+
+void Player::reset() {
+    blastPool.reset();
 }
 
 void Player::applyMovement() {
@@ -71,30 +93,29 @@ void Player::applyMovement() {
     }
 }
 
-void Player::movement() {
-    //reset each after each movement
+void Player::movement(const sf::Vector2f& mousePosition) {    
     isMoving = false;
     moveDistance = sf::Vector2f(0.0f, 0.0f);
-    //Capture keyboard input for movement
+    if (abilityActive) {
+        idle(mousePosition);
+        return;
+    }
+    //capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
-        direction = UP;
         moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { //down
-        direction = DOWN;
         moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
         isMoving = true;
     } 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { //left
         if (facingRight) facingRight = false;
-        direction = LEFT;
         moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { //right
         if (!facingRight) facingRight = true;
-        direction = RIGHT;
         moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     };
@@ -102,24 +123,27 @@ void Player::movement() {
     if (isMoving) {
         animation.update(sprite, 1, facingRight, {1.0f, 1.0f});//moving animation
     } else {
-        animation.update(sprite, 0, facingRight, {0.93f, 0.93f});//idle animation
+        idle(mousePosition);
     }
 }
 
-Direction Player::getDirection() const {
-    return direction;
+void Player::idle(const sf::Vector2f& mousePosition) {
+    if (mousePosition.x >= this->getPosition().x) { //right side
+        facingRight = true;
+    } else {
+        facingRight = false;
+    }
+    animation.update(sprite, 0, facingRight, {0.93f, 0.93f});
 }
-
-//!MAKE A FUNCTION THAT RETURN ALIVE
 
 //ENTITY FUNCTIONS
 
 sf::FloatRect Player::getBounds() const {
-    return hitBox.body.getGlobalBounds();
+    return hitBox.getBounds();
 }
 
 sf::Vector2f Player::getPosition() const {
-    return hitBox.body.getPosition();
+    return hitBox.getPosition();
 } 
 
 const sf::Vector2f& Player::getVelocity() const {
@@ -132,42 +156,75 @@ void Player::setVelocity(const sf::Vector2f& velocity) {
 
 void Player::setInitialPosition(const sf::FloatRect& screenBounds) { 
     sprite.setPosition(screenBounds.width/2, screenBounds.height/2);
-    hitBox.body.setPosition(screenBounds.width/2, screenBounds.height/2);
+    hitBox.followEntity(sf::Vector2f(screenBounds.width/2, screenBounds.height/2));
 }
 
 void Player::handleCollision(Entity& other) {
     EntityType otherEntity = other.entityType;
+    if (otherEntity == OBSTACLE || otherEntity == BLAST) return;
     if (otherEntity == ENEMY) {
         handleEnemyCollisions(other);
-    } else if (otherEntity == OBSTACLE || otherEntity == BLAST) {
-        return;
+    } else if (otherEntity == EXP) {
+        handleExpCollision(other);
+    }
+}
+
+void Player::handleExpCollision(Entity& entity) {
+    if (entity.isAlive()) {
+        Exp* exp = dynamic_cast<Exp*>(&entity);
+        this->checkLevelUp(exp->drop());
+    }
+}
+
+void Player::checkLevelUp(float exp) {
+    this->exp += exp;
+    if (this->exp >= expRequired) {
+        level++;
+        this->exp -= expRequired;
+        expRequired = 100*std::pow(level-1, 1.5);
     }
 }
 
 void Player::handleEnemyCollisions(Entity& entity) {
     Enemy* enemy = dynamic_cast<Enemy*>(&entity);
     if (enemy->getAttackTimer() >= enemy->getAttackCooldown()) {
-        takeDebuffs(enemy->attack());
+        this->takeDebuffs(enemy->attack());
         enemy->restartAttackTimer();
     }
 }
 
 void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
+    blastPool.render(window);
     // window.draw(hitBox.body);
-    for (auto& ability : abilities) {
-        ability->render(window);
-    }
+    // for (auto& ability : abilities) {
+    //     ability->render(window);
+    // }
 }
 
 //x = hp | y = ms
-void Player::takeDebuffs(const sf::Vector2f& debuff) {
+void Player::takeDebuffs(const sf::Vector2u& debuff) {
     health -= debuff.x;
     battleSpeed -= debuff.y; //!will not work
 }
 
 //fetchers
 
-float Player::getHealth() {
+uint8_t Player::getLevel() const {
+    return level;
+}
+
+float Player::getHpPercentage() const {
+    if (health < 0) {
+        return 0.0f;
+    }
+    return static_cast<float>(health)/healthMax;
+}
+
+float Player::getExpPercentage() const {
+    return static_cast<float>(exp)/expRequired;
+}
+
+int Player::getCurHealth() const {
     return health;
 }

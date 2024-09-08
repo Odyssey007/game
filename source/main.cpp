@@ -9,6 +9,7 @@ int main() {
         game.handleEvents(); 
         game.update(); //update frame
         game.render(); //render the new update
+        //game.isGameOver();
     }
     delete DeltaTime::getInstance();
 }

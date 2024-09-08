@@ -99,6 +99,7 @@ void QuadTree::clear() {
     }
 }
 
+// *not used
 void QuadTree::draw(sf::RenderWindow& window) {
     sf::RectangleShape rectangle(sf::Vector2f(bounds.width, bounds.height));
     rectangle.setPosition(bounds.left, bounds.top);

@@ -46,6 +46,7 @@ void Menu::setPosition(sf::View& view) {
     text[1].setPosition(pose);
 }
 
+//?writing on top not clearing
 void Menu::handleEvent(const sf::Event& event, GameState& state, const sf::Vector2f mousePos) {
     for (size_t i = 0; i < maxOptions; i++) {
         sf::FloatRect textBounds = text[i].getGlobalBounds();
@@ -60,12 +61,12 @@ void Menu::handleEvent(const sf::Event& event, GameState& state, const sf::Vecto
         if (event.mouseButton.button == sf::Mouse::Left) {
             sf::FloatRect resumeBounds = text[0].getGlobalBounds();
             if (resumeBounds.contains(static_cast<sf::Vector2f>(mousePos))) {
-                state = GAME; 
+                state = PLAYING; 
             }
-            sf::FloatRect exitBounds = text[1].getGlobalBounds();
-            if (exitBounds.contains(mousePos)) {
-                state = EXIT;
-            } 
+            // sf::FloatRect exitBounds = text[1].getGlobalBounds();
+            // if (exitBounds.contains(mousePos)) {
+            //     state = EXIT;
+            // } 
         }
     }
 }

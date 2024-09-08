@@ -1,12 +1,14 @@
 #include "../header/battle/entity.h"
 
-//HA HA moment
-
 Entity::Entity() {
     alive = true;
 }
 
-//these functions aren't used for all child cases
+bool Entity::isAlive() const {
+    return alive;
+}
+
+//these functions aren't used for some child cases
 const sf::Vector2f& Entity::getVelocity() const {
     static sf::Vector2f empty(0.0f, 0.0f);
     return empty;

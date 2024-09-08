@@ -24,10 +24,12 @@ void KingdomState::update(sf::RenderWindow& window, sf::Event& event) {
     view.setCenter(player->getBounds().left + player->getBounds().width/2.0f, 
                 player->getBounds().top + player->getBounds().height/2.0f);
     
-    player->update(mousePos); 
+    mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+    sf::FloatRect screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
+    player->update(mousePos, screenBounds); 
     player->applyMovement();
-    menu.positionMenu(view.getCenter(), resolution);  
-    //buildings.allBuilding();
+    menu.positionMenu({view.getCenter().x, view.getCenter().y}, resolution);  
 }
 
 void KingdomState::render(sf::RenderWindow& window) {
