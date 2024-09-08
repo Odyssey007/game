@@ -4,7 +4,7 @@ ButtonMenu::ButtonMenu(const std::string& name, const sf::Font& font) :
     showAddMenu(false), center(0, 0)
 {
     //Button rectangle
-    buttonRect.setSize({150, 30}); 
+    buttonRect.setSize({125, 30}); 
     buttonRect.setPosition(0, 0); 
     buttonRect.setFillColor(sf::Color(70, 70, 70));
 
@@ -89,14 +89,8 @@ void ButtonMenu::addEntity() {
 }
 
 void ButtonMenu::editKingdom(sf::Vector2f mousePos) {
-    bool edit = true; 
-
-    while (edit) {
-        if (castle.castleRect.contains(mousePos)) {
-            castle.moveBuilding(mousePos.x, mousePos.y); 
-            edit = false; 
-        }
-    }
+    //- Can implement a grid system here. 
+    std::cout << "Can edit" << std::endl;
 }
 
 void ButtonMenu::upgrade() {

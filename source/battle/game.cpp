@@ -8,7 +8,7 @@ Game::Game() :
     player(std::make_unique<Player>()), 
     enemyPool(std::make_unique<EnemyPool>(100)),
     obstaclePool(std::make_unique<ObstaclePool>(5)),
-    currentWave(1), waveTimer(sf::seconds(50)),
+    currentWave(20), waveTimer(sf::seconds(10)),
     blastPool(100)
 {
     //preliminaries
@@ -69,7 +69,6 @@ void Game::update() {
     playerPosition = player->getPosition(); 
     mousePosition = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
     
-    std::cout << player->getPosition().x << ", " << player->getPosition().y << std::endl;
     handleEvents();
     menu.setPosition(view);
 

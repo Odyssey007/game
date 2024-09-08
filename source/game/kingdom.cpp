@@ -8,20 +8,9 @@ KingdomState::KingdomState() :
 void KingdomState::enter(sf::RenderWindow& window) {
     view = window.getDefaultView();
     resolution = window.getSize(); 
+    sf::FloatRect screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
 
-    player->setInitialPosition(sf::FloatRect(0.0f, 0.0f, 0.0f, 0.0f)); 
-
-    // dynamicAsset.kingCastle();
-    // dynamicAsset.huts(); 
-    // dynamicAsset.multipurpose(); 
-    // dynamicAsset.scienceTech(); 
-    // dynamicAsset.blacksmithWeapon(); 
-    // dynamicAsset.farms();
-    // dynamicAsset.animalFarms();
-
-     staticAsset.kingdomWall(); 
-    // staticAsset.trees();
-    // staticAsset.civilians(); 
+    player->setInitialPosition(screenBounds); 
 }
 
 void KingdomState::handleEvents(sf::RenderWindow& window, sf::Event& event) {
@@ -43,14 +32,12 @@ void KingdomState::update(sf::RenderWindow& window, sf::Event& event) {
     player->update(mousePos); 
     player->applyMovement();
     menu.positionMenu(view.getCenter(), resolution);  
+    //buildings.allBuilding();
 }
 
 void KingdomState::render(sf::RenderWindow& window) {
     window.setView(view);
-    player->render(window); 
-    //dynamicAsset.render(window); 
-    staticAsset.render(window);
-    castle.render(window);  
+    player->render(window);  
     menu.render(window); 
 }
 

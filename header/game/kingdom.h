@@ -2,8 +2,6 @@
 #include "../header/utility.h"
 #include "../header/battle/player/player.h"
 #include "../header/game/states.h"
-#include "../header/kingdom/dynamicAsset.h"
-#include "../header/kingdom/staticAsset.h"
 #include "../header/kingdom/menu/menu.h"
 #include "../header/kingdom/buildings/dynamic/castle.h"
 
@@ -14,10 +12,7 @@ private:
     sf::View view; 
 
     //Entity instance 
-    std::shared_ptr<Player> player; 
-    //DynamicAsset dynamicAsset;
-    StaticAsset staticAsset; 
-    Castle castle;  
+    std::shared_ptr<Player> player;  
     KingdomMenu menu; 
 public:
     //Constructor 

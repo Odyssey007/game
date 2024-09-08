@@ -2,16 +2,16 @@
 #include "../header/utility.h"
 #include "../header/kingdom/buildings/dynamic/dynamicAsset.h"
 
-class Huts : public DynamicAssets {
+class Storage : public DynamicAssets {
 private:
     sf::IntRect rect; 
 public:  
     //Constructor; 
-    Huts(); 
+    Storage(); 
 
     //Getters
     virtual std::string getName() override;
-    virtual sf::Vector2f getPosition() override; 
+    virtual sf::Vector2f getPosition() override;
 
     //Base functions 
     virtual void upgrade() override; 

@@ -1,9 +1,10 @@
-#include "../header/kingdom/buildings/dynamic/huts.h"
+#include "../header/kingdom/buildings/dynamic/animalFarm.h"
 
-Huts::Huts() {
+AnimalFarms::AnimalFarms() {
     level = 1; // Will be loaded from the saved data
+    //? need to change from huts
     bounds.left = 350; // Will be loaded from the saved data
-    bounds.top = 10;   // Will be loaded from the saved data
+    bounds.top = 500;   // Will be loaded from the saved data
 
     // Load the hut texture
     if (!texture.loadFromFile("assets/kingdom/huts.png")) {
@@ -13,7 +14,7 @@ Huts::Huts() {
     }
 }
 
-void Huts::setupRect() {
+void AnimalFarms::setupRect() {
     sf::Vector2u textureSize = texture.getSize();
     bounds.width = static_cast<float>(textureSize.x);
     bounds.height = static_cast<float>(textureSize.y);
@@ -27,21 +28,22 @@ void Huts::setupRect() {
 }
 
 
-std::string Huts::getName() {
-    return "Huts"; 
+std::string AnimalFarms::getName() {
+    return "AnimalFarm"; 
 }
 
-sf::Vector2f Huts::getPosition() {
+sf::Vector2f AnimalFarms::getPosition() {
     return sf::Vector2f {bounds.left, bounds.top}; 
 }
 
-void Huts::upgrade() {
+void AnimalFarms::upgrade() {
     level++; 
     upgradeCost();
     //- Upgrade logic for castle goes here. 
 }
 
-void Huts::upgradeCost() {
+//? need to change
+void AnimalFarms::upgradeCost() {
     if (level % 5 == 0) {
         calculateCost(250, 200, 0); // Gold 
         calculateCost(500, 400, 1); // Food 
@@ -55,11 +57,11 @@ void Huts::upgradeCost() {
     }
 }
 
-sf::Vector2f Huts::bottomMid() {
+sf::Vector2f AnimalFarms::bottomMid() {
     return sf::Vector2f (bounds.left + (bounds.width/2), bounds.top + bounds.height + 5); 
 }
 
-void Huts::render(sf::RenderWindow& window) {
+void AnimalFarms::render(sf::RenderWindow& window) {
     sf::RectangleShape drawRect; 
     drawRect.setOutlineColor(sf::Color::Red); 
     drawRect.setOutlineThickness(1.0f); 

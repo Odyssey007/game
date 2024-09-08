@@ -1,65 +1,65 @@
-#include "../header/kingdom/buildings/dynamic/huts.h"
+#include "../header/kingdom/buildings/dynamic/storage.h"
 
-Huts::Huts() {
+Storage::Storage() {
     level = 1; // Will be loaded from the saved data
-    bounds.left = 350; // Will be loaded from the saved data
+    bounds.left = 1750; // Will be loaded from the saved data
     bounds.top = 10;   // Will be loaded from the saved data
 
-    // Load the hut texture
-    if (!texture.loadFromFile("assets/kingdom/huts.png")) {
+    // Load the storage texture
+    if (!texture.loadFromFile("assets/kingdom/storage.png")) {
         std::cerr << "Error loading huts texture!" << std::endl;
     } else {
         setupRect(); 
     }
 }
 
-void Huts::setupRect() {
+void Storage::setupRect() {
     sf::Vector2u textureSize = texture.getSize();
-    bounds.width = static_cast<float>(textureSize.x);
-    bounds.height = static_cast<float>(textureSize.y);
+    bounds.width = static_cast<float>(textureSize.x * 1.32f);
+    bounds.height = static_cast<float>(textureSize.y * 1.2f);
     rect.width = texture.getSize().x; 
     rect.height = texture.getSize().y;
 
     sprite.setTexture(texture);
     sprite.setTextureRect(rect);
+    sprite.setScale(1.32f, 1.2f); 
     sprite.setOrigin(texture.getSize().x/2, texture.getSize().y/2);
     sprite.setPosition(sf::Vector2f(bounds.left + bounds.width / 2.0f, bounds.top + bounds.height / 2.0f));
 }
 
-
-std::string Huts::getName() {
-    return "Huts"; 
+std::string Storage::getName() {
+    return "Storage";
 }
 
-sf::Vector2f Huts::getPosition() {
+sf::Vector2f Storage::getPosition() {
     return sf::Vector2f {bounds.left, bounds.top}; 
 }
 
-void Huts::upgrade() {
+void Storage::upgrade() {
     level++; 
     upgradeCost();
     //- Upgrade logic for castle goes here. 
 }
 
-void Huts::upgradeCost() {
+void Storage::upgradeCost() {
     if (level % 5 == 0) {
-        calculateCost(250, 200, 0); // Gold 
-        calculateCost(500, 400, 1); // Food 
-        calculateCost(500, 400, 2); // Wood 
-        cost[3] = 0; // Stone
+        calculateCost(300, 250, 0); // Gold 
+        cost[1] = 0; // Food 
+        calculateCost(1000, 400, 2); // Wood 
+        calculateCost(500, 400, 3); // Stone
     } else {
-        calculateCost(250, 100, 0); // Gold 
-        calculateCost(500, 200, 1); // Food 
-        calculateCost(500, 200, 2); // Wood 
-        cost[3] = 0; // Stone
+        calculateCost(300, 100, 0); // Gold 
+        cost[1] = 0; // Food 
+        calculateCost(1000, 200, 2); // Wood 
+        calculateCost(500, 200, 3); // Stone
     }
 }
 
-sf::Vector2f Huts::bottomMid() {
+sf::Vector2f Storage::bottomMid() {
     return sf::Vector2f (bounds.left + (bounds.width/2), bounds.top + bounds.height + 5); 
 }
 
-void Huts::render(sf::RenderWindow& window) {
+void Storage::render(sf::RenderWindow& window) {
     sf::RectangleShape drawRect; 
     drawRect.setOutlineColor(sf::Color::Red); 
     drawRect.setOutlineThickness(1.0f); 

@@ -1,18 +1,20 @@
 #include "../header/kingdom/menu/menu.h"
 
 KingdomMenu::KingdomMenu() :
-    building(false), enter(false)
+    selectedBuilding(nullptr), building(false), enter(false)
 {
     if(!font.loadFromFile("assets/fonts/munro.ttf")) {
         std::cout << "font not working\n";
     }
+
+    buildingManager.addDynamicBuildings(); // Initializing dynamic buildings; 
 
     //Resource tabs
     resources.emplace_back("Population", font); 
     resources.emplace_back("Gold", font); 
     resources.emplace_back("Food", font); 
     resources.emplace_back("Wood", font); 
-    resources.emplace_back("Metals", font); 
+    resources.emplace_back("Stone", font); 
 
     //Add and edit buttons 
     buttons.emplace_back("Add Buildings", font); 
@@ -21,20 +23,27 @@ KingdomMenu::KingdomMenu() :
     //Upgrade buttons for buildings
     buildings.emplace_back("Upgrade", font);
     buildings.emplace_back("Enter", font); 
+    for (auto& building : buildings) {
+        building.buttonRect.setSize({80, 30}); 
+    }
 }
 
 void KingdomMenu::handleEvent(sf::RenderWindow& window, sf::Event& event) {
+    flag = true;
     mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         handleResourceTabs();
         handleAddEditButtons();
-        handleBuildingButtons();
+        if (flag) {
+            handleBuildingButtons();
+        }
     }
 }
 
 void KingdomMenu::handleResourceTabs() {
     for (auto& resource : resources) {
         if (resource.resourceRect.getGlobalBounds().contains(mousePos)) {
+            flag = false;
             resource.toggleDropdown();
         } else {
             resource.drop = false;
@@ -43,13 +52,30 @@ void KingdomMenu::handleResourceTabs() {
 }
 
 void KingdomMenu::handleAddEditButtons() {
+    // Logic for Add Buttons in the kingdom.
     if (buttons[0].buttonRect.getGlobalBounds().contains(mousePos)) {
+        flag = false;
         buttons[0].addEntity();
     } else {
         bool clicked = false;
         for (unsigned int i = 0; i < buttons[0].addRect.size(); i++) {
             if (buttons[0].addRect[i].getGlobalBounds().contains(mousePos)) {
-                //? Logic for actual button will be added alter
+                flag = false;
+                if (buttons[0].addText[i].getString() == "Add Huts") {
+                    buildingManager.addHuts();
+                    buildingManager.allBuilding(); 
+                }
+
+                if (buttons[0].addText[i].getString() == "Add Farms") {
+                    buildingManager.addFarms();
+                    buildingManager.allBuilding(); 
+                }
+
+                if (buttons[0].addText[i].getString() == "Add Animal Farms") {
+                    buildingManager.addAnimalFarms();
+                    buildingManager.allBuilding(); 
+                }
+
                 clicked = true;
                 break;
             }
@@ -59,27 +85,50 @@ void KingdomMenu::handleAddEditButtons() {
         }
     }
 
+    // Logic for editing the kingdom
     if (buttons[1].buttonRect.getGlobalBounds().contains(mousePos)) {
+        flag = false;
+        std::cout << "working" << std::endl; 
         buttons[1].editKingdom(mousePos);
+
+        for (auto& dynamicBuildingPair : buildingManager.dynamicBuildings) {
+            auto& dynamicBuilding = dynamicBuildingPair.second; 
+            sf::Vector2f offset = dynamicBuilding->getPosition() - static_cast<sf::Vector2f>(mousePos);
+            
+            if (dynamicBuilding->bounds.contains(mousePos)) {
+                dynamicBuilding->sprite.setPosition(static_cast<sf::Vector2f>(mousePos) + offset);
+            }
+        }
     }
 }
 
 void KingdomMenu::handleBuildingButtons() {
-    if (castle.castleRect.contains(mousePos)) {
-        building = true;
-        enter = true;
-    } else {
-        if (buildings[0].buttonRect.getGlobalBounds().contains(mousePos)) {
-            buildings[0].upgrade();
-        }
-
-        if (buildings[1].buttonRect.getGlobalBounds().contains(mousePos)) {
-            buildings[1].enter();
-        }
-
-        building = false;
+    for (auto& dynamicBuildingPair : buildingManager.dynamicBuildings) {
+        auto& dynamicBuilding = dynamicBuildingPair.second; 
         enter = false;
-    }
+        
+        if (dynamicBuilding->bounds.contains(mousePos)) {
+            building = true;
+            selectedBuilding = dynamicBuilding.get(); 
+
+            if (dynamicBuilding->getName() == "Castle" || dynamicBuilding->getName() == "Shop") {
+                enter = true;
+            }
+            break;
+        } else {
+            if (buildings[0].buttonRect.getGlobalBounds().contains(mousePos)) {
+                buildings[0].upgrade();
+            }
+
+            if (buildings[1].buttonRect.getGlobalBounds().contains(mousePos)) {
+                buildings[1].enter();
+            }
+
+            building = false;
+            enter = false;
+            selectedBuilding = nullptr; 
+        }
+    }  
 }
 
 
@@ -103,17 +152,17 @@ void KingdomMenu::positionMenu(sf::Vector2f center, sf::Vector2u resolution) {
     //Positioning upgrade buttons on buildings
     if (building) {
         if (enter) {
-            // Positioning when both 'Upgrade' and 'Enter' buttons are active
-            buildings[0].setPosition(center, castle.bottomMid() + sf::Vector2f(-155, 0));
-            buildings[1].setPosition(center, castle.bottomMid() + sf::Vector2f(5, 0));
+            buildings[0].setPosition(center, selectedBuilding->bottomMid() + sf::Vector2f(-(buildings[0].buttonRect.getSize().x + 5), 0));
+            buildings[1].setPosition(center, selectedBuilding->bottomMid() + sf::Vector2f(5, 0));
         } else {
-            // Positioning when only the 'Upgrade' button is active
-            buildings[0].setPosition(center, castle.bottomMid() + sf::Vector2f(-75, 0));
+            buildings[0].setPosition(center, selectedBuilding->bottomMid() + sf::Vector2f(-buildings[0].buttonRect.getSize().x/2, 0)); 
         }
     }
 }
 
 void KingdomMenu::render(sf::RenderWindow& window) {
+    buildingManager.renderBuildings(window);
+
     for (auto& resource : resources) {
         resource.render(window); 
     }
