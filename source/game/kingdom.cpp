@@ -16,11 +16,6 @@ void KingdomState::enter(sf::RenderWindow& window) {
 void KingdomState::handleEvents(sf::RenderWindow& window, sf::Event& event) {
     mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     if (event.type == sf::Event::MouseButtonPressed) {
-        // if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        //     if (castle.castleRect.contains(mousePos)) {
-        //         castle.moveBuilding(mousePos.x, mousePos.y); 
-        //     }
-        // }
         menu.handleEvent(window, event); 
     }
 }
