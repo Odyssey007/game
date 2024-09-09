@@ -220,7 +220,7 @@ void Enemy::handleCollision(Entity& entity) {
 
 void Enemy::handleAbilityCollision(Entity& entity) {
     Ability* ability = dynamic_cast<Ability*>(&entity);
-    if (ability->getBufferTime() >= 0.05f) {
+    if (ability->getBufferTime() >= 0.5f) { //?can change for two ability type
         takeDebuff(ability->hitEnemy(), ability->stun);
         ability->restartBufferTime();
     }

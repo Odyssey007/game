@@ -21,7 +21,7 @@ private:
     void reset();
 public:
     Dash();
-    bool activate(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos);
+    bool activate(const sf::Vector2f& dashDir, const sf::Vector2f& playerPos);
     bool getIsDashing() const;
     void update(bool& colliding, sf::Vector2f& moveDistance);
 };

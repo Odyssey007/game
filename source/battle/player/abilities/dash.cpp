@@ -13,14 +13,10 @@ Dash::Dash() {
 
 //? disgusting: when you dash into horizontal pillar in the middle it lets you walk thru???
 
-bool Dash::activate(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos) {
-    std::cout << cooldownTimer.getElapsedTime().asSeconds() << std::endl;
+bool Dash::activate(const sf::Vector2f& dashDir, const sf::Vector2f& playerPos) {
     if (cooldownTimer.getElapsedTime().asSeconds() >= cooldown || first) {
         dashActivate = true; first = false;
-        dashDirection = mousePos - playerPos;
-        if (magnitude(dashDirection) > 0) {
-            dashDirection = normalize(dashDirection);
-        }
+        dashDirection = dashDir;
         return true;
     }
     return false;

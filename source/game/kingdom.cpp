@@ -26,8 +26,9 @@ void KingdomState::update(sf::RenderWindow& window, sf::Event& event) {
     
     mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-    sf::FloatRect screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
-    player->update(mousePos, screenBounds); 
+    // sf::FloatRect screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
+    // player->update(mousePos, screenBounds);
+    player->movement(mousePos);
     player->applyMovement();
     menu.positionMenu({view.getCenter().x, view.getCenter().y}, resolution);  
 }

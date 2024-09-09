@@ -8,12 +8,13 @@ AtomicBulletPool::AtomicBulletPool(size_t totalBullets) {
     }
 }
 
-bool AtomicBulletPool::spawnProjectile(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos, GridSystem& grid) {
-    if (fireCooldown.getElapsedTime().asSeconds() >= 0.15f) {
+bool AtomicBulletPool::spawnProjectile(const sf::Vector2f& target, const sf::Vector2f& playerPos, GridSystem& grid) {
+    if (magnitude(target) == 0) return false; //?
+    if (fireCooldown.getElapsedTime().asSeconds() >= 3.15f) {
         auto bullet = std::move(allBullets.back());
         allBullets.pop_back();
-        bullet->startPosition(playerPos, mousePos);
-        bullet->activate(mousePos, playerPos);
+        bullet->startPosition(playerPos, target);
+        bullet->activate(target, playerPos);
         grid.addEntity(*bullet);
         activeBullets.push_back(std::move(bullet));
         fireCooldown.restart();
@@ -50,7 +51,6 @@ void AtomicBulletPool::cleanUp(GridSystem& grid) {
     //residue
     for (auto it = activeResidue.begin(); it != activeResidue.end(); ) {
         if (!(*it)->isAlive()) {
-            std::cout << (*it)->isAlive() << std::endl;
             allResidue.push_back(std::move(*it));
             it = activeResidue.erase(it);
         } else {
@@ -79,11 +79,12 @@ void AtomicBulletPool::render(sf::RenderWindow& window) const {
     }
 }
 
-//------------------
+//------------------ ATOMIC RESIDUE
 
 AtomicResidue::AtomicResidue() {
     setProperties();
-    debuff = sf::Vector2u(10, 10);
+    //!implement slow later
+    debuff = sf::Vector2u(10, 0);
     //
     collisionType = CIRCLE; entityType = TIMED_ABILITY; stun = false;
     animationSheetDim = sf::Vector2u(4, 1); frameDuration = 0.2f;
@@ -182,7 +183,7 @@ sf::FloatRect AtomicResidue::getBounds() const {
     return hitBox.getBounds();
 }
 
-//------------------
+//------------------ ATOMIC BULLET
 
 AtomicBullet::AtomicBullet() {
     move = sf::Vector2f(0.0f, 0.0f);

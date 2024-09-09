@@ -62,8 +62,7 @@ public:
     AtomicBulletPool(size_t totalBullets);
     virtual void cleanUp(GridSystem& grid) override;
     virtual void update(const sf::FloatRect screenBounds) override;
-    virtual bool spawnProjectile(const sf::Vector2f& mousePos, 
-                                 const sf::Vector2f& playerPos, GridSystem& grid) override;
+    virtual bool spawnProjectile(const sf::Vector2f& target, const sf::Vector2f& playerPos, GridSystem& grid) override;
     virtual void render(sf::RenderWindow& window) const override;
     //residue
     void spawnResidue(const sf::Vector2f& bulletPos, GridSystem& grid);

@@ -8,6 +8,8 @@
 #include "../header/battle/player/abilities/blast.h"
 #include "../header/battle/player/abilities/atomicBullet.h"
 
+enum Direction { IDLE, LEFT, RIGHT, UP, DOWN };
+
 class Player : public Entity {
 private:
     //texture
@@ -38,14 +40,17 @@ private:
     void handleExpCollision(Entity& other);
     void checkLevelUp(float exp);
     //movement
-    void movement(const sf::Vector2f& mousePosition);
     void idle(const sf::Vector2f& mousePosition);
     void pickFacingDirection(const sf::Vector2f& mousePosition);
     //abilities
     bool abilityActive;
+    BlastPool blastPool;
+    
     Dash dash;
-
+    Direction direction;
 public:
+    //!bc of grid in update and kingdom
+    void movement(const sf::Vector2f& mousePosition);
     //constructor
     Player(); 
     //fetchers
@@ -54,7 +59,7 @@ public:
     float getHpPercentage() const;
     float getExpPercentage() const;
     //functions
-    void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds);
+    void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds, GridSystem& grid);
     void takeDebuffs(const sf::Vector2u& debuff);
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
@@ -67,9 +72,11 @@ public:
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& other) override;
     virtual void render(sf::RenderWindow& window) const override;
+    void renderAbilities(sf::RenderWindow& window) const;
 
-
-
+    float closest = std::numeric_limits<float>::max();
+    const Entity* closestNeighbor = nullptr;
+    void findNearestEnemy(const Entity& enemy);
 
     //ability
     std::vector<std::unique_ptr<Ability>> abilities;
@@ -81,4 +88,9 @@ public:
     bool getAbilityStatus() const;
 
     void abilityFactory();
+
+
+
+
+    void tempSol();
 };

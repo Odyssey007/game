@@ -89,7 +89,7 @@ sf::FloatRect Slime::getBounds() const {
 }
 
 sf::Vector2f Slime::getPosition() const {
-    return hitBox.getPosition();
+    return sprite.getPosition();
 }
 
 void Slime::render(sf::RenderWindow& window) const {

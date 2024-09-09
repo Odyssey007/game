@@ -9,7 +9,9 @@ Player::Player() :
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
-    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
+    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true),
+    //blast
+    blastPool(100)
 {
     hitWall = false; abilityActive = false;
     //preliminaries
@@ -23,22 +25,48 @@ Player::Player() :
     //set origin
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 
+
+    direction = IDLE;
     //todo
-    // abilityPools.push_back(std::make_unique<BlastPool>(100));
+    // abilityPools.push_back(std::make_unique<BlastPool>(100)); 
     abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
     //abilities
     // abilities.push_back(std::make_unique<Dash>());
 }
 
+void Player::findNearestEnemy(const Entity& enemy) {
+    sf::Vector2f toEnemy = enemy.getPosition() - getPosition();
+    float length = magnitude(toEnemy);
 
+    if (length <= closest) {
+        closest = length;
+        closestNeighbor = &enemy;
+    }
+}
 
+void Player::tempSol() {
+    if (closestNeighbor && !closestNeighbor->isAlive()) {
+        closestNeighbor = nullptr;
+    }
+}
 
-void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds) {
+void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds, GridSystem& grid) {    
+    sf::Vector2f send(0.0f, 0.0f);
+
+    if (closestNeighbor) {
+        send = closestNeighbor->getPosition();    
+    } else {
+        send = sf::Vector2f(0.0f, 0.0f);
+        closest = std::numeric_limits<float>::max();
+    }
+
     movement(mousePosition);
     //----abilities
     dash.update(hitWall, moveDistance); //attached
+    blastPool.update(screenBounds);
     //pools
     for (auto& abilityPool : abilityPools) {
+        abilityPool->spawnProjectile(send, getPosition(), grid);
         abilityPool->update(screenBounds);
     }
     //one time cast
@@ -50,24 +78,43 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
 
 //for mouse buttons
 void Player::updateAbilities(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid) {
-    for (auto& abilityPool : abilityPools) {
-        if (button == sf::Mouse::Left) {
-            abilityActive = abilityPool->spawnProjectile(mousePos, getPosition(), grid);
-        }
+    if (button == sf::Mouse::Left) {
+       abilityActive = blastPool.spawnProjectile(mousePos, getPosition(), grid);
     }
 }
 
 //for keyboard buttons
 void Player::updateAbilities(sf::Keyboard::Key key, const sf::Vector2f& mousePos, GridSystem& grid) {
     if (key == sf::Keyboard::Space) {
-        abilityActive = dash.activate(mousePos, getPosition());
+        sf::Vector2f dashDir(0.0f, 0.0f);
+        switch (direction) {
+            case IDLE:
+                dashDir = mousePos - getPosition();
+                if (magnitude(dashDir) > 0) dashDir = normalize(dashDir);
+                break;
+            case UP:
+                dashDir = sf::Vector2f(0.0f, -1.0f);
+                break;
+            case DOWN:
+                dashDir = sf::Vector2f(0.0f, 1.0f);
+                break;
+            case LEFT:
+                dashDir = sf::Vector2f(-1.0f, 0.0f);
+                break;
+            case RIGHT:
+                dashDir = sf::Vector2f(1.0f, 0.0f);
+                break;
+        }
+        abilityActive = dash.activate(dashDir, getPosition());
     }
 }
+//!SOMETIMES WHEN FIRING YOU GO IDLE AND IDLE REGISTERS HERE AS WELL; MAKING IT USE MOUSE INSTEAD OF DIR
 
 void Player::cleanUpAbilities(GridSystem& grid) {
     for (auto& abilityPool : abilityPools) {
         abilityPool->cleanUp(grid);
     }
+    blastPool.cleanUp();
 }
 //!not used
 bool Player::getAbilityStatus() const {
@@ -105,22 +152,22 @@ void Player::movement(const sf::Vector2f& mousePosition) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
         pickFacingDirection(mousePosition);
         moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-        isMoving = true;
+        isMoving = true; direction = UP;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { //down
         pickFacingDirection(mousePosition);
         moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
-        isMoving = true;
+        isMoving = true; direction = DOWN;
     } 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { //left
         if (facingRight) facingRight = false;
         moveDistance.x -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-        isMoving = true;
+        isMoving = true; direction = LEFT;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { //right
         if (!facingRight) facingRight = true;
         moveDistance.x += battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-        isMoving = true;
+        isMoving = true; direction = RIGHT;
     };
     //update the player position if moving
     if (isMoving) {
@@ -139,6 +186,7 @@ void Player::pickFacingDirection(const sf::Vector2f& mousePos) {
 }
 
 void Player::idle(const sf::Vector2f& mousePosition) {
+    direction = IDLE;
     pickFacingDirection(mousePosition);
     animation.update(sprite, 0, facingRight, {0.93f, 0.93f});
 }
@@ -234,11 +282,14 @@ void Player::handleEnemyCollisions(Entity& entity) {
 void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
     window.draw(hitBox.body);
+}
 
+void Player::renderAbilities(sf::RenderWindow& window) const {
+    blastPool.render(window);
     for (auto& abilityPool : abilityPools) {
         abilityPool->render(window);
     }
-    // window.draw(hitBox.body);
+
     // for (auto& ability : abilities) {
     //     ability->render(window);
     // }

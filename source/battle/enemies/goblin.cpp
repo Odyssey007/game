@@ -65,7 +65,7 @@ sf::FloatRect Goblin::getBounds() const {
 }
 
 sf::Vector2f Goblin::getPosition() const {
-    return hitBox.getPosition();
+    return sprite.getPosition();
 }
 
 void Goblin::render(sf::RenderWindow& window) const {
