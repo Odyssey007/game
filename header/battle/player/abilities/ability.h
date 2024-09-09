@@ -1,11 +1,20 @@
 #pragma once
+#include "../header/battle/gridSystem.h"
 #include "../header/utility.h"
 #include "../header/animation.h"
-#include "../header/battle/collision.h"
 #include "../header/battle/entity.h"
+
+//!see y u need this only here
+class GridSystem; 
+
+// enum AllAbilities {
+//     BLAST, DASH, 
+// };
 
 class Ability : public Entity {
 protected:
+    bool isSelfCast;
+    //
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
     sf::Sprite sprite;
     //animation
@@ -26,7 +35,8 @@ public:
     float getBufferTime() const;
     virtual void kill();
     virtual sf::Vector2u hitEnemy();
-    virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) = 0;
+    virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);
+    virtual void activate(const sf::Vector2f& mousePosition, sf::Vector2f& playerPosition);
     // ENTITY
     virtual sf::Vector2f getPosition() const override; 
     //setters
@@ -34,4 +44,17 @@ public:
     //functions
     virtual void handleCollision(Entity& entity) override;
     virtual void render(sf::RenderWindow& window) const override;
+};
+
+
+class AbilityPool {
+protected:
+    uint8_t totalAmmo;
+    sf::Clock fireCooldown;
+public:
+    virtual void cleanUp() = 0;
+    virtual void update(const sf::FloatRect screenBounds) = 0;
+    virtual bool spawnProjectile(const sf::Vector2f& mousePos, 
+                                 const sf::Vector2f& playerPos, GridSystem& grid) = 0;
+    virtual void render(sf::RenderWindow& window) const = 0;
 };

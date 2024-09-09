@@ -15,6 +15,14 @@ void Ability::loadTexture(const std::string& name, const std::string& filePath) 
     textures.emplace(name, std::move(texture));
 }
 
+void Ability::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
+    return;
+}
+
+void Ability::activate(const sf::Vector2f& mousePosition, sf::Vector2f& playerPosition) {
+    return;
+}
+
 void Ability::restartBufferTime() {
     bufferTimer.restart();
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include "../header/utility.h"
 #include "../header/battle/player/abilities/ability.h"
-#include "../header/battle/gridSystem.h"
 
 class Blast : public Ability {
 private:
@@ -21,16 +20,15 @@ public:
     virtual sf::FloatRect getBounds() const override;
 };
 
-class BlastPool {
+class BlastPool : public AbilityPool {
 private:
-    size_t totalBlasts;
     std::vector<std::unique_ptr<Blast>> allBlasts;
     std::vector<std::unique_ptr<Blast>> activeBlasts;
-    sf::Clock fireCooldown;
 public:
     BlastPool(size_t totalBlasts);
-    bool spawnBlast(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos, GridSystem& grid);
-    void update(const sf::FloatRect screenBounds);
-    void reset();
-    void render(sf::RenderWindow& window) const;
+    virtual void cleanUp() override;
+    virtual void update(const sf::FloatRect screenBounds) override;
+    virtual bool spawnProjectile(const sf::Vector2f& mousePos, 
+                            const sf::Vector2f& playerPos, GridSystem& grid) override;
+    virtual void render(sf::RenderWindow& window) const override;
 };

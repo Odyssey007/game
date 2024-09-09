@@ -133,6 +133,7 @@ void Pillar::handleCollision(Entity& entity) {
         stopEntities(entity);
     }
 }
+#include "../header/battle/player/player.h"
 
 void Pillar::stopEntities(Entity& entity) {
     sf::FloatRect entityBounds = entity.getBounds();

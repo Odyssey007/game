@@ -1,12 +1,13 @@
 #include "../header/battle/player/abilities/blast.h"
 
-BlastPool::BlastPool(size_t totalBlasts) : totalBlasts(totalBlasts) {
-    for (size_t i = 0; i < totalBlasts; ++i) {
+BlastPool::BlastPool(size_t totalBlasts) {
+    totalAmmo = totalBlasts;
+    for (size_t i = 0; i < totalAmmo; ++i) {
         allBlasts.emplace_back(std::make_unique<Blast>());
     }
 }
 
-bool BlastPool::spawnBlast(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos, GridSystem& grid) {
+bool BlastPool::spawnProjectile(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos, GridSystem& grid) {
     if (fireCooldown.getElapsedTime().asSeconds() >= 0.15f) {
         auto blast = std::move(allBlasts.back());
         allBlasts.pop_back();
@@ -26,7 +27,7 @@ void BlastPool::update(const sf::FloatRect screenBounds) {
     }
 }
 
-void BlastPool::reset() {
+void BlastPool::cleanUp() {
     for (auto it = activeBlasts.begin(); it != activeBlasts.end(); ) {
         if (!(*it)->isAlive()) {
             allBlasts.push_back(std::move(*it));

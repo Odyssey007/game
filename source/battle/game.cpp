@@ -10,7 +10,7 @@ Game::Game() {
     enemyPool = std::make_unique<EnemyPool>(100);
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
     //wave set up
-    enemiesSpawning = 1; enemyLevel = 0;
+    enemiesSpawning = 0; enemyLevel = 0;
     //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -59,11 +59,16 @@ void Game::handleEvents() {
 
 void Game::handleEventsPlaying() {
     if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::LAlt) gameState = PAUSE_MENU;
+        sf::Keyboard::Key key = event.key.code;
+        if (key == sf::Keyboard::LAlt) {
+            gameState = PAUSE_MENU;
+        } else {
+            player->updateAbilities(key, mousePosition, grid);
+        }
     } else if (event.type == sf::Event::MouseButtonPressed) {
         sf::Mouse::Button button = event.mouseButton.button;
-        player->checkAbility(button, mousePosition, grid);
-    } else if (event.type == sf::Event::MouseButtonReleased) {
+        player->updateAbilities(button, mousePosition, grid);
+    } else if (event.type == sf::Event::MouseButtonReleased || event.type == sf::Event::KeyReleased) {
         player->setAbilityInactive();
     }
 }
@@ -118,7 +123,7 @@ void Game::updatePlaying() {
     enemyPool->applyMovement();
     obstaclePool->update(screenBounds);
     //clean up 
-    player->reset();
+    player->cleanUpAbilities();
     enemyPool->resetExp();
     enemyPool->resetEnemies(grid);
     grid.removeDeadEntities();

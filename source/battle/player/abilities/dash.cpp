@@ -1,37 +1,45 @@
 #include "../header/battle/player/abilities/dash.h"
 
 Dash::Dash() {
-    totalDashDistance = 0;
-    dashDistance = 150;
+    teleportRange = 100.0f;
+    fireCooldown = 10.0f;
 }
 
-void Dash::reset() {
-    totalDashDistance = 0;
-    dashDistance = 150;
+bool Dash::activate(const sf::Vector2f& mousePosition, sf::Vector2f& playerPosition) {
+    sf::Vector2f canJump = mousePosition - playerPosition;
+    if (magnitude(canJump) > teleportRange) {
+        canJump = normalize(canJump) * teleportRange;
+        playerPosition = playerPosition + canJump;
+        return true;
+    }
+    return false;
 }
 
-void Dash::kill() {
-    alive = false;
-};
 
-// void Dash::activate(sf::Sprite& player, const sf::Vector2f velocity 
-//                     const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
-//     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-//         sf::Vector2f direction = normalize(mousePosition - playerPosition);
+/*
+void Player::dash(const sf::Vector2f& mousePosition) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && dashClock.getElapsedTime().asSeconds() > dashCooldown) {
+        isDashing = true;
+        dashClock.restart();
 
-//         if (totalDashDistance < dashDistance) {
-//             float move = 6*300*DeltaTime::getInstance()->getDeltaTime();
-//             sf::Vector2f moveV = direction * move;
-//             player.move(moveV);
-//             totalDashDistance += magnitude(moveV);
-//         }
-//     }
-// }
+        // Calculate move distance
+        sf::Vector2f direction = mousePosition - sprite.getPosition();
+        moveDistance = normalize(direction);
+        totalDashDistance = 0; 
+    }
 
-void Dash::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
-    return;
+    if (isDashing) {
+        if (totalDashDistance < dashDistance) {
+            sf::Vector2f move;
+            move.x = moveDistance.x * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
+            move.y = moveDistance.y * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
+
+            sprite.move(move);
+            hitBox.followEntity(sprite.getPosition());
+            totalDashDistance += magnitude(move);
+        } else {
+            isDashing = false; 
+        }
+    }
 }
-
-// void Dash::render(sf::RenderWindow& window) const {
-//     return;
-// }
+*/

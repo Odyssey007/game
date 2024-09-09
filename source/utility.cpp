@@ -7,7 +7,7 @@ float magnitude(const sf::Vector2f& vector) {
 //unit vec
 sf::Vector2f normalize(const sf::Vector2f& one) {    
     float normal = magnitude(one);
-    sf::Vector2f normalized;
+    sf::Vector2f normalized = sf::Vector2f(0.f, 0.f);
     if (normal != 0) {
         normalized = one / normal;
     }

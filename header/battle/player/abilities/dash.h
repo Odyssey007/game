@@ -2,18 +2,12 @@
 #include "../header/utility.h"
 #include "../header/battle/player/abilities/ability.h"
 
-class Dash : public Ability {
+class Dash {
 private:
-    float totalDashDistance;
-    float dashDistance;
+    sf::Clock activeCooldown;
+    float fireCooldown;
+    float teleportRange;
 public:
     Dash();
-    //void activate(sf::Sprite& player, const sf::Vector2f velocity, 
-//                  const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);
-    void reset();
-
-
-    virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) override;
-
-    virtual void kill() override;
+    bool activate(const sf::Vector2f& mousePosition, sf::Vector2f& playerPosition);
 };

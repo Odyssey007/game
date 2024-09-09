@@ -9,9 +9,7 @@ Player::Player() :
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
-    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true),
-
-    blastPool(100)
+    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
 {
     //preliminaries
     entityType = PLAYER; collisionType = BOX;
@@ -23,35 +21,14 @@ Player::Player() :
     hitBox.updateSize(bounds);
     //set origin
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
+
+    //todo
+    abilityPools.push_back(std::make_unique<BlastPool>(100));
     //abilities
-    // abilities.push_back(std::make_shared<Slash>()); 
+    // abilities.push_back(std::make_unique<Dash>());
 }
 
-void Player::dash(const sf::Vector2f& mousePosition) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && dashClock.getElapsedTime().asSeconds() > dashCooldown) {
-        isDashing = true;
-        dashClock.restart();
 
-        // Calculate move distance
-        sf::Vector2f direction = mousePosition - sprite.getPosition();
-        moveDistance = normalize(direction);
-        totalDashDistance = 0; 
-    }
-
-    if (isDashing) {
-        if (totalDashDistance < dashDistance) {
-            sf::Vector2f move;
-            move.x = moveDistance.x * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
-            move.y = moveDistance.y * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
-
-            sprite.move(move);
-            hitBox.followEntity(sprite.getPosition());
-            totalDashDistance += magnitude(move);
-        } else {
-            isDashing = false; 
-        }
-    }
-}
 
 
 void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds) {
@@ -59,20 +36,72 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
     
 
 
-    //ability
+    //ability    
+    for (auto& abilityPool : abilityPools) {
+        abilityPool->update(screenBounds);
+    }
+
     dash(mousePosition);
-    blastPool.update(screenBounds);
 
+    // std::cout << abilityActive << std::endl;
+    // for (auto& ability : abilities) {
+    //     ability->activate(mousePosition, hitBox.getPosition());
+    // }
+}
 
-
-    for (auto& ability : abilities) {
-        ability->activate(mousePosition, hitBox.getPosition());
+void Player::updateAbilities(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid) {
+    for (auto& abilityPool : abilityPools) {
+        if (button == sf::Mouse::Left) {
+            abilityActive = abilityPool->spawnProjectile(mousePos, getPosition(), grid);
+        }
     }
 }
 
-void Player::checkAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid) {
-    if (button == sf::Mouse::Left) {
-        abilityActive = blastPool.spawnBlast(mousePos, getPosition(), grid);
+void Player::dash(const sf::Vector2f& mousePos) {
+    if (!needDash) {
+        return;
+    }
+
+    // Charging phase
+    if (!dashing) {
+        chargeTimer -= DeltaTime::getInstance()->getDeltaTime();
+        if (chargeTimer <= 0) {
+            dashing = true;  // Start dashing
+        } else {
+            return;
+        }
+    }
+
+    
+
+    if (dashing && hitWall) {
+        dashDirection = sf::Vector2f(0,0);
+        hitWall = false;
+    }
+
+    // Dashing phase
+    if (dashing) {        
+        dashDirection = normalize(dashDirection);
+        if (totalLeapDistance < leapDistance) {
+            float moveFrame = 5.5f * battleSpeed * DeltaTime::getInstance()->getDeltaTime();
+            moveDistance = dashDirection * moveFrame;
+            totalLeapDistance += magnitude(moveDistance);
+        } else {
+            // Dash is finished
+            moveDistance = sf::Vector2f(0,0);
+            totalLeapDistance = 0.0f;
+            needDash = false;
+            dashing = false;
+            chargeTimer = 0.35f;  // Reset charge timer
+        }
+    }
+}
+
+void Player::updateAbilities(sf::Keyboard::Key key, const sf::Vector2f& mousePos, GridSystem& grid) {
+    if (key == sf::Keyboard::Space && !needDash) {
+        needDash = true;
+        abilityActive = true;
+        dashDirection = mousePos - getPosition();
     }
 }
 
@@ -80,11 +109,20 @@ void Player::setAbilityInactive() {
     abilityActive = false;
 }
 
-void Player::reset() {
-    blastPool.reset();
+void Player::cleanUpAbilities() {
+    for (auto& abilityPool : abilityPools) {
+        abilityPool->cleanUp();
+    }
 }
 
+//hits wall->hitWall=true ... abilityActive=true -> both true thus 0
 void Player::applyMovement() {
+    if (dashing) {
+        sprite.move(moveDistance);
+        hitBox.followEntity(sprite.getPosition());
+        return;
+    }
+
     if (moveDistance != sf::Vector2f(0.0f, 0.0f)) {
         moveDistance = normalize(moveDistance);
         moveDistance *= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
@@ -93,13 +131,13 @@ void Player::applyMovement() {
     }
 }
 
-void Player::movement(const sf::Vector2f& mousePosition) {    
-    isMoving = false;
-    moveDistance = sf::Vector2f(0.0f, 0.0f);
+void Player::movement(const sf::Vector2f& mousePosition) {
     if (abilityActive) {
         idle(mousePosition);
         return;
     }
+    isMoving = false;
+    moveDistance = sf::Vector2f(0.0f, 0.0f);
     //capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
         moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
@@ -143,7 +181,7 @@ sf::FloatRect Player::getBounds() const {
 }
 
 sf::Vector2f Player::getPosition() const {
-    return hitBox.getPosition();
+    return sprite.getPosition();
 } 
 
 const sf::Vector2f& Player::getVelocity() const {
@@ -161,11 +199,13 @@ void Player::setInitialPosition(const sf::FloatRect& screenBounds) {
 
 void Player::handleCollision(Entity& other) {
     EntityType otherEntity = other.entityType;
-    if (otherEntity == OBSTACLE || otherEntity == BLAST) return;
+    if (otherEntity == BLAST) return;
     if (otherEntity == ENEMY) {
         handleEnemyCollisions(other);
     } else if (otherEntity == EXP) {
         handleExpCollision(other);
+    } else if (otherEntity == OBSTACLE) {
+        hitWall = true;
     }
 }
 
@@ -195,7 +235,11 @@ void Player::handleEnemyCollisions(Entity& entity) {
 
 void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    blastPool.render(window);
+    window.draw(hitBox.body);
+
+    for (auto& abilityPool : abilityPools) {
+        abilityPool->render(window);
+    }
     // window.draw(hitBox.body);
     // for (auto& ability : abilities) {
     //     ability->render(window);

@@ -24,7 +24,6 @@ private:
     int exp;
     int expRequired;
     uint8_t level;
-    std::vector<std::shared_ptr<Ability>> abilities;
     //hit box
     BoxCollision hitBox;
     sf::FloatRect bounds;
@@ -65,20 +64,26 @@ public:
     void idle(const sf::Vector2f& mousePosition);
 
 
+    //dash
+    bool hitWall = false;
+
+
+    sf::Vector2f dashDirection;
+    bool needDash = false;
+    void dash(const sf::Vector2f& mousePos);
+    bool dashing = false;
+    float chargeTimer = 0.15f;
+    float totalLeapDistance = 0.0f;
+    float leapDistance = 150.f;
+
     //ability
     bool abilityActive = false;
-
-    bool isDashing = false;
-    float dashCooldown = 0.5f;
-    sf::Clock dashClock;
-    float totalDashDistance = 0;
-    float dashDistance = 300;
-    void dash(const sf::Vector2f& mousePosition);
-
-
-
-    BlastPool blastPool; //blast
-    void reset();
-    void checkAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid);
+    std::vector<std::unique_ptr<Ability>> abilities;
+    std::vector<std::unique_ptr<AbilityPool>> abilityPools; 
+    void updateAbilities(sf::Keyboard::Key key, const sf::Vector2f& mousePos, GridSystem& grid);
+    void updateAbilities(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid);
     void setAbilityInactive();
+    void cleanUpAbilities();
+
+    void abilityFactory();
 };
