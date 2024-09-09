@@ -1,45 +1,72 @@
 #include "../header/battle/player/abilities/dash.h"
 
 Dash::Dash() {
-    teleportRange = 100.0f;
-    fireCooldown = 10.0f;
+    dashActivate = false; isDashing = false;
+    //buffer
+    chargeTimer = 0.15f; 
+    //distance
+    curDashDistance = 0.0f; 
+    totalDashDistance = 150.0f;
+    //
+    cooldown = 0.5f; first = true;
 }
 
-bool Dash::activate(const sf::Vector2f& mousePosition, sf::Vector2f& playerPosition) {
-    sf::Vector2f canJump = mousePosition - playerPosition;
-    if (magnitude(canJump) > teleportRange) {
-        canJump = normalize(canJump) * teleportRange;
-        playerPosition = playerPosition + canJump;
+//? disgusting: when you dash into horizontal pillar in the middle it lets you walk thru???
+
+bool Dash::activate(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos) {
+    std::cout << cooldownTimer.getElapsedTime().asSeconds() << std::endl;
+    if (cooldownTimer.getElapsedTime().asSeconds() >= cooldown || first) {
+        dashActivate = true; first = false;
+        dashDirection = mousePos - playerPos;
+        if (magnitude(dashDirection) > 0) {
+            dashDirection = normalize(dashDirection);
+        }
         return true;
     }
     return false;
 }
 
+bool Dash::getIsDashing() const {
+    return isDashing;
+}
 
-/*
-void Player::dash(const sf::Vector2f& mousePosition) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && dashClock.getElapsedTime().asSeconds() > dashCooldown) {
-        isDashing = true;
-        dashClock.restart();
-
-        // Calculate move distance
-        sf::Vector2f direction = mousePosition - sprite.getPosition();
-        moveDistance = normalize(direction);
-        totalDashDistance = 0; 
+void Dash::update(bool& colliding, sf::Vector2f& moveDistance) {
+    if (!dashActivate) {
+        return;
     }
-
-    if (isDashing) {
-        if (totalDashDistance < dashDistance) {
-            sf::Vector2f move;
-            move.x = moveDistance.x * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
-            move.y = moveDistance.y * DeltaTime::getInstance()->getDeltaTime() * 200 * 6;
-
-            sprite.move(move);
-            hitBox.followEntity(sprite.getPosition());
-            totalDashDistance += magnitude(move);
+    //dash buffer
+    if (!isDashing) {
+        chargeTimer -= DeltaTime::getInstance()->getDeltaTime();
+        if (chargeTimer <= 0) {
+            isDashing = true;
         } else {
-            isDashing = false; 
+            return;
+        }
+    }
+    //stops once it hits obstacle
+    if (isDashing && colliding) { 
+        dashDirection = sf::Vector2f(0,0);
+        colliding = false;
+        reset(); //force end of dash
+        return;
+    }
+    //dashes
+    if (isDashing) {        
+        if (curDashDistance < totalDashDistance) {
+            float moveFrame = 5.5f * 350.0f * DeltaTime::getInstance()->getDeltaTime();
+            moveDistance = dashDirection * moveFrame;
+            curDashDistance += magnitude(moveDistance);
+        } else { 
+            reset(); //end of dash
         }
     }
 }
-*/
+
+void Dash::reset() {
+    dashActivate = false; 
+    isDashing = false;
+    curDashDistance = 0.0f;
+    chargeTimer = 0.15f;
+    //
+    cooldownTimer.restart();
+}

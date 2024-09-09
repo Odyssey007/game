@@ -27,6 +27,7 @@ private:
     //hit box
     BoxCollision hitBox;
     sf::FloatRect bounds;
+    bool hitWall;
     //player movement
     sf::Vector2f moveDistance;
     bool isMoving;
@@ -35,6 +36,14 @@ private:
     void handleEnemyCollisions(Entity& other);
     void handleExpCollision(Entity& other);
     void checkLevelUp(float exp);
+    //movement
+    void movement(const sf::Vector2f& mousePosition);
+    void idle(const sf::Vector2f& mousePosition);
+    void pickFacingDirection(const sf::Vector2f& mousePosition);
+    //abilities
+    bool abilityActive;
+    Dash dash;
+
 public:
     //constructor
     Player(); 
@@ -60,30 +69,15 @@ public:
 
 
 
-    void movement(const sf::Vector2f& mousePosition);
-    void idle(const sf::Vector2f& mousePosition);
-
-
-    //dash
-    bool hitWall = false;
-
-
-    sf::Vector2f dashDirection;
-    bool needDash = false;
-    void dash(const sf::Vector2f& mousePos);
-    bool dashing = false;
-    float chargeTimer = 0.15f;
-    float totalLeapDistance = 0.0f;
-    float leapDistance = 150.f;
 
     //ability
-    bool abilityActive = false;
     std::vector<std::unique_ptr<Ability>> abilities;
     std::vector<std::unique_ptr<AbilityPool>> abilityPools; 
     void updateAbilities(sf::Keyboard::Key key, const sf::Vector2f& mousePos, GridSystem& grid);
     void updateAbilities(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid);
-    void setAbilityInactive();
     void cleanUpAbilities();
+    void setAbilityInactive();
+    bool getAbilityStatus() const;
 
     void abilityFactory();
 };

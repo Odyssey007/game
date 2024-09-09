@@ -11,6 +11,7 @@ Player::Player() :
     //movement
     moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true)
 {
+    hitWall = false; abilityActive = false;
     //preliminaries
     entityType = PLAYER; collisionType = BOX;
     texture.loadFromFile("assets/playerSheet.png");
@@ -33,22 +34,20 @@ Player::Player() :
 
 void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds) {
     movement(mousePosition);
-    
-
-
-    //ability    
+    //----abilities
+    dash.update(hitWall, moveDistance); //attached
+    //pools
     for (auto& abilityPool : abilityPools) {
         abilityPool->update(screenBounds);
     }
-
-    dash(mousePosition);
-
+    //one time cast
     // std::cout << abilityActive << std::endl;
     // for (auto& ability : abilities) {
     //     ability->activate(mousePosition, hitBox.getPosition());
     // }
 }
 
+//for mouse buttons
 void Player::updateAbilities(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid) {
     for (auto& abilityPool : abilityPools) {
         if (button == sf::Mouse::Left) {
@@ -57,56 +56,11 @@ void Player::updateAbilities(sf::Mouse::Button button, const sf::Vector2f& mouse
     }
 }
 
-void Player::dash(const sf::Vector2f& mousePos) {
-    if (!needDash) {
-        return;
-    }
-
-    // Charging phase
-    if (!dashing) {
-        chargeTimer -= DeltaTime::getInstance()->getDeltaTime();
-        if (chargeTimer <= 0) {
-            dashing = true;  // Start dashing
-        } else {
-            return;
-        }
-    }
-
-    
-
-    if (dashing && hitWall) {
-        dashDirection = sf::Vector2f(0,0);
-        hitWall = false;
-    }
-
-    // Dashing phase
-    if (dashing) {        
-        dashDirection = normalize(dashDirection);
-        if (totalLeapDistance < leapDistance) {
-            float moveFrame = 5.5f * battleSpeed * DeltaTime::getInstance()->getDeltaTime();
-            moveDistance = dashDirection * moveFrame;
-            totalLeapDistance += magnitude(moveDistance);
-        } else {
-            // Dash is finished
-            moveDistance = sf::Vector2f(0,0);
-            totalLeapDistance = 0.0f;
-            needDash = false;
-            dashing = false;
-            chargeTimer = 0.35f;  // Reset charge timer
-        }
-    }
-}
-
+//for keyboard buttons
 void Player::updateAbilities(sf::Keyboard::Key key, const sf::Vector2f& mousePos, GridSystem& grid) {
-    if (key == sf::Keyboard::Space && !needDash) {
-        needDash = true;
-        abilityActive = true;
-        dashDirection = mousePos - getPosition();
+    if (key == sf::Keyboard::Space) {
+        abilityActive = dash.activate(mousePos, getPosition());
     }
-}
-
-void Player::setAbilityInactive() {
-    abilityActive = false;
 }
 
 void Player::cleanUpAbilities() {
@@ -114,16 +68,24 @@ void Player::cleanUpAbilities() {
         abilityPool->cleanUp();
     }
 }
+//!not used
+bool Player::getAbilityStatus() const {
+    return abilityActive;
+}
 
-//hits wall->hitWall=true ... abilityActive=true -> both true thus 0
+void Player::setAbilityInactive() {
+    abilityActive = false;
+}
+
 void Player::applyMovement() {
-    if (dashing) {
-        sprite.move(moveDistance);
-        hitBox.followEntity(sprite.getPosition());
-        return;
-    }
-
     if (moveDistance != sf::Vector2f(0.0f, 0.0f)) {
+        //for dash
+        if (dash.getIsDashing()) {
+            sprite.move(moveDistance);
+            hitBox.followEntity(sprite.getPosition());
+            return;
+        }
+        //normal
         moveDistance = normalize(moveDistance);
         moveDistance *= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         sprite.move(moveDistance);
@@ -140,10 +102,12 @@ void Player::movement(const sf::Vector2f& mousePosition) {
     moveDistance = sf::Vector2f(0.0f, 0.0f);
     //capture keyboard input for movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { //up
+        pickFacingDirection(mousePosition);
         moveDistance.y -= battleSpeed * DeltaTime::getInstance()->getDeltaTime();
         isMoving = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { //down
+        pickFacingDirection(mousePosition);
         moveDistance.y += battleSpeed * DeltaTime::getInstance()->getDeltaTime(); 
         isMoving = true;
     } 
@@ -165,13 +129,53 @@ void Player::movement(const sf::Vector2f& mousePosition) {
     }
 }
 
-void Player::idle(const sf::Vector2f& mousePosition) {
-    if (mousePosition.x >= this->getPosition().x) { //right side
+void Player::pickFacingDirection(const sf::Vector2f& mousePos) {
+    if (mousePos.x >= this->getPosition().x) { //right side
         facingRight = true;
     } else {
         facingRight = false;
     }
+}
+
+void Player::idle(const sf::Vector2f& mousePosition) {
+    pickFacingDirection(mousePosition);
     animation.update(sprite, 0, facingRight, {0.93f, 0.93f});
+}
+
+void Player::checkLevelUp(float exp) {
+    this->exp += exp;
+    if (this->exp >= expRequired) {
+        level++;
+        this->exp -= expRequired;
+        expRequired = 100*std::pow(level-1, 1.5);
+    }
+}
+
+//x = hp | y = ms
+void Player::takeDebuffs(const sf::Vector2u& debuff) {
+    health -= debuff.x;
+    battleSpeed -= debuff.y; //!will not work
+}
+
+//fetchers
+
+uint8_t Player::getLevel() const {
+    return level;
+}
+
+float Player::getHpPercentage() const {
+    if (health < 0) {
+        return 0.0f;
+    }
+    return static_cast<float>(health)/healthMax;
+}
+
+float Player::getExpPercentage() const {
+    return static_cast<float>(exp)/expRequired;
+}
+
+int Player::getCurHealth() const {
+    return health;
 }
 
 //ENTITY FUNCTIONS
@@ -216,15 +220,6 @@ void Player::handleExpCollision(Entity& entity) {
     }
 }
 
-void Player::checkLevelUp(float exp) {
-    this->exp += exp;
-    if (this->exp >= expRequired) {
-        level++;
-        this->exp -= expRequired;
-        expRequired = 100*std::pow(level-1, 1.5);
-    }
-}
-
 void Player::handleEnemyCollisions(Entity& entity) {
     Enemy* enemy = dynamic_cast<Enemy*>(&entity);
     if (enemy->getAttackTimer() >= enemy->getAttackCooldown()) {
@@ -244,31 +239,4 @@ void Player::render(sf::RenderWindow& window) const {
     // for (auto& ability : abilities) {
     //     ability->render(window);
     // }
-}
-
-//x = hp | y = ms
-void Player::takeDebuffs(const sf::Vector2u& debuff) {
-    health -= debuff.x;
-    battleSpeed -= debuff.y; //!will not work
-}
-
-//fetchers
-
-uint8_t Player::getLevel() const {
-    return level;
-}
-
-float Player::getHpPercentage() const {
-    if (health < 0) {
-        return 0.0f;
-    }
-    return static_cast<float>(health)/healthMax;
-}
-
-float Player::getExpPercentage() const {
-    return static_cast<float>(exp)/expRequired;
-}
-
-int Player::getCurHealth() const {
-    return health;
 }
