@@ -48,17 +48,16 @@ void BlastPool::render(sf::RenderWindow& window) const {
 //------------------
 
 Blast::Blast() : 
-    move(sf::Vector2f(0.0f, 0.0f)),
+    move(0.0f, 0.0f),
     blastSpeed(800.0f), debuff(100, 0)
 {
     //preliminaries
-    collisionType = CIRCLE; entityType = BLAST; stun = false;
+    collisionType = CIRCLE; entityType = COLLISION_ABILITY; stun = false;
     animationSheetDim = sf::Vector2u(4, 1); frameDuration = 0.15f; 
     sprite.setTexture(*textures["blast"]);
     animation = Animation(*textures["blast"], animationSheetDim, frameDuration);
     sprite.setTextureRect(animation.uvRect);
     //hitbox
-    hitBox = CircleCollision();
     bounds = sf::FloatRect(140, 140, 22, 22);
     hitBox.updateSize(bounds);
     //

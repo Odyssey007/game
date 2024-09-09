@@ -23,11 +23,11 @@ public:
     void update(const sf::Vector2f& target);
     bool isAllDead();
     void applyMovement();
-    void render(sf::RenderWindow& window) const;
+    void renderEnemies(sf::RenderWindow& window) const;
     void resetEnemies(GridSystem& grid);
     //exp
     void expDrop(GridSystem& grid, const sf::FloatRect& enemy);
-    void resetExp();
+    void renderExp(sf::RenderWindow& window) const;
 };
 
 class ObstaclePool {

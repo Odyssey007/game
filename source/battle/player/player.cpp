@@ -24,7 +24,8 @@ Player::Player() :
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 
     //todo
-    abilityPools.push_back(std::make_unique<BlastPool>(100));
+    // abilityPools.push_back(std::make_unique<BlastPool>(100));
+    abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
     //abilities
     // abilities.push_back(std::make_unique<Dash>());
 }
@@ -63,9 +64,9 @@ void Player::updateAbilities(sf::Keyboard::Key key, const sf::Vector2f& mousePos
     }
 }
 
-void Player::cleanUpAbilities() {
+void Player::cleanUpAbilities(GridSystem& grid) {
     for (auto& abilityPool : abilityPools) {
-        abilityPool->cleanUp();
+        abilityPool->cleanUp(grid);
     }
 }
 //!not used
@@ -203,7 +204,9 @@ void Player::setInitialPosition(const sf::FloatRect& screenBounds) {
 
 void Player::handleCollision(Entity& other) {
     EntityType otherEntity = other.entityType;
-    if (otherEntity == BLAST) return;
+    if (otherEntity == PLAYER || otherEntity == TIMED_ABILITY ||
+        otherEntity == COLLISION_ABILITY) return;
+    //
     if (otherEntity == ENEMY) {
         handleEnemyCollisions(other);
     } else if (otherEntity == EXP) {

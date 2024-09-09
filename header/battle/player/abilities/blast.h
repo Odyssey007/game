@@ -12,10 +12,10 @@ public:
     Blast();
     void startPosition(const sf::Vector2f& playerPosition, const sf::Vector2f& mousePosition);
     void isActive(const sf::FloatRect screenBounds);
-    virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) override;
     void update();
     //ABILITY
     virtual sf::Vector2u hitEnemy() override; //returns dmg
+    virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) override;
     //ENTITY
     virtual sf::FloatRect getBounds() const override;
 };
@@ -29,6 +29,6 @@ public:
     virtual void cleanUp() override;
     virtual void update(const sf::FloatRect screenBounds) override;
     virtual bool spawnProjectile(const sf::Vector2f& mousePos, 
-                            const sf::Vector2f& playerPos, GridSystem& grid) override;
+                                 const sf::Vector2f& playerPos, GridSystem& grid) override;
     virtual void render(sf::RenderWindow& window) const override;
 };

@@ -13,8 +13,6 @@ class GridSystem;
 
 class Ability : public Entity {
 protected:
-    bool isSelfCast;
-    //
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
     sf::Sprite sprite;
     //animation
@@ -36,7 +34,6 @@ public:
     virtual void kill();
     virtual sf::Vector2u hitEnemy();
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);
-    virtual void activate(const sf::Vector2f& mousePosition, sf::Vector2f& playerPosition);
     // ENTITY
     virtual sf::Vector2f getPosition() const override; 
     //setters
@@ -52,7 +49,8 @@ protected:
     uint8_t totalAmmo;
     sf::Clock fireCooldown;
 public:
-    virtual void cleanUp() = 0;
+    virtual void cleanUp();
+    virtual void cleanUp(GridSystem& grid);
     virtual void update(const sf::FloatRect screenBounds) = 0;
     virtual bool spawnProjectile(const sf::Vector2f& mousePos, 
                                  const sf::Vector2f& playerPos, GridSystem& grid) = 0;

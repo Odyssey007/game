@@ -210,9 +210,10 @@ void Enemy::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
     if (otherEntity == PLAYER || otherEntity == OBSTACLE || 
         otherEntity == EXP) return;
+    //
     if (otherEntity == ENEMY) {
         handleEnemyCollision(entity);
-    } else if (otherEntity == BLAST) {
+    } else if (otherEntity == COLLISION_ABILITY || otherEntity == TIMED_ABILITY) {
         handleAbilityCollision(entity);
     }
 }

@@ -5,6 +5,8 @@ Ability::Ability() :
 {
     loadTexture("basicSlash", "assets/abilities/slashSheet.png");
     loadTexture("blast", "assets/abilities/blastSheet.png");
+    loadTexture("atomicBullet", "assets/abilities/atomicBullet.png");
+    loadTexture("atomicResidue", "assets/abilities/atomicResidue.png");
 }
 
 void Ability::loadTexture(const std::string& name, const std::string& filePath) {
@@ -16,10 +18,6 @@ void Ability::loadTexture(const std::string& name, const std::string& filePath) 
 }
 
 void Ability::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
-    return;
-}
-
-void Ability::activate(const sf::Vector2f& mousePosition, sf::Vector2f& playerPosition) {
     return;
 }
 
@@ -53,16 +51,30 @@ void Ability::setInitialPosition(const sf::FloatRect& screenBounds) {
 void Ability::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
     if (otherEntity == PLAYER || otherEntity == EXP ||
-        otherEntity == BLAST) return;
-    if (otherEntity == ENEMY) {
-        kill();
-    } else if (otherEntity == OBSTACLE) {
-        if (entity.isAlive()) {
+        otherEntity == COLLISION_ABILITY || 
+        otherEntity == TIMED_ABILITY) return;
+    //
+    if (this->entityType == COLLISION_ABILITY) {
+        if (otherEntity == ENEMY) {
             kill();
+        } else if (otherEntity == OBSTACLE) {
+            if (entity.isAlive()) {
+                kill();
+            }
         }
     }
 }
 
 void Ability::render(sf::RenderWindow& window) const {
     window.draw(sprite);
+}
+
+//---------------
+
+void AbilityPool::cleanUp() {
+    return;
+}
+
+void AbilityPool::cleanUp(GridSystem& grid) {
+    return;
 }

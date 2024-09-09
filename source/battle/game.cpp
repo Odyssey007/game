@@ -123,8 +123,7 @@ void Game::updatePlaying() {
     enemyPool->applyMovement();
     obstaclePool->update(screenBounds);
     //clean up 
-    player->cleanUpAbilities();
-    enemyPool->resetExp();
+    player->cleanUpAbilities(grid);
     enemyPool->resetEnemies(grid);
     grid.removeDeadEntities();
     //update gridSys
@@ -174,8 +173,9 @@ void Game::renderPlaying() {
     window->clear();
     window->setView(view);
     //entities
-    enemyPool->render(*window);
+    enemyPool->renderEnemies(*window);
     player->render(*window);
+    enemyPool->renderExp(*window);
     obstaclePool->render(*window);
     //UI
     playerUI->render(*window);

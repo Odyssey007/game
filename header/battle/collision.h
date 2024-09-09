@@ -32,8 +32,8 @@ public:
 
 class CircleCollision : public Collision {
 private:
-    sf::CircleShape body;
 public:
+    sf::CircleShape body;
     //constructor
     CircleCollision();
     //functions

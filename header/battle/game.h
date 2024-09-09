@@ -19,6 +19,8 @@
 #include "../header/battle/player/abilities/abilitySelectionUI.h"
 
 
+#include "../header/battle/player/abilities/atomicBullet.h"
+
 class Game {
 private:
     //set up

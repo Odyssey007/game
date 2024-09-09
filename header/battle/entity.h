@@ -1,9 +1,12 @@
 #pragma once 
 #include "../header/utility.h"
 
-enum EntityType { PLAYER, ENEMY, OBSTACLE, EXP, BLAST };
-enum EnemyType { SLIME, GOBLIN };
+enum EntityType { 
+    PLAYER, ENEMY, OBSTACLE, EXP, 
+    COLLISION_ABILITY, TIMED_ABILITY 
+};
 enum CollisionType { BOX, CIRCLE };
+enum EnemyType { SLIME, GOBLIN }; //!not used
 
 class Entity {
 protected:

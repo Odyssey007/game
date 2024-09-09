@@ -16,7 +16,7 @@ EnemyPool::EnemyPool(const size_t totalEnemies) :
         }
         pool.emplace_back(std::move(enemy));
     }
-    //change amount....maybe
+    //?change amount....maybe
     for (size_t i = 0; i < 150; ++i) {
         expPool.emplace_back(std::make_unique<Exp>());
     }
@@ -66,23 +66,34 @@ void EnemyPool::applyMovement() {
     }
 }
 
-void EnemyPool::render(sf::RenderWindow& window) const {
-    //exp
-    for (const auto& exp : expDrops) {
-        exp->render(window);
-    }
-    //enemies
+void EnemyPool::renderEnemies(sf::RenderWindow& window) const {
     for (const auto& enemy : activeEnemies) {
         enemy->render(window);
     }
 }
 
+void EnemyPool::renderExp(sf::RenderWindow& window) const {
+    for (const auto& exp : expDrops) {
+        exp->render(window);
+    }
+}
+
 void EnemyPool::resetEnemies(GridSystem& grid) {
+    //enemies
     for (auto it = activeEnemies.begin(); it != activeEnemies.end(); ) {
         if (!(*it)->isAlive()) {
             expDrop(grid, (*it)->getBounds());
             pool.push_back(std::move(*it));
             it = activeEnemies.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    //exp
+    for (auto it = expDrops.begin(); it != expDrops.end(); ) {
+        if (!(*it)->isAlive()) {
+            expPool.push_back(std::move(*it));
+            it = expDrops.erase(it);
         } else {
             ++it;
         }
@@ -96,17 +107,6 @@ void EnemyPool::expDrop(GridSystem& grid, const sf::FloatRect& enemy) {
         exp->spawn(enemy);
         grid.addEntity(*exp);
         expDrops.push_back(std::move(exp));
-    }
-}
-
-void EnemyPool::resetExp() {
-    for (auto it = expDrops.begin(); it != expDrops.end(); ) {
-        if (!(*it)->isAlive()) {
-            expPool.push_back(std::move(*it));
-            it = expDrops.erase(it);
-        } else {
-            ++it;
-        }
     }
 }
 

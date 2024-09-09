@@ -6,6 +6,7 @@
 #include "../header/battle/player/abilities/basicSlash.h"
 #include "../header/battle/player/abilities/dash.h"
 #include "../header/battle/player/abilities/blast.h"
+#include "../header/battle/player/abilities/atomicBullet.h"
 
 class Player : public Entity {
 private:
@@ -75,7 +76,7 @@ public:
     std::vector<std::unique_ptr<AbilityPool>> abilityPools; 
     void updateAbilities(sf::Keyboard::Key key, const sf::Vector2f& mousePos, GridSystem& grid);
     void updateAbilities(sf::Mouse::Button button, const sf::Vector2f& mousePos, GridSystem& grid);
-    void cleanUpAbilities();
+    void cleanUpAbilities(GridSystem& grid);
     void setAbilityInactive();
     bool getAbilityStatus() const;
 

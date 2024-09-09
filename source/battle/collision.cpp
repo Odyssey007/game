@@ -53,8 +53,8 @@ sf::FloatRect BoxCollision::getBounds() const {
 //CIRCLE HITBOX
 CircleCollision::CircleCollision() {
     //visual
-    body.setOutlineThickness(1.0f);
     body.setOutlineColor(sf::Color::Red);
+    body.setOutlineThickness(1.0f);
     body.setFillColor(sf::Color::Transparent); 
 
 }

@@ -89,8 +89,8 @@ void Exp::applyMovement() {
 void Exp::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
 
-    if (otherEntity == OBSTACLE || otherEntity == ENEMY || 
-        otherEntity == BLAST) return;
+    if (otherEntity == OBSTACLE || otherEntity == COLLISION_ABILITY || 
+        otherEntity == TIMED_ABILITY || otherEntity == ENEMY) return;
     if (otherEntity == PLAYER) alive = false;
 }
 
