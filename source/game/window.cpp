@@ -11,20 +11,28 @@ bool Screen::winRunning() {
     return window->isOpen(); 
 }
 
+void Screen::handleEvents() {
+    while(window->pollEvent(event)) {
+        switch(event.type) {
+            case sf::Event::Closed:
+                window->close(); 
+                break;
+            case sf::Event::KeyPressed:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    window->close();
+                }
+                break; 
+            default:
+                break; 
+        }
+        kingdom.handleEvents(*window, event); 
+    }
+}
+
 void Screen::update() { 
-    handleEvents(); 
     kingdom.update(*window, event); 
 }
 
-void Screen::handleEvents() {
-    while(window->pollEvent(event)) {
-        if(event.type == sf::Event::Closed) {
-            window->close(); 
-        } else if(event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Escape) window->close();
-        }
-    }
-}
 
 void Screen::render() {
     window->clear(); 

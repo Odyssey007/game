@@ -7,22 +7,17 @@ KingdomState::KingdomState() :
 
 void KingdomState::enter(sf::RenderWindow& window) {
     view = window.getDefaultView();
-    resolution - window.getSize(); 
+    resolution = window.getSize(); 
+    sf::FloatRect screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
 
-    player->setInitialPosition(sf::FloatRect(0.0f, 0.0f, 0.0f, 0.0f)); 
+    player->setInitialPosition(screenBounds); 
+}
 
-    dynamicAsset.kingCastle();
-    dynamicAsset.huts(); 
-    dynamicAsset.multipurpose(); 
-    dynamicAsset.scienceTech(); 
-    dynamicAsset.blacksmithWeapon(); 
-    dynamicAsset.farms();
-    dynamicAsset.paths(); 
-    dynamicAsset.animalFarms();
-
-    staticAsset.kingdomWall(); 
-    staticAsset.trees();
-    staticAsset.civilians(); 
+void KingdomState::handleEvents(sf::RenderWindow& window, sf::Event& event) {
+    mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    if (event.type == sf::Event::MouseButtonPressed) {
+        menu.handleEvent(window, event); 
+    }
 }
 
 void KingdomState::update(sf::RenderWindow& window, sf::Event& event) {
@@ -33,22 +28,14 @@ void KingdomState::update(sf::RenderWindow& window, sf::Event& event) {
 
     sf::FloatRect screenBounds = sf::FloatRect(view.getCenter() - view.getSize() / 2.0f, view.getSize());
     player->update(mousePos, screenBounds); 
-    player->applyMovement(); 
-}
-
-void KingdomState::handleEvents(sf::RenderWindow& window, sf::Event& event) {
-    while(window.pollEvent(event)) {
-        if(event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Escape) window.close();
-        }
-    }
+    player->applyMovement();
+    menu.positionMenu({view.getCenter().x, view.getCenter().y}, resolution);  
 }
 
 void KingdomState::render(sf::RenderWindow& window) {
     window.setView(view);
-    player->render(window); 
-    dynamicAsset.render(window); 
-    staticAsset.render(window); 
+    player->render(window);  
+    menu.render(window); 
 }
 
 void KingdomState::exit() {

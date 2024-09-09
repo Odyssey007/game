@@ -30,7 +30,6 @@ void Animation::update(sf::Sprite& sprite, int row, bool faceRight, const sf::Ve
     uvRect.top = currentFrame.y * uvRect.height; 
 
     float originalBottom = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.0f;
-
     if (faceRight) {
         sprite.setScale(scaleNum.x, scaleNum.y); 
     } 

@@ -14,6 +14,10 @@ include_directories(
     header/battle/obstacles
     header/game
     header/kingdom
+    header/kingdom/buildings
+    header/kingdom/buildings/dynamic
+    header/kingdom/buildings/static
+    header/kingdom/menu
 )
 
 # Gather all source files
@@ -26,6 +30,10 @@ file(GLOB SOURCES
     "source/battle/obstacles/*.cpp"
     "source/game/*.cpp"
     "source/kingdom/*.cpp"
+    "source/kingdom/buildings/*.cpp"
+    "source/kingdom/buildings/dynamic/*.cpp"
+    "source/kingdom/buildings/static/*.cpp"
+    "source/kingdom/menu/*.cpp"
     )
 
 find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
