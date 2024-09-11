@@ -33,13 +33,15 @@ public:
     float getBufferTime() const;
     virtual void kill();
     virtual sf::Vector2u hitEnemy();
+    //  update
+    virtual void update(const sf::Vector2f& target, const sf::Vector2f& playerPos, bool playerFacingRight);
+    //  activate
     virtual void activate(const sf::Vector2f& target);
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);
     // ENTITY
-    virtual sf::Vector2f getPosition() const override; 
-    //setters
+    virtual sf::FloatRect getBounds() const override; 
+    virtual sf::Vector2f getPosition() const override;
     virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
-    //functions
     virtual void handleCollision(Entity& entity) override;
     virtual void render(sf::RenderWindow& window) const override;
 };

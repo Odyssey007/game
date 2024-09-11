@@ -1,17 +1,16 @@
 #include "../header/battle/game.h"
 
 //preset values into setting up window
-Game::Game() : shot(PiercingShotManager(grid))
-{
+Game::Game() {
     //preliminaries
     window = nullptr; gameState = PLAYING; currentWindow();
     grid = GridSystem(sf::FloatRect(0, 0, screenBounds.width * 2, screenBounds.height * 2)); 
     //entity construction
-    player = std::make_unique<Player>();
     enemyPool = std::make_unique<EnemyPool>(100);
+    player = std::make_unique<Player>(); player->extraSetUp(grid);
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
     //wave set up
-    enemiesSpawning = 0; enemyLevel = 0;
+    enemiesSpawning = 1; enemyLevel = 0;
     //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -114,8 +113,6 @@ void Game::update() {
 }
 
 void Game::updatePlaying() {
-    shot.activate(mousePosition, playerPosition);
-    shot.update(mousePosition, playerPosition, player->isFacingRight());
     //enemy spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
         enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -191,8 +188,6 @@ void Game::renderPlaying() {
     //UI
     playerUI->render(*window);
     // grid.draw(*window);
-
-    shot.render(*window);
 }
 
 void Game::renderLevelUp() {

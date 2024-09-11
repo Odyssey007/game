@@ -9,7 +9,7 @@ AtomicBulletPool::AtomicBulletPool(size_t totalBullets) {
 }
 
 bool AtomicBulletPool::spawnProjectile(const sf::Vector2f& target, const sf::Vector2f& playerPos, GridSystem& grid) {
-    if (magnitude(target) == 0) return false; //?
+    if (magnitude(target) == 0) return false; //!enemy null
     if (fireCooldown.getElapsedTime().asSeconds() >= 3.15f) {
         auto bullet = std::move(allBullets.back());
         allBullets.pop_back();

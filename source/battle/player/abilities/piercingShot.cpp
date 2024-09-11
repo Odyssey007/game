@@ -112,7 +112,7 @@ void PiercingShot::restPosition(const sf::Vector2f& restPosition) {
     sprite.rotate(0.0f);
 }
 
-void PiercingShot::movement(const sf::Vector2f& target) {
+void PiercingShot::applyMovement(const sf::Vector2f& target) {
     move = sf::Vector2f(0.0f, 0.0f); 
     sf::Vector2f direction = normalize(target);
     move = direction*speed;
@@ -127,7 +127,7 @@ void PiercingShot::activate(const sf::Vector2f& toEnemy) {
         hit = true;
         return;
     }
-    movement(toTarget);
+    applyMovement(toTarget);
 }
 
 void PiercingShot::goBack(const sf::Vector2f& toRest) {
@@ -137,7 +137,7 @@ void PiercingShot::goBack(const sf::Vector2f& toRest) {
         revert = false;
         return;
     }
-    movement(toTarget);
+    applyMovement(toTarget);
 }
 
 void PiercingShot::animateMovement() {

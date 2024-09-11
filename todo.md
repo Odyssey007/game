@@ -15,6 +15,6 @@ balancing
 save sys
 
 new abilities
----piercingShot
 ---energyBarrier
 ---electric pulse
+---ice throw?

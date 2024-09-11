@@ -9,7 +9,7 @@ Player::Player() :
     //player bounds
     bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
-    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true),
+    moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true), direction(IDLE),
     //blast
     blastPool(100)
 {
@@ -25,13 +25,14 @@ Player::Player() :
     //set origin
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 
-
-    direction = IDLE;
-    //todo
-    // abilityPools.push_back(std::make_unique<BlastPool>(100)); 
+    //ability pools
     abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
     //abilities
-    // abilities.push_back(std::make_unique<Dash>());
+    // abilities.push_back(std::make_unique<PiercingShotManager>(grid));
+}
+
+void Player::extraSetUp(GridSystem& grid) {
+    abilities.push_back(std::make_unique<PiercingShotManager>(grid));  
 }
 
 void Player::findNearestEnemy(const Entity& enemy) {
@@ -50,13 +51,11 @@ void Player::tempSol() {
     }
 }
 
-bool Player::isFacingRight() const {
-    return facingRight;
-}
-
 void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds, GridSystem& grid) {    
-    sf::Vector2f send(0.0f, 0.0f);
+    movement(mousePosition);
 
+    //----abilities
+    sf::Vector2f send = sf::Vector2f(0.0f, 0.0f);
     if (closestNeighbor) {
         send = closestNeighbor->getPosition();    
     } else {
@@ -64,20 +63,18 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
         closest = std::numeric_limits<float>::max();
     }
 
-    movement(mousePosition);
-    //----abilities
-    dash.update(hitWall, moveDistance); //attached
-    blastPool.update(screenBounds);
-    //pools
+    dash.update(hitWall, moveDistance); //basic
+    blastPool.update(screenBounds); //basic
+    //ability pools
     for (auto& abilityPool : abilityPools) {
         abilityPool->spawnProjectile(send, getPosition(), grid);
         abilityPool->update(screenBounds);
     }
-    //one time cast
-    // std::cout << abilityActive << std::endl;
-    // for (auto& ability : abilities) {
-    //     ability->activate(mousePosition, hitBox.getPosition());
-    // }
+    //ability
+    for (auto& ability : abilities) {
+        ability->activate(send, getPosition());
+        ability->update(send, getPosition(), facingRight);
+    }
 }
 
 //for mouse buttons
@@ -289,12 +286,14 @@ void Player::render(sf::RenderWindow& window) const {
 }
 
 void Player::renderAbilities(sf::RenderWindow& window) const {
+    //basics
     blastPool.render(window);
+    //ability pool
     for (auto& abilityPool : abilityPools) {
         abilityPool->render(window);
     }
-
-    // for (auto& ability : abilities) {
-    //     ability->render(window);
-    // }
+    //ability
+    for (auto& ability : abilities) {
+        ability->render(window);
+    }
 }

@@ -18,9 +18,6 @@
 #include "../header/battle/player/playerUI.h"
 #include "../header/battle/player/abilities/abilitySelectionUI.h"
 
-
-#include "../header/battle/player/abilities/piercingShot.h"
-
 class Game {
 private:
     sf::Texture backgroundTexture;
@@ -73,9 +70,6 @@ public:
     //!not finalized
     //pause menu
     Menu menu;
-
-
-    PiercingShotManager shot;
 };
 
 /*

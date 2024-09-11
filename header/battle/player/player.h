@@ -7,6 +7,7 @@
 #include "../header/battle/player/abilities/dash.h"
 #include "../header/battle/player/abilities/blast.h"
 #include "../header/battle/player/abilities/atomicBullet.h"
+#include "../header/battle/player/abilities/piercingShot.h"
 
 enum Direction { IDLE, LEFT, RIGHT, UP, DOWN };
 
@@ -31,10 +32,11 @@ private:
     BoxCollision hitBox;
     sf::FloatRect bounds;
     bool hitWall;
-    //player movement
+    //movement
     sf::Vector2f moveDistance;
     bool isMoving;
     bool facingRight;
+    Direction direction;
     //collision handling
     void handleEnemyCollisions(Entity& other);
     void handleExpCollision(Entity& other);
@@ -47,9 +49,9 @@ private:
     BlastPool blastPool;
     
     Dash dash;
-    Direction direction;
+
 public:
-    bool isFacingRight() const;
+    void extraSetUp(GridSystem& grid);
     //!bc of grid in update and kingdom
     void movement(const sf::Vector2f& mousePosition);
     //constructor

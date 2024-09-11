@@ -18,10 +18,15 @@ void Ability::loadTexture(const std::string& name, const std::string& filePath) 
     textures.emplace(name, std::move(texture));
 }
 
-void Ability::activate(const sf::Vector2f& target) {
+//  update
+void Ability::update(const sf::Vector2f& target, const sf::Vector2f& playerPos, bool playerFacingRight) {
     return;
 }
 
+//  activate
+void Ability::activate(const sf::Vector2f& target) {
+    return;
+}
 void Ability::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
     return;
 }
@@ -44,6 +49,10 @@ sf::Vector2u Ability::hitEnemy() {
 }
 
 // ENTITY
+
+sf::FloatRect Ability::getBounds() const {
+    return sf::FloatRect(0.f , 0.f , 0.f, 0.f);
+}
 
 sf::Vector2f Ability::getPosition() const {
     return sprite.getPosition();
