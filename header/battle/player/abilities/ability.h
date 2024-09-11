@@ -33,6 +33,7 @@ public:
     float getBufferTime() const;
     virtual void kill();
     virtual sf::Vector2u hitEnemy();
+    virtual void activate(const sf::Vector2f& target);
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);
     // ENTITY
     virtual sf::Vector2f getPosition() const override; 

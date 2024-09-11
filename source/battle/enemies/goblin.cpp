@@ -16,6 +16,15 @@ Goblin::Goblin() {
 }
 
 void Goblin::update(const sf::Vector2f& target) {
+    if (isSlowed) {
+        effectDuration -= DeltaTime::getInstance()->getDeltaTime();
+    }
+    if (isSlowed && effectDuration <= 0) {
+        isSlowed = false;
+        movementSpeed = 250.0f;
+        effectDuration = 1.0f;
+    }
+    //
     if (distance(target, sprite.getPosition()) >= 100.0f) {
         meleeMovement(target);
         isMoving = true;

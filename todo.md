@@ -1,7 +1,5 @@
 abilities
  -ability center? ** ---- implement how to store and 
- -dash (fix) **
- -new abilities
  -scaling implementation
 
 enemies
@@ -15,3 +13,8 @@ balancing
     -ability-scale
 
 save sys
+
+new abilities
+---piercingShot
+---energyBarrier
+---electric pulse

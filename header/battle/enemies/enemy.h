@@ -70,4 +70,7 @@ public:
     //ENTITY functions 
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& entity) override;
+
+    bool isSlowed = false;
+    float effectDuration = 1.0f;
 };

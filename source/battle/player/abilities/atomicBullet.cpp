@@ -84,7 +84,7 @@ void AtomicBulletPool::render(sf::RenderWindow& window) const {
 AtomicResidue::AtomicResidue() {
     setProperties();
     //!implement slow later
-    debuff = sf::Vector2u(10, 0);
+    debuff = sf::Vector2u(10, 100);
     //
     collisionType = CIRCLE; entityType = TIMED_ABILITY; stun = false;
     animationSheetDim = sf::Vector2u(4, 1); frameDuration = 0.2f;
@@ -187,7 +187,7 @@ sf::FloatRect AtomicResidue::getBounds() const {
 
 AtomicBullet::AtomicBullet() {
     move = sf::Vector2f(0.0f, 0.0f);
-    speed = 200.0f; debuff = sf::Vector2u(500, 0); diedGoingOut = false;
+    speed = 200.0f; debuff = sf::Vector2u(0, 0); diedGoingOut = false;
 
     collisionType = CIRCLE; entityType = COLLISION_ABILITY; stun = false;
     sprite.setTexture(*textures["atomicBullet"]);
@@ -219,8 +219,7 @@ void AtomicBullet::update() {
     sf::Vector2f frameMove = move*DeltaTime::getInstance()->getDeltaTime();
     sprite.move(frameMove);
     hitBox.followEntity(sprite.getPosition());
-    
-
+    //animation
     float rotationSpeed = 90.0f;
     float frameRotation = rotationSpeed*DeltaTime::getInstance()->getDeltaTime();
     sprite.rotate(frameRotation);

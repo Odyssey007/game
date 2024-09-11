@@ -7,6 +7,7 @@ Ability::Ability() :
     loadTexture("blast", "assets/abilities/blastSheet.png");
     loadTexture("atomicBullet", "assets/abilities/atomicBullet.png");
     loadTexture("atomicResidue", "assets/abilities/atomicResidue.png");
+    loadTexture("piercingShot", "assets/abilities/piercingShot.jpg");
 }
 
 void Ability::loadTexture(const std::string& name, const std::string& filePath) {
@@ -15,6 +16,10 @@ void Ability::loadTexture(const std::string& name, const std::string& filePath) 
         throw std::runtime_error("Failed to load enemy texture: " + filePath);
     }
     textures.emplace(name, std::move(texture));
+}
+
+void Ability::activate(const sf::Vector2f& target) {
+    return;
 }
 
 void Ability::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {

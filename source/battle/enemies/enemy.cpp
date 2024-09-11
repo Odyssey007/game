@@ -152,7 +152,11 @@ void Enemy::restartAttackTimer() {
 //x = hp | y = ms
 void Enemy::takeDebuff(sf::Vector2u debuff, bool stun) {
     health -= debuff.x;
-    movementSpeed -= debuff.y; //!will not work with stun
+    // movementSpeed -= debuff.y; //!will not work with stun
+    if (!isSlowed) {
+        movementSpeed = 100.0f;
+        isSlowed = true;
+    }
 }
 
 void Enemy::spawn(const size_t level, const sf::FloatRect& screenBounds) {

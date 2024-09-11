@@ -19,10 +19,12 @@
 #include "../header/battle/player/abilities/abilitySelectionUI.h"
 
 
-#include "../header/battle/player/abilities/atomicBullet.h"
+#include "../header/battle/player/abilities/piercingShot.h"
 
 class Game {
 private:
+    sf::Texture backgroundTexture;
+    sf::Sprite spriteBackground;
     //set up
     std::unique_ptr<sf::RenderWindow> window; 
     sf::View view;
@@ -71,6 +73,9 @@ public:
     //!not finalized
     //pause menu
     Menu menu;
+
+
+    PiercingShotManager shot;
 };
 
 /*

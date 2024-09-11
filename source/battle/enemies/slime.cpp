@@ -22,6 +22,14 @@ Slime::Slime() :
 }
 
 void Slime::update(const sf::Vector2f& target) {
+    if (isSlowed) {
+        effectDuration -= DeltaTime::getInstance()->getDeltaTime();
+    }
+    if (isSlowed && effectDuration <= 0) {
+        isSlowed = false;
+        movementSpeed = 150.0f;
+        effectDuration = 1.0f;
+    }
     // Check if recovery buffer is needed for attack  
     if (needToRecover) {
         if (recoveryTimer > 0) {

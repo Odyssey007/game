@@ -49,6 +49,7 @@ private:
     Dash dash;
     Direction direction;
 public:
+    bool isFacingRight() const;
     //!bc of grid in update and kingdom
     void movement(const sf::Vector2f& mousePosition);
     //constructor

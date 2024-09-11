@@ -1,7 +1,8 @@
 #include "../header/battle/game.h"
 
 //preset values into setting up window
-Game::Game() {
+Game::Game() : shot(PiercingShotManager(grid))
+{
     //preliminaries
     window = nullptr; gameState = PLAYING; currentWindow();
     grid = GridSystem(sf::FloatRect(0, 0, screenBounds.width * 2, screenBounds.height * 2)); 
@@ -10,7 +11,7 @@ Game::Game() {
     enemyPool = std::make_unique<EnemyPool>(100);
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
     //wave set up
-    enemiesSpawning = 1; enemyLevel = 0;
+    enemiesSpawning = 0; enemyLevel = 0;
     //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -18,6 +19,10 @@ Game::Game() {
     playerUI = std::make_unique<PlayerUI>(screenBounds.width);
     lastLvl = 1; skipFrame = false;
     abilitySelectionUI = std::make_unique<AbilitySelectionUI>();
+
+
+    backgroundTexture.loadFromFile("assets/background.png");
+    spriteBackground.setTexture(backgroundTexture);
 }
 
 //window set up
@@ -109,6 +114,8 @@ void Game::update() {
 }
 
 void Game::updatePlaying() {
+    shot.activate(mousePosition, playerPosition);
+    shot.update(mousePosition, playerPosition, player->isFacingRight());
     //enemy spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
         enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -173,15 +180,19 @@ void Game::renderPlaying() {
     skipFrame = false; //in case needs to update
     window->clear();
     window->setView(view);
+    //
+    // window->draw(spriteBackground);
     //entities
+    player->render(*window);
     player->renderAbilities(*window);
     enemyPool->renderEnemies(*window);
-    player->render(*window);
     enemyPool->renderExp(*window);
     obstaclePool->render(*window);
     //UI
     playerUI->render(*window);
-    // grid.draw(*window); 
+    // grid.draw(*window);
+
+    shot.render(*window);
 }
 
 void Game::renderLevelUp() {

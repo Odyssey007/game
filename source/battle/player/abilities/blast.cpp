@@ -96,11 +96,11 @@ void Blast::isActive(const sf::FloatRect screenBounds) {
     alive = screenBounds.contains(currentPosition);
 }
 
-sf::FloatRect Blast::getBounds() const {
-    return hitBox.getBounds();
-}
-
 //returns dmg blast will deal
 sf::Vector2u Blast::hitEnemy() {
     return debuff;
+}
+
+sf::FloatRect Blast::getBounds() const {
+    return hitBox.getBounds();
 }

@@ -50,6 +50,10 @@ void Player::tempSol() {
     }
 }
 
+bool Player::isFacingRight() const {
+    return facingRight;
+}
+
 void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds, GridSystem& grid) {    
     sf::Vector2f send(0.0f, 0.0f);
 
