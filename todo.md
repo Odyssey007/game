@@ -18,3 +18,5 @@ new abilities
 ---energyBarrier
 ---electric pulse
 ---ice throw?
+
+---stat boosters

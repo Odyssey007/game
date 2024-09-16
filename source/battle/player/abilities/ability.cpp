@@ -3,11 +3,12 @@
 Ability::Ability() :
     animationSheetDim(sf::Vector2f(0.0f, 0.0f)), frameDuration(0.0f)
 {
-    loadTexture("basicSlash", "assets/abilities/slashSheet.png");
     loadTexture("blast", "assets/abilities/blastSheet.png");
+    loadTexture("basicSlash", "assets/abilities/slashSheet.png");
     loadTexture("atomicBullet", "assets/abilities/atomicBullet.png");
-    loadTexture("atomicResidue", "assets/abilities/atomicResidue.png");
     loadTexture("piercingShot", "assets/abilities/piercingShot.jpg");
+    loadTexture("atomicResidue", "assets/abilities/atomicResidue.png");
+    loadTexture("energyBarrier", "assets/abilities/energyBarrier.png");
 }
 
 void Ability::loadTexture(const std::string& name, const std::string& filePath) {

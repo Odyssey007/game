@@ -4,6 +4,7 @@
 
 class PiercingShotManager;
 
+//TODO slow | reduced dmg on the way back 
 class PiercingShot : public Ability {
 private:
     CircleCollision hitBox;

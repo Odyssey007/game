@@ -10,7 +10,7 @@ Game::Game() {
     player = std::make_unique<Player>(); player->extraSetUp(grid);
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
     //wave set up
-    enemiesSpawning = 1; enemyLevel = 0;
+    enemiesSpawning = 0; enemyLevel = 0;
     //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -180,14 +180,15 @@ void Game::renderPlaying() {
     //
     // window->draw(spriteBackground);
     //entities
-    player->render(*window);
     player->renderAbilities(*window);
+    player->render(*window);
     enemyPool->renderEnemies(*window);
     enemyPool->renderExp(*window);
     obstaclePool->render(*window);
     //UI
     playerUI->render(*window);
     // grid.draw(*window);
+
 }
 
 void Game::renderLevelUp() {

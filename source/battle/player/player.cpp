@@ -63,6 +63,13 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
         closest = std::numeric_limits<float>::max();
     }
 
+    //
+    barrier.update(numAttacked);
+    barrier.activate(getPosition(), facingRight, isMoving);
+
+
+    // return;//!
+
     dash.update(hitWall, moveDistance); //basic
     blastPool.update(screenBounds); //basic
     //ability pools
@@ -205,6 +212,7 @@ void Player::checkLevelUp(float exp) {
 void Player::takeDebuffs(const sf::Vector2u& debuff) {
     health -= debuff.x;
     battleSpeed -= debuff.y; //!will not work
+    numAttacked++;
 }
 
 //fetchers
@@ -282,10 +290,11 @@ void Player::handleEnemyCollisions(Entity& entity) {
 
 void Player::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    window.draw(hitBox.body);
+    // window.draw(hitBox.body);
 }
 
 void Player::renderAbilities(sf::RenderWindow& window) const {
+    barrier.render(window);
     //basics
     blastPool.render(window);
     //ability pool

@@ -8,6 +8,7 @@
 #include "../header/battle/player/abilities/blast.h"
 #include "../header/battle/player/abilities/atomicBullet.h"
 #include "../header/battle/player/abilities/piercingShot.h"
+#include "../header/battle/player/abilities/energyBarrier.h"
 
 enum Direction { IDLE, LEFT, RIGHT, UP, DOWN };
 
@@ -51,6 +52,8 @@ private:
     Dash dash;
 
 public:
+    EnergyBarrier barrier;
+    uint8_t numAttacked = 0;
     void extraSetUp(GridSystem& grid);
     //!bc of grid in update and kingdom
     void movement(const sf::Vector2f& mousePosition);

@@ -83,7 +83,7 @@ PiercingShot::PiercingShot() :
     //movement
     move(0.0f, 0.0f), speed(1000.0f)
 {
-    collisionType = BOX; entityType = COLLISION_ABILITY; stun = false;
+    collisionType = CIRCLE; entityType = COLLISION_ABILITY; stun = false;
     //
     sprite.setTexture(*textures["piercingShot"]);
     bounds = sf::FloatRect(2, 0, 17, 18);
