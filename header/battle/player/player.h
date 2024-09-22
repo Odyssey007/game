@@ -30,9 +30,9 @@ private:
     int expRequired;
     uint8_t level;
     //hit box
+    bool hitWall;
     BoxCollision hitBox;
     sf::FloatRect bounds;
-    bool hitWall;
     //movement
     sf::Vector2f moveDistance;
     bool isMoving;
@@ -47,13 +47,11 @@ private:
     void pickFacingDirection(const sf::Vector2f& mousePosition);
     //abilities
     bool abilityActive;
+    uint8_t numAttacked; //num times enemy hit player
+    //basic abilities
     BlastPool blastPool;
-    
     Dash dash;
-
 public:
-    EnergyBarrier barrier;
-    uint8_t numAttacked = 0;
     void extraSetUp(GridSystem& grid);
     //!bc of grid in update and kingdom
     void movement(const sf::Vector2f& mousePosition);
@@ -94,9 +92,6 @@ public:
     bool getAbilityStatus() const;
 
     void abilityFactory();
-
-
-
 
     void tempSol();
 };

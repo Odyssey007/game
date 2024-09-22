@@ -1,6 +1,8 @@
 #pragma once 
 #include "../header/utility.h"
 
+//COLLISION_ABILITY: dies after hitting
+//TIMED_ABILITY: doesn't die after hitting
 enum EntityType { 
     PLAYER, ENEMY, OBSTACLE, EXP, 
     COLLISION_ABILITY, TIMED_ABILITY 

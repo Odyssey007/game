@@ -4,31 +4,32 @@
 
 class EnergyBarrier : public Ability {
 private:
+    bool active;
     uint8_t state;
     sf::Vector2u debuff;
-    //
-    bool active = false;
-    //
     CircleCollision hitBox;
+    //enlarge
+    float curScale;
+    float targetScale;
+    float elapsedTime;
+    float scaleDuration;
+    //pulse
+    float pulseElapsed;
+    float frequency;
+    float minScale;
+    float maxScale;
     //
     sf::Clock timer;
-public:
-    EnergyBarrier();
-    void activate(const sf::Vector2f& playerPos, bool facingRight, bool moving);
-    void update(uint8_t& numHits);
-    sf::FloatRect calcBounds(float scale);
-    
-    float curScale = 2.3f;
-    float targetScale = 15.0f;
-    float elapsedTime = 0.0f;
-    float scaleDuration = 0.5f;
     void enlarge();
-    float pulseElapsed = 0.0f;
-    float frequency = 10.1f;
-    float minScale = 2.3f;
-    float maxScale = 3.f;
     void pulse();
     void reset();
+    sf::FloatRect calcBounds(float scale);
+public:
+    EnergyBarrier() = default;
+    EnergyBarrier(GridSystem& grid);
+    void activate(const sf::Vector2f& playerPos, bool facingRight, bool moving) override;
+    void update(uint8_t& numHits) override;
+
     virtual sf::Vector2u hitEnemy() override; //returns dmg
-    virtual void render(sf::RenderWindow& window) const override;
+    virtual sf::FloatRect getBounds() const override;
 };

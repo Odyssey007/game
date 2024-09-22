@@ -1,15 +1,25 @@
 #include "../header/battle/player/abilities/energyBarrier.h"
 
-EnergyBarrier::EnergyBarrier() {
-    collisionType = CIRCLE; entityType = COLLISION_ABILITY; stun = false;
+EnergyBarrier::EnergyBarrier(GridSystem& grid) : 
+    //stats
+    active(false), state(0), debuff(5, 0),
+    //enlarge
+    curScale(2.3f), targetScale(15.0f), elapsedTime(0.0f), scaleDuration(0.5f),
+    //pulse
+    pulseElapsed(0.0f), frequency(10.1f), minScale(2.3f), maxScale(3.0f)
+{
+    //preliminaries
+    grid.addEntity(*this);
+    collisionType = CIRCLE; entityType = TIMED_ABILITY; stun = false;
+    animationSheetDim = sf::Vector2u(4, 4); frameDuration = 0.15f;
     //
-    sprite.setTexture(*textures["energyBarrier"]);
-    animationSheetDim = sf::Vector2u(4, 4); frameDuration = 0.15f; state = 0;
     animation = Animation(*textures["energyBarrier"], animationSheetDim, frameDuration);
+    sprite.setTexture(*textures["energyBarrier"]);
     sprite.setTextureRect(animation.uvRect);
     //
     bounds = sf::FloatRect(-12.0f, -12.0f, 55.0f, 55.0f);
     hitBox.updateSize(bounds);
+    //
     sprite.setScale(curScale, curScale);
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 }
@@ -29,11 +39,14 @@ void EnergyBarrier::activate(const sf::Vector2f& playerPos, bool facingRight, bo
 void EnergyBarrier::update(uint8_t& numHits) {
     switch (state) {
         case 0:
-            active = false;
             reset();
             break;
         case 2:
-            debuff.x *= numHits;
+            if (numHits == 0) {
+                debuff.x = 5;
+            } else {
+                debuff.x = 5*numHits;
+            }
             pulse();
             if (timer.getElapsedTime().asSeconds() >= 3.0f) {
                 state++;
@@ -53,6 +66,12 @@ void EnergyBarrier::update(uint8_t& numHits) {
 }
 
 void EnergyBarrier::reset() {
+    curScale = 2.3f;
+    active = false;
+    sprite.setScale(curScale, curScale);
+    hitBox.updateSize(bounds);
+    //
+    debuff.x = 5;
     elapsedTime = 0.0f;
     curScale = 2.3;
     pulseElapsed = 0.0f;
@@ -102,6 +121,6 @@ sf::Vector2u EnergyBarrier::hitEnemy() {
     }
 }
 
-void EnergyBarrier::render(sf::RenderWindow& window) const {
-    window.draw(sprite);
+sf::FloatRect EnergyBarrier::getBounds() const {
+    return hitBox.getBounds();
 }

@@ -24,11 +24,19 @@ void Ability::update(const sf::Vector2f& target, const sf::Vector2f& playerPos, 
     return;
 }
 
+void Ability::update(uint8_t& numHits) {
+    return;
+}
+
 //  activate
 void Ability::activate(const sf::Vector2f& target) {
     return;
 }
 void Ability::activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition) {
+    return;
+}
+
+void Ability::activate(const sf::Vector2f& playerPos, bool facingRight, bool moving) {
     return;
 }
 

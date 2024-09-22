@@ -137,9 +137,6 @@ void GridSystem::removeDeadEntities() {
 
     // for (const auto& entity : entities) {
     //     std::cout << entity.get().entityType;
-    //     if (!entity.get().isAlive()) {
-    //         std::cout << "--" << std::endl;
-    //     }
     //     std::cout << std::endl;
     // }
     // std::cout << std::endl;
@@ -163,7 +160,7 @@ void GridSystem::checkCollision() {
         grid.getNodeElements(gridEntities);
         getNeighbors(); // Get the neighbors within a grid
         for (auto& quadEntities : gridEntities) {
-            collisionManager.update(quadEntities); 
+            collisionManager.update(quadEntities);
         }
         gridEntities.clear();
     }

@@ -23,7 +23,11 @@ void Animation::update(sf::Sprite& sprite, int row, bool faceRight, const sf::Ve
 
     if(totalTime >= frameDuration) {
         totalTime -= frameDuration;
-        currentFrame.x = (currentFrame.x + 1) % frameDimension.x; 
+        if (frameDimension.x != 0) {
+            currentFrame.x = (currentFrame.x + 1) % frameDimension.x;
+        } else {
+            currentFrame.x = 0;
+        }
     }
 
     uvRect.left = currentFrame.x * uvRect.width; 

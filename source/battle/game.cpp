@@ -10,7 +10,7 @@ Game::Game() {
     player = std::make_unique<Player>(); player->extraSetUp(grid);
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
     //wave set up
-    enemiesSpawning = 0; enemyLevel = 0;
+    enemiesSpawning = 1; enemyLevel = 0;
     //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -113,19 +113,18 @@ void Game::update() {
 }
 
 void Game::updatePlaying() {
-    //enemy spawn
+    //enemy spawn: checks if a new wave needs to spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
         enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
     }
     //update entities
+    obstaclePool->update(screenBounds);
     player->update(mousePosition, screenBounds, grid);
     enemyPool->update(playerPosition);
-    obstaclePool->update(screenBounds);
     //collision check
     grid.checkCollision();
     player->applyMovement();
     enemyPool->applyMovement();
-    obstaclePool->update(screenBounds);
     player->tempSol(); //?hack fix later
     //clean up 
     player->cleanUpAbilities(grid);
@@ -187,7 +186,7 @@ void Game::renderPlaying() {
     obstaclePool->render(*window);
     //UI
     playerUI->render(*window);
-    // grid.draw(*window);
+    grid.draw(*window);
 
 }
 

@@ -206,6 +206,7 @@ void Enemy::setVelocity(const sf::Vector2f& velocity) {
 }
 
 void Enemy::applyMovement() {
+    std::cout << health << std::endl;
     sprite.move(moveDistance);
     moveDistance = sf::Vector2f(0.0f, 0.0f);
 }

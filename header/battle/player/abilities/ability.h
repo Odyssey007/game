@@ -35,9 +35,11 @@ public:
     virtual sf::Vector2u hitEnemy();
     //  update
     virtual void update(const sf::Vector2f& target, const sf::Vector2f& playerPos, bool playerFacingRight);
+    virtual void update(uint8_t& numHits); //EnergyBarrier
     //  activate
     virtual void activate(const sf::Vector2f& target);
     virtual void activate(const sf::Vector2f& mousePosition, const sf::Vector2f& playerPosition);
+    virtual void activate(const sf::Vector2f& playerPos, bool facingRight, bool moving); //EnergyBarrier
     // ENTITY
     virtual sf::FloatRect getBounds() const override; 
     virtual sf::Vector2f getPosition() const override;

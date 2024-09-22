@@ -13,7 +13,7 @@ Player::Player() :
     //blast
     blastPool(100)
 {
-    hitWall = false; abilityActive = false;
+    hitWall = false; abilityActive = false; numAttacked = 0
     //preliminaries
     entityType = PLAYER; collisionType = BOX;
     texture.loadFromFile("assets/playerSheet.png");
@@ -28,11 +28,11 @@ Player::Player() :
     //ability pools
     abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
     //abilities
-    // abilities.push_back(std::make_unique<PiercingShotManager>(grid));
 }
 
 void Player::extraSetUp(GridSystem& grid) {
-    abilities.push_back(std::make_unique<PiercingShotManager>(grid));  
+    abilities.push_back(std::make_unique<PiercingShotManager>(grid));
+    abilities.push_back(std::make_unique<EnergyBarrier>(grid));
 }
 
 void Player::findNearestEnemy(const Entity& enemy) {
@@ -63,13 +63,6 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
         closest = std::numeric_limits<float>::max();
     }
 
-    //
-    barrier.update(numAttacked);
-    barrier.activate(getPosition(), facingRight, isMoving);
-
-
-    // return;//!
-
     dash.update(hitWall, moveDistance); //basic
     blastPool.update(screenBounds); //basic
     //ability pools
@@ -80,7 +73,10 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
     //ability
     for (auto& ability : abilities) {
         ability->activate(send, getPosition());
+        ability->activate(getPosition(), facingRight, isMoving);
+        //
         ability->update(send, getPosition(), facingRight);
+        ability->update(numAttacked);
     }
 }
 
@@ -294,7 +290,6 @@ void Player::render(sf::RenderWindow& window) const {
 }
 
 void Player::renderAbilities(sf::RenderWindow& window) const {
-    barrier.render(window);
     //basics
     blastPool.render(window);
     //ability pool

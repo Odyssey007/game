@@ -1,4 +1,5 @@
 #include "../header/battle/collisionManager.h"
+#include "../header/battle/player/player.h" //!diabolical--DON'T DELETE
 
 //each entity locally evaluates what it should do after colliding with another entity
 void CollisionManager::update(const std::vector<std::reference_wrapper<Entity>>& entities) {
@@ -16,9 +17,6 @@ void CollisionManager::update(const std::vector<std::reference_wrapper<Entity>>&
         }
     }
 }
-
-//!diabolical--DON'T DELETE
-#include "../header/battle/player/player.h"
 
 void CollisionManager::helpPlayerGainNeighbor(Entity& entity1, Entity& entity2) {
     Player* player = nullptr;
