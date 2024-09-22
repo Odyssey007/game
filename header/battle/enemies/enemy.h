@@ -22,8 +22,8 @@ protected:
     int baseDamage;
     sf::Clock attackTimer;
     float attackCooldown;
-    EnemyType enemyType; //!not needed yet
     //movement 
+    bool facingRight;
     int totalDirections;
     std::vector<sf::Vector2f> directions;
     sf::Vector2f bestDirection;
@@ -47,6 +47,7 @@ protected:
     void takeDebuff(sf::Vector2u debuff, bool stun); //!implement stun
     //
     virtual void checkLvlUp(const size_t level) = 0;
+    void initialBestDirection(const sf::Vector2f& toTarget);
     //ENTITY setter
     virtual void setInitialPosition(const sf::FloatRect& screenBounds) override;
 public:

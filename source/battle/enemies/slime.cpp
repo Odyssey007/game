@@ -1,22 +1,13 @@
 #include "../header/battle/enemies/slime.h"
 
-Slime::Slime() :
-    //ability
-    firstAttack(true),
-    //leap buffers
-    leaping(false), chargeTimer(0.35f), needToRecover(false), recoveryTimer(0.35f),
-    //leap distance
-    leapDistance(150.0f), totalLeapDistance(0.0f)
-{
+Slime::Slime() {
     dmg = 5; slow = 0;
     //preliminaries
-    enemyType = SLIME; collisionType = CIRCLE;
+    collisionType = CIRCLE;
     sprite.setTexture(*textures["slime"]);
     //hit box
-    hitBox = CircleCollision();
     bounds = sf::FloatRect(45, 70, 59, 49);
     hitBox.updateSize(bounds);
-    //hitBoxBody = std::make_shared<sf::CircleShape>(hitBox.body);
     //set origin and position
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 }
@@ -30,53 +21,27 @@ void Slime::update(const sf::Vector2f& target) {
         movementSpeed = 150.0f;
         effectDuration = 1.0f;
     }
-    // Check if recovery buffer is needed for attack  
-    if (needToRecover) {
-        if (recoveryTimer > 0) {
-            recoveryTimer -= DeltaTime::getInstance()->getDeltaTime();
-            return;
-        }
-        needToRecover = false;
+    //changing direction
+    sf::Vector2f toTarget = target - sprite.getPosition();
+    toTarget = normalize(toTarget);
+    if (toTarget.x >= 0) {
+        facingRight = true;
+    } else if (toTarget.x < 0) {
+        facingRight = false;
     }
 
-    float canLeap = 100.0f;
+    if (facingRight) {
+        sprite.setScale(1.0f, 1.0f); 
+    } 
+    else {
+        sprite.setScale(-1.0f, 1.0f);
+    }
 
     //moves
-    if (distance(target, sprite.getPosition()) >= canLeap && !leaping) {
+    if (distance(target, sprite.getPosition()) >= 100.0f) {
         meleeMovement(target);
-    } else { //attacks
-        normalAttack();
-    }
-    //!problem with hitbox when leap attack it doesn't track for a sec
+    } 
     hitBox.followEntity(sprite.getPosition());
-}
-
-void Slime::normalAttack() {
-}
-
-void Slime::leapAttack() {
-    if (!leaping) {
-        chargeTimer -= DeltaTime::getInstance()->getDeltaTime();
-        if (chargeTimer <= 0) {
-            leaping = true;
-        }
-    }
-    if (totalLeapDistance < leapDistance && leaping) {
-        float moveFrame = 5.5 * movementSpeed * DeltaTime::getInstance()->getDeltaTime();
-        sf::Vector2f move = bestDirection * moveFrame;
-        sprite.move(move);
-        totalLeapDistance += magnitude(move);
-    } else if (leaping) {
-        totalLeapDistance = 0.0f;
-        //start buffer
-        leaping = false;
-        chargeTimer = 0.35f;
-        //end buffer
-        needToRecover = true;
-        recoveryTimer = 0.35f;
-        //
-        firstAttack = false;
-    }
 }
 
 sf::Vector2u Slime::attack() {
@@ -102,5 +67,4 @@ sf::Vector2f Slime::getPosition() const {
 
 void Slime::render(sf::RenderWindow& window) const {
     window.draw(sprite);
-    // window.draw(hitBox.body);
 }

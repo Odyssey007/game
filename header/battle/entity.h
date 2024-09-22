@@ -8,7 +8,6 @@ enum EntityType {
     COLLISION_ABILITY, TIMED_ABILITY 
 };
 enum CollisionType { BOX, CIRCLE };
-enum EnemyType { SLIME, GOBLIN }; //!not used
 
 class Entity {
 protected:
@@ -17,7 +16,6 @@ public:
     Entity();
     EntityType entityType;
     CollisionType collisionType;
-    EnemyType enemyType;
     //fetchers
     virtual bool isAlive() const;
     virtual sf::FloatRect getBounds() const = 0; //gets globalBounds()

@@ -60,7 +60,11 @@ void EnergyBarrier::update(uint8_t& numHits) {
     }
 
     if (timer.getElapsedTime().asSeconds() >= 5.0f) {
-        state = (state == 0 ? 2 : state + 1);
+        if (numHits == 0) {
+            state = 0;
+        } else {
+            state = (state == 0 ? 2 : state + 1);
+        }
         timer.restart();
     }
 }

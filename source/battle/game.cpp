@@ -22,6 +22,10 @@ Game::Game() {
 
     backgroundTexture.loadFromFile("assets/background.png");
     spriteBackground.setTexture(backgroundTexture);
+
+    miniBoss = std::make_unique<SlimeMiniBoss>();
+    miniBoss->spawn(1, screenBounds);
+    grid.addEntity(*miniBoss);
 }
 
 //window set up
@@ -113,6 +117,14 @@ void Game::update() {
 }
 
 void Game::updatePlaying() {
+    miniBoss->checkAlive();
+    if (miniBoss->isAlive()) {
+        miniBoss->update(playerPosition);
+    }
+
+
+
+
     //enemy spawn: checks if a new wave needs to spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
         enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -123,6 +135,9 @@ void Game::updatePlaying() {
     enemyPool->update(playerPosition);
     //collision check
     grid.checkCollision();
+
+    miniBoss->applyMovement();
+
     player->applyMovement();
     enemyPool->applyMovement();
     player->tempSol(); //?hack fix later
@@ -183,10 +198,13 @@ void Game::renderPlaying() {
     player->render(*window);
     enemyPool->renderEnemies(*window);
     enemyPool->renderExp(*window);
+
+    miniBoss->render(*window);
+
     obstaclePool->render(*window);
     //UI
     playerUI->render(*window);
-    grid.draw(*window);
+    // grid.draw(*window);
 
 }
 

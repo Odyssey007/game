@@ -187,7 +187,7 @@ sf::FloatRect AtomicResidue::getBounds() const {
 
 AtomicBullet::AtomicBullet() {
     move = sf::Vector2f(0.0f, 0.0f);
-    speed = 200.0f; debuff = sf::Vector2u(0, 0); diedGoingOut = false;
+    speed = 200.0f; debuff = sf::Vector2u(25, 0); diedGoingOut = false;
 
     collisionType = CIRCLE; entityType = COLLISION_ABILITY; stun = false;
     sprite.setTexture(*textures["atomicBullet"]);

@@ -13,7 +13,7 @@ Player::Player() :
     //blast
     blastPool(100)
 {
-    hitWall = false; abilityActive = false; numAttacked = 0
+    hitWall = false; abilityActive = false; numAttacked = 0;
     //preliminaries
     entityType = PLAYER; collisionType = BOX;
     texture.loadFromFile("assets/playerSheet.png");
@@ -65,6 +65,9 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
 
     dash.update(hitWall, moveDistance); //basic
     blastPool.update(screenBounds); //basic
+
+    // return; //!
+
     //ability pools
     for (auto& abilityPool : abilityPools) {
         abilityPool->spawnProjectile(send, getPosition(), grid);

@@ -12,7 +12,6 @@ private:
     //
     BoxCollision hitBox;
     bool isMoving;
-    bool facingRight;
     void isFacingRight();
 
     virtual void checkLvlUp(const size_t level) override;

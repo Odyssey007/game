@@ -8,8 +8,7 @@ Goblin::Goblin() {
     animationSheetDim = sf::Vector2u(4, 1);
     animation = Animation(*textures["goblin"], animationSheetDim, frameDuration);
     //
-    collisionType = BOX; enemyType = SLIME;
-    hitBox = BoxCollision();
+    collisionType = BOX;
     hitBox.updateSize(bounds);
     sprite.setTextureRect(animation.uvRect);
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));

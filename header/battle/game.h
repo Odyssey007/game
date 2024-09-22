@@ -18,6 +18,9 @@
 #include "../header/battle/player/playerUI.h"
 #include "../header/battle/player/abilities/abilitySelectionUI.h"
 
+//remove
+#include "../header/battle/enemies/slimeMiniBoss.h"
+
 
 class Game {
 private:
@@ -72,6 +75,7 @@ public:
     //pause menu
     Menu menu;
 
+    std::unique_ptr<SlimeMiniBoss> miniBoss;
 };
 
 /*

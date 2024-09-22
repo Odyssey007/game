@@ -6,6 +6,8 @@
 #include "../header/battle/gridSystem.h"
 #include "../header/battle/enemies/exp.h"
 
+enum EnemyType { SLIME, GOBLIN }; //used for spawning pool
+
 class EnemyPool {
 private: 
     size_t totalEnemies; 

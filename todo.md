@@ -15,8 +15,10 @@ balancing
 save sys
 
 new abilities
----energyBarrier
----electric pulse
 ---ice throw?
 
----stat boosters
+      ---stat boosters
+      max health
+      health regenerate
+      move speed 
+      ability cool down

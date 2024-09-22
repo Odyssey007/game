@@ -75,7 +75,7 @@ void PiercingShotManager::render(sf::RenderWindow& window) const {
 //------------SHOT
 
 PiercingShot::PiercingShot() :
-    debuff(0, 0),
+    debuff(10, 0),
     //checks
     active(false), revert(false), hit(false),
     //buffer

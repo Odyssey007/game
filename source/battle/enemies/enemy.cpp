@@ -4,9 +4,9 @@ Enemy::Enemy() :
     //animation
     animationSheetDim(sf::Vector2u(0, 0)), frameDuration(0.18f),
     //attributes
-    fullHealth(100), movementSpeed(150.0f), baseDamage(10), attackCooldown(1.5f),
+    health(100), fullHealth(100), movementSpeed(150.0f), baseDamage(10), attackCooldown(1.5f),
     //movement
-    totalDirections(32), bestDirection(sf::Vector2f(0.0f, 0.0f)), 
+    facingRight(false), totalDirections(32), bestDirection(sf::Vector2f(0.0f, 0.0f)), 
     moveDistance(sf::Vector2f(0.0f, 0.0f)), bounds(sf::FloatRect(0.0f, 0.0f, 0.0f, 0.0f))
 {
     //update parent
@@ -39,11 +39,7 @@ void Enemy::generateDirections(int numDirections) {
     }
 }
 
-void Enemy::meleeMovement(const sf::Vector2f& target) {
-    sf::Vector2f rawToTarget = target - this->getPosition();
-    sf::Vector2f toTarget = normalize(rawToTarget);
-    sf::Vector2f whereBlocked = toTarget;
-    //determines best direction towards player
+void Enemy::initialBestDirection(const sf::Vector2f& toTarget) {
     float maxDot = -1.0f;
     bestDirection = directions[0]; //default direction
     for (int i = 0; i < totalDirections; i++) {
@@ -53,6 +49,14 @@ void Enemy::meleeMovement(const sf::Vector2f& target) {
             bestDirection = directions[i];
         }
     }
+}
+
+void Enemy::meleeMovement(const sf::Vector2f& target) {
+    sf::Vector2f rawToTarget = target - this->getPosition();
+    sf::Vector2f toTarget = normalize(rawToTarget);
+    sf::Vector2f whereBlocked = toTarget;
+    //determines best direction towards player
+    initialBestDirection(toTarget);
     //check if path is blocked by neighbor
     bool isCircling = false;
     float speed = movementSpeed;
@@ -206,7 +210,6 @@ void Enemy::setVelocity(const sf::Vector2f& velocity) {
 }
 
 void Enemy::applyMovement() {
-    std::cout << health << std::endl;
     sprite.move(moveDistance);
     moveDistance = sf::Vector2f(0.0f, 0.0f);
 }

@@ -1,27 +1,24 @@
-#pragma once
-#include "../header/utility.h"
-#include "../header/battle/enemies/enemy.h"
-#include "../header/battle/collision.h"
-#include "../header/battle/collisionManager.h"
-#include "../header/battle/player/player.h"
+#include "../header/battle/enemies/slime.h"
 
-//currentAbility: 0 - NONE | 1 - NORMAL | 2 - LEAP
-class Player;
-
-class Slime : public Enemy {
+class SlimeMiniBoss : public Enemy {
 private:
-    //
-    int dmg;
-    int slow;
+    float scale;
+    sf::Vector2u debuff;
     //hit box
     bool facingRight;
     CircleCollision hitBox;
-    //current ability in use
-
+    //leap attack
+    float leapingSpeed;
+    bool leaping; //charging buffer for leap
+    float chargeTimer;
+    bool needToRecover; //recovery buffer for leap
+    float recoveryTimer;
+    float leapDistance; //leap distance
+    float totalLeapDistance;
     virtual void checkLvlUp(const size_t level) override;
 public:
-    //constructor
-    Slime();
+    SlimeMiniBoss();
+    void leapAttack();
     //functions
     virtual void update(const sf::Vector2f& target) override; 
     virtual sf::Vector2u attack() override;
