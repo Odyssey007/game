@@ -6,7 +6,7 @@ class EnergyBarrier : public Ability {
 private:
     bool active;
     uint8_t state;
-    sf::Vector2u debuff;
+    sf::Vector2f debuff;
     CircleCollision hitBox;
     //enlarge
     float curScale;
@@ -30,6 +30,6 @@ public:
     void activate(const sf::Vector2f& playerPos, bool facingRight, bool moving) override;
     void update(uint8_t& numHits) override;
 
-    virtual sf::Vector2u hitEnemy() override; //returns dmg
+    virtual sf::Vector2f hitEnemy() override; //returns dmg
     virtual sf::FloatRect getBounds() const override;
 };

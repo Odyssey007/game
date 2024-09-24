@@ -11,23 +11,16 @@ class Player;
 class Slime : public Enemy {
 private:
     //
-    int dmg;
-    int slow;
-    //hit box
-    bool facingRight;
+    sf::Vector2f debuff;
     CircleCollision hitBox;
-    //current ability in use
-
+    //
     virtual void checkLvlUp(const size_t level) override;
 public:
-    //constructor
     Slime();
-    //functions
+    //ENEMY functions
     virtual void update(const sf::Vector2f& target) override; 
-    virtual sf::Vector2u attack() override;
+    virtual sf::Vector2f attack() override;
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
-    //ENTITY functions
-    virtual void render(sf::RenderWindow& window) const override;
 };

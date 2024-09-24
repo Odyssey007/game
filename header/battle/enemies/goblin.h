@@ -7,23 +7,17 @@
 class Goblin : public Enemy {
 private:
     //
-    int dmg;
-    int slow;
-    //
+    sf::Vector2f debuff;
     BoxCollision hitBox;
-    bool isMoving;
+    //
     void isFacingRight();
-
     virtual void checkLvlUp(const size_t level) override;
 public:
     Goblin();
     //ENEMY functions
-    virtual sf::Vector2u attack() override;
+    virtual sf::Vector2f attack() override;
     virtual void update(const sf::Vector2f& target) override;
-
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
-    //ENTITY functions
-    virtual void render(sf::RenderWindow& window) const override;
 };

@@ -9,7 +9,7 @@ AtomicBulletPool::AtomicBulletPool(size_t totalBullets) {
 }
 
 bool AtomicBulletPool::spawnProjectile(const sf::Vector2f& target, const sf::Vector2f& playerPos, GridSystem& grid) {
-    if (magnitude(target) == 0) return false; //!enemy null
+    if (magnitude(target) == 0) return false; //no nearest enemy
     if (fireCooldown.getElapsedTime().asSeconds() >= 3.15f) {
         auto bullet = std::move(allBullets.back());
         allBullets.pop_back();
@@ -84,7 +84,7 @@ void AtomicBulletPool::render(sf::RenderWindow& window) const {
 AtomicResidue::AtomicResidue() {
     setProperties();
     //!implement slow later
-    debuff = sf::Vector2u(10, 100);
+    debuff = {10.0f, 0.1f};
     //
     collisionType = CIRCLE; entityType = TIMED_ABILITY; stun = false;
     animationSheetDim = sf::Vector2u(4, 1); frameDuration = 0.2f;
@@ -175,7 +175,7 @@ void AtomicResidue::update() {
     animation.update(sprite, 0, true, {curScale, curScale});
 }
 
-sf::Vector2u AtomicResidue::hitEnemy() {
+sf::Vector2f AtomicResidue::hitEnemy() {
     return debuff;
 }
 
@@ -187,7 +187,7 @@ sf::FloatRect AtomicResidue::getBounds() const {
 
 AtomicBullet::AtomicBullet() {
     move = sf::Vector2f(0.0f, 0.0f);
-    speed = 200.0f; debuff = sf::Vector2u(25, 0); diedGoingOut = false;
+    speed = 200.0f; debuff = {25.0f, 0.0f}; diedGoingOut = false;
 
     collisionType = CIRCLE; entityType = COLLISION_ABILITY; stun = false;
     sprite.setTexture(*textures["atomicBullet"]);
@@ -245,6 +245,6 @@ sf::FloatRect AtomicBullet::getBounds() const {
     return hitBox.getBounds();
 }
 
-sf::Vector2u AtomicBullet::hitEnemy() {
+sf::Vector2f AtomicBullet::hitEnemy() {
     return debuff;
 }

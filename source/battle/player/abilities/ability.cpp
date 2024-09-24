@@ -53,8 +53,8 @@ void Ability::kill() {
 };
 
 //base debuff by all ability
-sf::Vector2u Ability::hitEnemy() {
-    return sf::Vector2u(10, 0);
+sf::Vector2f Ability::hitEnemy() {
+    return sf::Vector2f(10, 0);
 }
 
 // ENTITY

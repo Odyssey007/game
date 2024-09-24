@@ -24,6 +24,7 @@ bool PiercingShotManager::startBuffer() {
 
 //checks when it should be active 
 void PiercingShotManager::activate(const sf::Vector2f& target, const sf::Vector2f& playerPos) {
+    if (magnitude(target) == 0) return; //no nearest enemy
     sf::Vector2f toTarget = target - playerPos;
     float distToTarget = magnitude(toTarget);
 
@@ -75,7 +76,7 @@ void PiercingShotManager::render(sf::RenderWindow& window) const {
 //------------SHOT
 
 PiercingShot::PiercingShot() :
-    debuff(10, 0),
+    debuff(10.0f, 0.0f),
     //checks
     active(false), revert(false), hit(false),
     //buffer
@@ -159,11 +160,11 @@ void PiercingShot::afterHitBuffer() {
 }
 
 //returns dmg blast will deal
-sf::Vector2u PiercingShot::hitEnemy() {
+sf::Vector2f PiercingShot::hitEnemy() {
     if (active) {
         return debuff;
     } else {
-        return sf::Vector2u(0, 0);
+        return sf::Vector2f(0.0f, 0.0f);
     }
 }
 

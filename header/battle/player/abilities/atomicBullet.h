@@ -7,7 +7,7 @@ private:
     CircleCollision hitBox;
     sf::Vector2f move;
     float speed;
-    sf::Vector2u debuff;
+    sf::Vector2f debuff;
     //
     bool diedGoingOut;
 public:
@@ -17,7 +17,7 @@ public:
     void isActive(const sf::FloatRect screenBounds);
     void update();
     //ABILITY
-    virtual sf::Vector2u hitEnemy() override; //returns dmg
+    virtual sf::Vector2f hitEnemy() override; //returns dmg
     virtual void activate(const sf::Vector2f& mousePos, const sf::Vector2f& playerPos) override;
     //ENTITY
     virtual sf::FloatRect getBounds() const override;
@@ -26,7 +26,7 @@ public:
 class AtomicResidue : public Ability {
 private:
     float upTime; //how long it stays alive 
-    sf::Vector2u debuff;
+    sf::Vector2f debuff;
     CircleCollision hitBox;
     //scaling
     float curScale;
@@ -46,7 +46,7 @@ public:
     void isActive();
     void update();
     //ABILITY
-    virtual sf::Vector2u hitEnemy() override;
+    virtual sf::Vector2f hitEnemy() override;
     //ENTITY
     virtual sf::FloatRect getBounds() const override;
 };

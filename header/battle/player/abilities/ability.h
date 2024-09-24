@@ -32,7 +32,7 @@ public:
     void restartBufferTime();
     float getBufferTime() const;
     virtual void kill();
-    virtual sf::Vector2u hitEnemy();
+    virtual sf::Vector2f hitEnemy();
     //  update
     virtual void update(const sf::Vector2f& target, const sf::Vector2f& playerPos, bool playerFacingRight);
     virtual void update(uint8_t& numHits); //EnergyBarrier

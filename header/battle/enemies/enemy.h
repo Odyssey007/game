@@ -15,14 +15,17 @@ protected:
     Animation animation;
     sf::Vector2u animationSheetDim;
     float frameDuration;
-    //atributes 
-    int health;
-    int fullHealth;
-    float movementSpeed;
-    int baseDamage;
+    //atributes
+    bool hitPlayer;
+    bool isSlowed;
+    float slowDuration;
     sf::Clock attackTimer;
     float attackCooldown;
+    //NEED TO BE SET BY CHILD
+    int health;
+    float movementSpeed;
     //movement 
+    bool isMoving;
     bool facingRight;
     int totalDirections;
     std::vector<sf::Vector2f> directions;
@@ -44,7 +47,7 @@ protected:
     void handleAbilityCollision(Entity& entity);
     //
     void loadTexture(const std::string& name, const std::string& filePath);
-    void takeDebuff(sf::Vector2u debuff, bool stun); //!implement stun
+    void takeDebuff(sf::Vector2f debuff, bool stun); //TODO stun
     //
     virtual void checkLvlUp(const size_t level) = 0;
     void initialBestDirection(const sf::Vector2f& toTarget);
@@ -62,7 +65,7 @@ public:
     void checkAlive();
     void spawn(const size_t level, const sf::FloatRect& screenBounds);
     void restartAttackTimer();
-    virtual sf::Vector2u attack() = 0; //!not used currently
+    virtual sf::Vector2f attack() = 0;
     virtual void update(const sf::Vector2f& target) = 0;
     //ENTITY fetchers
     virtual const sf::Vector2f& getVelocity() const override;
@@ -71,7 +74,5 @@ public:
     //ENTITY functions 
     virtual void applyMovement() override;
     virtual void handleCollision(Entity& entity) override;
-
-    bool isSlowed = false;
-    float effectDuration = 1.0f;
+    virtual void render(sf::RenderWindow& window) const override;
 };

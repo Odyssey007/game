@@ -19,7 +19,6 @@
 #include "../header/battle/player/abilities/abilitySelectionUI.h"
 
 //remove
-#include "../header/battle/enemies/slimeMiniBoss.h"
 
 
 class Game {
@@ -74,14 +73,4 @@ public:
     //!not finalized
     //pause menu
     Menu menu;
-
-    std::unique_ptr<SlimeMiniBoss> miniBoss;
 };
-
-/*
-sf::Clock worldTime;  
-sf::Time elapsed = worldTime.getElapsedTime();
-
-int minutes = static_cast<int>(elapsed.asSeconds()) / 60;
-int seconds = static_cast<int>(elapsed.asSeconds()) % 60;
-*/

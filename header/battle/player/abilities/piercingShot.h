@@ -8,7 +8,7 @@ class PiercingShotManager;
 class PiercingShot : public Ability {
 private:
     CircleCollision hitBox;
-    sf::Vector2u debuff;
+    sf::Vector2f debuff;
     //checks
     bool active; 
     bool revert;
@@ -28,7 +28,7 @@ private:
     void animateMovement();
     void afterHitBuffer();
     // PARENT
-    virtual sf::Vector2u hitEnemy() override; // ABILITY
+    virtual sf::Vector2f hitEnemy() override; // ABILITY
     virtual sf::FloatRect getBounds() const override; //ENTITY
     //
     friend class PiercingShotManager;

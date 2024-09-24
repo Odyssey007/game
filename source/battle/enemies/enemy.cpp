@@ -4,9 +4,10 @@ Enemy::Enemy() :
     //animation
     animationSheetDim(sf::Vector2u(0, 0)), frameDuration(0.18f),
     //attributes
-    health(100), fullHealth(100), movementSpeed(150.0f), baseDamage(10), attackCooldown(1.5f),
+    hitPlayer(false), isSlowed(false), slowDuration(1.0f), attackCooldown(1.5f),
+    health(0), movementSpeed(0.0f), //not set
     //movement
-    facingRight(false), totalDirections(32), bestDirection(sf::Vector2f(0.0f, 0.0f)), 
+    isMoving(false), facingRight(false), totalDirections(32), bestDirection(sf::Vector2f(0.0f, 0.0f)), 
     moveDistance(sf::Vector2f(0.0f, 0.0f)), bounds(sf::FloatRect(0.0f, 0.0f, 0.0f, 0.0f))
 {
     //update parent
@@ -154,19 +155,18 @@ void Enemy::restartAttackTimer() {
 }
 
 //x = hp | y = ms
-void Enemy::takeDebuff(sf::Vector2u debuff, bool stun) {
+void Enemy::takeDebuff(sf::Vector2f debuff, bool stun) {
     health -= debuff.x;
     // movementSpeed -= debuff.y; //!will not work with stun
     if (!isSlowed) {
-        movementSpeed = 100.0f;
         isSlowed = true;
+        movementSpeed = movementSpeed*debuff.y;
     }
 }
 
 void Enemy::spawn(const size_t level, const sf::FloatRect& screenBounds) {
     this->alive = true; 
     checkLvlUp(level);
-    health = fullHealth;
     setInitialPosition(screenBounds);
 }
 
@@ -216,10 +216,11 @@ void Enemy::applyMovement() {
 
 void Enemy::handleCollision(Entity& entity) {
     EntityType otherEntity = entity.entityType;
-    if (otherEntity == PLAYER || otherEntity == OBSTACLE || 
-        otherEntity == EXP) return;
+    if (otherEntity == OBSTACLE || otherEntity == EXP) return;
     //
-    if (otherEntity == ENEMY) {
+    else if (otherEntity == PLAYER) {
+        hitPlayer = true;
+    } else if (otherEntity == ENEMY) {
         handleEnemyCollision(entity);
     } else if (otherEntity == COLLISION_ABILITY || otherEntity == TIMED_ABILITY) {
         handleAbilityCollision(entity);
@@ -331,4 +332,8 @@ void Enemy::boxCircleOverlap(Entity& box, Entity& circle) {
         circle.setVelocity(circleVelocity);
         box.setVelocity(boxVelocity);
     }
+}
+
+void Enemy::render(sf::RenderWindow& window) const {
+    window.draw(sprite);
 }

@@ -2,7 +2,7 @@
 
 EnergyBarrier::EnergyBarrier(GridSystem& grid) : 
     //stats
-    active(false), state(0), debuff(5, 0),
+    active(false), state(0), debuff(5.0f, 0.0f),
     //enlarge
     curScale(2.3f), targetScale(15.0f), elapsedTime(0.0f), scaleDuration(0.5f),
     //pulse
@@ -43,9 +43,9 @@ void EnergyBarrier::update(uint8_t& numHits) {
             break;
         case 2:
             if (numHits == 0) {
-                debuff.x = 5;
+                debuff.x = 5.0f;
             } else {
-                debuff.x = 5*numHits;
+                debuff.x = 5.0f*numHits;
             }
             pulse();
             if (timer.getElapsedTime().asSeconds() >= 3.0f) {
@@ -75,7 +75,7 @@ void EnergyBarrier::reset() {
     sprite.setScale(curScale, curScale);
     hitBox.updateSize(bounds);
     //
-    debuff.x = 5;
+    debuff.x = 5.0f;
     elapsedTime = 0.0f;
     curScale = 2.3;
     pulseElapsed = 0.0f;
@@ -117,11 +117,11 @@ sf::FloatRect EnergyBarrier::calcBounds(float scale) {
     return sf::FloatRect(left, top, adjustedWidth, adjustedHeight);
 }
 
-sf::Vector2u EnergyBarrier::hitEnemy() {
+sf::Vector2f EnergyBarrier::hitEnemy() {
     if (active) {
         return debuff;
     } else {
-        return sf::Vector2u(0, 0);
+        return sf::Vector2f(0.0f, 0.0f);
     }
 }
 

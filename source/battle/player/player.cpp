@@ -4,16 +4,16 @@ Player::Player() :
     //animation
     animationSheetDim(sf::Vector2u(4, 2)), frameDuration(0.18),
     //player stats
-    healthMax(100), health(100), battleSpeed(300.0f), kingdomSpeed(300.0f),
-    exp(0), expRequired(1), level(1),
-    //player bounds
-    bounds(sf::FloatRect(50, 30, 30, 80)),
+    healthMax(100), health(100), battleSpeed(BASE_BATTLE_SPEED), 
+    kingdomSpeed(300.0f), exp(0), expRequired(1), level(1),
+    //hitbox
+    hitWall(false), bounds(sf::FloatRect(50, 30, 30, 80)),
     //movement
     moveDistance(sf::Vector2f(0.0f, 0.0f)), isMoving(false), facingRight(true), direction(IDLE),
-    //blast
-    blastPool(100)
+    isSlowed(false), slowDuration(1.0f),
+    //ability
+    abilityActive(false), numAttacked(0), blastPool(100)
 {
-    hitWall = false; abilityActive = false; numAttacked = 0;
     //preliminaries
     entityType = PLAYER; collisionType = BOX;
     texture.loadFromFile("assets/playerSheet.png");
@@ -52,8 +52,17 @@ void Player::tempSol() {
 }
 
 void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds, GridSystem& grid) {    
+    //slow effects
+    if (isSlowed) {
+        slowDuration -= DeltaTime::getInstance()->getDeltaTime();
+    }
+    if (isSlowed && slowDuration <= 0) {
+        isSlowed = false;
+        slowDuration = 1.0f;
+        battleSpeed = BASE_BATTLE_SPEED;
+    }
+    //movements
     movement(mousePosition);
-
     //----abilities
     sf::Vector2f send = sf::Vector2f(0.0f, 0.0f);
     if (closestNeighbor) {
@@ -208,10 +217,14 @@ void Player::checkLevelUp(float exp) {
 }
 
 //x = hp | y = ms
-void Player::takeDebuffs(const sf::Vector2u& debuff) {
+void Player::takeDebuffs(const sf::Vector2f& debuff) {
     health -= debuff.x;
     battleSpeed -= debuff.y; //!will not work
     numAttacked++;
+    if (!isSlowed) {
+        isSlowed = true;
+        battleSpeed = battleSpeed*debuff.y;
+    }
 }
 
 //fetchers

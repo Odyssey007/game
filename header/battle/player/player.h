@@ -11,6 +11,7 @@
 #include "../header/battle/player/abilities/energyBarrier.h"
 
 enum Direction { IDLE, LEFT, RIGHT, UP, DOWN };
+const float BASE_BATTLE_SPEED = 300.0f;
 
 class Player : public Entity {
 private:
@@ -38,6 +39,8 @@ private:
     bool isMoving;
     bool facingRight;
     Direction direction;
+    bool isSlowed; //slow effects
+    float slowDuration;
     //collision handling
     void handleEnemyCollisions(Entity& other);
     void handleExpCollision(Entity& other);
@@ -64,7 +67,7 @@ public:
     float getExpPercentage() const;
     //functions
     void update(const sf::Vector2f& mousePosition, const sf::FloatRect& screenBounds, GridSystem& grid);
-    void takeDebuffs(const sf::Vector2u& debuff);
+    void takeDebuffs(const sf::Vector2f& debuff);
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;

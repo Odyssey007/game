@@ -2,29 +2,28 @@
 
 class SlimeMiniBoss : public Enemy {
 private:
+    //mini
     float scale;
-    sf::Vector2u debuff;
-    //hit box
-    bool facingRight;
-    CircleCollision hitBox;
-    //leap attack
-    float leapingSpeed;
-    bool leaping; //charging buffer for leap
+    //ability1: leap attack
+    bool leaping;           //charging buffer for leap
+    float leapingSpeed;     //buffers
     float chargeTimer;
-    bool needToRecover; //recovery buffer for leap
+    bool needToRecover; 
     float recoveryTimer;
-    float leapDistance; //leap distance
+    float leapDistance;     //distance
     float totalLeapDistance;
+    //
+    sf::Vector2f debuff;
+    CircleCollision hitBox;
+    //
+    void leapAttack();
     virtual void checkLvlUp(const size_t level) override;
 public:
     SlimeMiniBoss();
-    void leapAttack();
-    //functions
+    //ENEMY functions
     virtual void update(const sf::Vector2f& target) override; 
-    virtual sf::Vector2u attack() override;
+    virtual sf::Vector2f attack() override;
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
-    //ENTITY functions
-    virtual void render(sf::RenderWindow& window) const override;
 };

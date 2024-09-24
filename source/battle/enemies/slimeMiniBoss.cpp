@@ -1,33 +1,42 @@
 #include "../header/battle/enemies/slimeMiniBoss.h"
 
+const float BASE_MOVEMENT_SPEED = 185.0f;
+const float BASE_SLOW = 0.0f; //done in %
+const float BASE_DMG = 12.0f;
+const float BASE_HP = 250.0f;
+//ABILITY 1
+const float ABILITY1_SLOW = 0.85f;
+const float ABILITY1_DMG = 15.0f;
+
 SlimeMiniBoss::SlimeMiniBoss() : 
+    scale(1.3f), //mini
     //leap buffers
-    leapingSpeed(5.5f), leaping(false), chargeTimer(0.35f), needToRecover(false), recoveryTimer(0.35f),
+    leaping(false), leapingSpeed(5.5f), chargeTimer(0.35f), needToRecover(false), recoveryTimer(0.35f),
     //leap distance
     leapDistance(275.0f), totalLeapDistance(0.0f)
 {
-    debuff = {10, 0}; health = 300; fullHealth = 250;
-    //preliminaries
-    collisionType = CIRCLE;
-    sprite.setTexture(*textures["slime"]);
-    //hit box
+    collisionType = CIRCLE; //update entity-parent
+    //update enemy-parent
+    movementSpeed = BASE_MOVEMENT_SPEED;
+    debuff = {BASE_DMG, BASE_SLOW}; health = BASE_HP;
     bounds = sf::FloatRect(39, 65, 75, 62);
-    hitBox.updateSize(bounds);
-    //set origin and position
-    scale = 1.3f;
+    //mini-boss
     sprite.setScale(scale, scale);
     sprite.setColor(sf::Color(236, 59, 59));
+    //
+    sprite.setTexture(*textures["slime"]);
+    hitBox.updateSize(bounds);
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
 }
 
 void SlimeMiniBoss::update(const sf::Vector2f& target) {
     if (isSlowed) {
-        effectDuration -= DeltaTime::getInstance()->getDeltaTime();
+        slowDuration -= DeltaTime::getInstance()->getDeltaTime();
     }
-    if (isSlowed && effectDuration <= 0) {
+    if (isSlowed && slowDuration <= 0) {
         isSlowed = false;
-        movementSpeed = 150.0f;
-        effectDuration = 1.0f;
+        slowDuration = 1.0f;
+        movementSpeed = BASE_MOVEMENT_SPEED;
     }
     //changing direction
     sf::Vector2f toTarget = target - sprite.getPosition();
@@ -68,6 +77,9 @@ void SlimeMiniBoss::leapAttack() {
         if (chargeTimer <= 0) {
             leaping = true;
             chargeTimer = 0.35f;
+            //
+            debuff.x = ABILITY1_DMG;
+            debuff.y = ABILITY1_SLOW;
         }
         return;
     }
@@ -78,23 +90,25 @@ void SlimeMiniBoss::leapAttack() {
         hitBox.followEntity(sprite.getPosition());
         totalLeapDistance += magnitude(move);
     } else if (leaping) {
-        totalLeapDistance = 0.0f;
-        //start buffer
-        leaping = false;
-        //end buffer
+        //start recovery
         needToRecover = true;
         recoveryTimer = 0.35f;
+        //reset
+        totalLeapDistance = 0.0f;
+        leaping = false;
+        debuff.x = BASE_DMG;
+        debuff.y = BASE_SLOW;
     }
 }
 
 void SlimeMiniBoss::checkLvlUp(const size_t level) {
     if (level == 0) return;
-    fullHealth += 100*level*0.1f;
-    debuff.x += 15*level*0.05f;
-    movementSpeed += 250*level*0.005f;
+    health += BASE_HP*level*0.1f;
+    debuff.x += BASE_DMG*level*0.05f;
+    movementSpeed += BASE_MOVEMENT_SPEED*level*0.005f;
 }
 
-sf::Vector2u SlimeMiniBoss::attack() {
+sf::Vector2f SlimeMiniBoss::attack() {
     return debuff;
 }
 
@@ -104,10 +118,4 @@ sf::FloatRect SlimeMiniBoss::getBounds() const {
 
 sf::Vector2f SlimeMiniBoss::getPosition() const {
     return sprite.getPosition();
-}
-
-void SlimeMiniBoss::render(sf::RenderWindow& window) const {
-    if (alive) {
-        window.draw(sprite);
-    }
 }
