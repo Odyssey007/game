@@ -19,7 +19,7 @@
 #include "../header/battle/player/abilities/abilitySelectionUI.h"
 
 //remove
-
+#include "../header/battle/enemies/goblinBoss.h"
 
 class Game {
 private:
@@ -73,4 +73,7 @@ public:
     //!not finalized
     //pause menu
     Menu menu;
+
+
+    std::unique_ptr<GoblinBoss> miniBoss;
 };

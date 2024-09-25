@@ -15,6 +15,7 @@ Enemy::Enemy() :
     //
     loadTexture("slime", "assets/enemies/slime.png");
     loadTexture("goblin", "assets/enemies/goblinSheet.png");
+    loadTexture("goblinBoss", "assets/enemies/goblinBossSheet.png");
     generateDirections();
 }
 

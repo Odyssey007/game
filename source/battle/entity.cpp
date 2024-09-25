@@ -18,6 +18,10 @@ void Entity::setVelocity(const sf::Vector2f& v) {
     return;
 }
 
+void Entity::setInitialPosition(const sf::FloatRect& screenBounds) {
+    return;
+}
+
 void Entity::applyMovement() {
     return;
 }

@@ -1,3 +1,4 @@
+#pragma once
 #include "../header/battle/enemies/goblin.h"
 
 class GoblinMiniBoss : public Enemy {

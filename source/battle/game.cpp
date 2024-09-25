@@ -10,7 +10,7 @@ Game::Game() {
     player = std::make_unique<Player>(); player->extraSetUp(grid);
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
     //wave set up
-    enemiesSpawning = 1; enemyLevel = 0;
+    enemiesSpawning = 0; enemyLevel = 0;
     //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -23,9 +23,10 @@ Game::Game() {
     backgroundTexture.loadFromFile("assets/background.png");
     spriteBackground.setTexture(backgroundTexture);
 
-    // miniBoss = std::make_unique<GoblinMiniBoss>();
-    // miniBoss->spawn(1, screenBounds);
-    // grid.addEntity(*miniBoss);
+    miniBoss = std::make_unique<GoblinBoss>();
+    miniBoss->spawn(1, screenBounds);
+    grid.addEntity(*miniBoss);
+    miniBoss->addExtra(grid);
 }
 
 //window set up
@@ -117,11 +118,11 @@ void Game::update() {
 }
 
 void Game::updatePlaying() {
-    // miniBoss->checkAlive();
-    // if (miniBoss->isAlive()) {
-    //     miniBoss->update(playerPosition);
-    //     miniBoss->checkAlive();
-    // }
+    miniBoss->checkAlive();
+    if (miniBoss->isAlive()) {
+        miniBoss->update(playerPosition);
+        miniBoss->checkAlive();
+    }
 
 
 
@@ -137,7 +138,7 @@ void Game::updatePlaying() {
     //collision check
     grid.checkCollision();
 
-    // miniBoss->applyMovement();
+    miniBoss->applyMovement();
 
     player->applyMovement();
     enemyPool->applyMovement();
@@ -194,6 +195,9 @@ void Game::renderPlaying() {
     window->setView(view);
     //entities
     player->renderAbilities(*window);
+
+    miniBoss->render(*window);
+
     enemyPool->renderEnemies(*window);
     enemyPool->renderExp(*window);
     player->render(*window);

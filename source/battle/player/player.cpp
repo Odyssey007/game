@@ -75,7 +75,7 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
     dash.update(hitWall, moveDistance); //basic
     blastPool.update(screenBounds); //basic
 
-    // return; //!
+    return; //!
 
     //ability pools
     for (auto& abilityPool : abilityPools) {
@@ -219,12 +219,11 @@ void Player::checkLevelUp(float exp) {
 //x = hp | y = ms
 void Player::takeDebuffs(const sf::Vector2f& debuff) {
     health -= debuff.x;
-    battleSpeed -= debuff.y; //!will not work
-    numAttacked++;
-    if (!isSlowed) {
+    if (!isSlowed && debuff.y != 0.0f) {
         isSlowed = true;
         battleSpeed = battleSpeed*debuff.y;
     }
+    numAttacked++;
 }
 
 //fetchers
@@ -276,23 +275,35 @@ void Player::handleCollision(Entity& other) {
     if (otherEntity == PLAYER || otherEntity == TIMED_ABILITY ||
         otherEntity == COLLISION_ABILITY) return;
     //
-    if (otherEntity == ENEMY) {
-        handleEnemyCollisions(other);
+    else if (otherEntity == ENEMY) {
+        handleEnemyCollision(other);
     } else if (otherEntity == EXP) {
         handleExpCollision(other);
     } else if (otherEntity == OBSTACLE) {
         hitWall = true;
+    } else if (otherEntity == ENEMY_ABILITY) {
+        handleEnemyAbilityCollision(other);
+    }
+}
+
+void Player::handleEnemyAbilityCollision(Entity& entity) {
+    if (!entity.isAlive()) return;
+    EnemyAbility* ability = dynamic_cast<EnemyAbility*>(&entity);
+    if ((ability->getAttackTimer() >= ability->getAttackCooldown()) || ability->newAttack()) {
+        if (ability->newAttack()) ability->resetOverride();
+        this->takeDebuffs(ability->attack());
+        ability->restartAttackTimer();
     }
 }
 
 void Player::handleExpCollision(Entity& entity) {
-    if (entity.isAlive()) {
-        Exp* exp = dynamic_cast<Exp*>(&entity);
-        this->checkLevelUp(exp->drop());
-    }
+    if (!entity.isAlive()) return;
+    Exp* exp = dynamic_cast<Exp*>(&entity);
+    this->checkLevelUp(exp->drop());
 }
 
-void Player::handleEnemyCollisions(Entity& entity) {
+void Player::handleEnemyCollision(Entity& entity) {
+    if (!entity.isAlive()) return;
     Enemy* enemy = dynamic_cast<Enemy*>(&entity);
     if (enemy->getAttackTimer() >= enemy->getAttackCooldown()) {
         this->takeDebuffs(enemy->attack());

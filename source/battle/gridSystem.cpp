@@ -128,7 +128,7 @@ void GridSystem::addEntity(Entity& entity) {
 //!horror optimization
 void GridSystem::removeDeadEntities() {
     for (auto it = entities.begin(); it != entities.end(); ) {
-        if (!it->get().isAlive() && it->get().entityType != EntityType::OBSTACLE) {
+        if (!it->get().isAlive() && it->get().entityType != OBSTACLE && it->get().entityType != ENEMY_ABILITY) {
             it = entities.erase(it);
         } else {
             ++it;

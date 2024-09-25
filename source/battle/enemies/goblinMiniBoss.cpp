@@ -76,7 +76,7 @@ void GoblinMiniBoss::update(const sf::Vector2f& target) {
         debuff.y = BASE_SLOW;
     }
     hitBox.followEntity(sprite.getPosition());
-    //blink ability
+    //ability1: blink activate
     if (distance(target, sprite.getPosition()) < 300.0f && shouldBlink) {
         blinkBehind(target);
         cooldown = 5.0f;
@@ -94,7 +94,6 @@ void GoblinMiniBoss::blinkBehind(const sf::Vector2f& target) {
     toTarget = normalize(toTarget);
 
     float offsetDistance;
-
     if (std::abs(moveDistance.x) > std::abs(moveDistance.y)) { //moving hor
         offsetDistance = -55.0f;
     } else { //moving vert
@@ -104,7 +103,6 @@ void GoblinMiniBoss::blinkBehind(const sf::Vector2f& target) {
             offsetDistance = -75.0f;
         }
     }
-
     sf::Vector2f newPosition = target + toTarget*offsetDistance;
 
     sprite.setPosition(newPosition);

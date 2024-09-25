@@ -9,6 +9,9 @@
 #include "../header/battle/player/abilities/atomicBullet.h"
 #include "../header/battle/player/abilities/piercingShot.h"
 #include "../header/battle/player/abilities/energyBarrier.h"
+//
+#include "../header/battle/enemies/enemyAbility.h"
+
 
 enum Direction { IDLE, LEFT, RIGHT, UP, DOWN };
 const float BASE_BATTLE_SPEED = 300.0f;
@@ -42,7 +45,8 @@ private:
     bool isSlowed; //slow effects
     float slowDuration;
     //collision handling
-    void handleEnemyCollisions(Entity& other);
+    void handleEnemyAbilityCollision(Entity& other);
+    void handleEnemyCollision(Entity& other);
     void handleExpCollision(Entity& other);
     void checkLevelUp(float exp);
     //movement
