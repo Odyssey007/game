@@ -21,7 +21,7 @@ bool BlastPool::spawnProjectile(const sf::Vector2f& mousePos, const sf::Vector2f
     return false;
 }
 
-void BlastPool::update(const sf::FloatRect screenBounds) {
+void BlastPool::update(const sf::FloatRect& screenBounds) {
     for (const auto& blast : activeBlasts) {
         blast->isActive(screenBounds);
     }
@@ -91,7 +91,7 @@ void Blast::update() {
 }
 
 //checks if within screen
-void Blast::isActive(const sf::FloatRect screenBounds) {
+void Blast::isActive(const sf::FloatRect& screenBounds) {
     sf::Vector2f currentPosition = sprite.getPosition();
     alive = screenBounds.contains(currentPosition);
 }

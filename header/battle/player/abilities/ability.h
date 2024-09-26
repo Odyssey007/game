@@ -7,10 +7,6 @@
 //!see y u need this only here
 class GridSystem; 
 
-// enum AllAbilities {
-//     BLAST, DASH, 
-// };
-
 class Ability : public Entity {
 protected:
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
@@ -48,7 +44,6 @@ public:
     virtual void render(sf::RenderWindow& window) const override;
 };
 
-
 class AbilityPool {
 protected:
     uint8_t totalAmmo;
@@ -56,7 +51,7 @@ protected:
 public:
     virtual void cleanUp();
     virtual void cleanUp(GridSystem& grid);
-    virtual void update(const sf::FloatRect screenBounds) = 0;
+    virtual void update(const sf::FloatRect& screenBounds) = 0;
     virtual bool spawnProjectile(const sf::Vector2f& mousePos, 
                                  const sf::Vector2f& playerPos, GridSystem& grid) = 0;
     virtual void render(sf::RenderWindow& window) const = 0;

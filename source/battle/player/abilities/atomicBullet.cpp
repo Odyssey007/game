@@ -23,7 +23,7 @@ bool AtomicBulletPool::spawnProjectile(const sf::Vector2f& target, const sf::Vec
     return false;
 }
 
-void AtomicBulletPool::update(const sf::FloatRect screenBounds) {
+void AtomicBulletPool::update(const sf::FloatRect& screenBounds) {
     for (const auto& bullet : activeBullets) {
         bullet->isActive(screenBounds);
     }
@@ -225,10 +225,8 @@ void AtomicBullet::update() {
     sprite.rotate(frameRotation);
 }
 
-void AtomicBullet::isActive(const sf::FloatRect screenBounds) {
-    sf::Vector2f currentPosition = sprite.getPosition();
-    
-    if (screenBounds.contains(currentPosition)) {
+void AtomicBullet::isActive(const sf::FloatRect& screenBounds) {
+    if (screenBounds.contains(sprite.getPosition())) {
         alive = true;
         diedGoingOut = false;
     } else {

@@ -11,6 +11,7 @@ include_directories(
     header/battle/player
     header/battle/player/abilities
     header/battle/enemies
+    header/battle/enemies/goblinBoss
     header/battle/obstacles
     header/game
     header/kingdom
@@ -27,6 +28,7 @@ file(GLOB SOURCES
     "source/battle/player/*.cpp"
     "source/battle/player/abilities/*.cpp"
     "source/battle/enemies/*.cpp"
+    "source/battle/enemies/goblinBoss/*.cpp"
     "source/battle/obstacles/*.cpp"
     "source/game/*.cpp"
     "source/kingdom/*.cpp"

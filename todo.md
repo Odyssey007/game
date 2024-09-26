@@ -3,7 +3,6 @@ abilities
  -scaling implementation
 
 enemies
- -mini bosses
  -boss
 
 balancing

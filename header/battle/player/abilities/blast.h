@@ -11,7 +11,7 @@ private:
 public:
     Blast();
     void startPosition(const sf::Vector2f& playerPosition, const sf::Vector2f& mousePosition);
-    void isActive(const sf::FloatRect screenBounds);
+    void isActive(const sf::FloatRect& screenBounds);
     void update();
     //ABILITY
     virtual sf::Vector2f hitEnemy() override; //returns dmg
@@ -27,7 +27,7 @@ private:
 public:
     BlastPool(size_t totalBlasts);
     virtual void cleanUp() override;
-    virtual void update(const sf::FloatRect screenBounds) override;
+    virtual void update(const sf::FloatRect& screenBounds) override;
     virtual bool spawnProjectile(const sf::Vector2f& mousePos, 
                                  const sf::Vector2f& playerPos, GridSystem& grid) override;
     virtual void render(sf::RenderWindow& window) const override;

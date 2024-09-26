@@ -14,7 +14,7 @@ public:
     bool isGoneOut() const;
     AtomicBullet();
     void startPosition(const sf::Vector2f& playerPos, const sf::Vector2f& mousePos);
-    void isActive(const sf::FloatRect screenBounds);
+    void isActive(const sf::FloatRect& screenBounds);
     void update();
     //ABILITY
     virtual sf::Vector2f hitEnemy() override; //returns dmg
@@ -61,7 +61,7 @@ private:
 public:
     AtomicBulletPool(size_t totalBullets);
     virtual void cleanUp(GridSystem& grid) override;
-    virtual void update(const sf::FloatRect screenBounds) override;
+    virtual void update(const sf::FloatRect& screenBounds) override;
     virtual bool spawnProjectile(const sf::Vector2f& target, const sf::Vector2f& playerPos, GridSystem& grid) override;
     virtual void render(sf::RenderWindow& window) const override;
     //residue

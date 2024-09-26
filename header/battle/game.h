@@ -19,7 +19,8 @@
 #include "../header/battle/player/abilities/abilitySelectionUI.h"
 
 //remove
-#include "../header/battle/enemies/goblinBoss.h"
+#include "../header/battle/enemies/goblinBoss/goblinBoss.h"
+#include "../header/battle/enemies/goblinBoss/bulletSpray.h"
 
 class Game {
 private:

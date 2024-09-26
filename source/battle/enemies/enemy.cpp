@@ -32,7 +32,7 @@ void Enemy::generateDirections(int numDirections) {
     const float zeroThreshold = 1e-6; //to stop floating point precision error
     directions.clear();
     for (int i = 0; i < numDirections; i++) {
-        float angle = 2 * M_PI * i / numDirections;
+        float angle = 2*M_PI*i/numDirections;
         float x = std::cos(angle);
         float y = std::sin(angle);
         if (std::abs(x) < zeroThreshold) x = 0;

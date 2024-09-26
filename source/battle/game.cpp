@@ -120,12 +120,10 @@ void Game::update() {
 void Game::updatePlaying() {
     miniBoss->checkAlive();
     if (miniBoss->isAlive()) {
-        miniBoss->update(playerPosition);
+        // miniBoss->update(playerPosition);
         miniBoss->checkAlive();
+        miniBoss->updateAbility(grid, screenBounds);
     }
-
-
-
 
     //enemy spawn: checks if a new wave needs to spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
@@ -144,6 +142,9 @@ void Game::updatePlaying() {
     enemyPool->applyMovement();
     player->tempSol(); //?hack fix later
     //clean up 
+    
+    miniBoss->abilityCleanUp();
+
     player->cleanUpAbilities(grid);
     enemyPool->resetEnemies(grid);
     grid.removeDeadEntities();
