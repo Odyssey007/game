@@ -2,9 +2,6 @@ abilities
  -ability center? ** ---- implement how to store and 
  -scaling implementation
 
-enemies
- -boss
-
 balancing
  -wave timing
     -enemy lvl|spawn

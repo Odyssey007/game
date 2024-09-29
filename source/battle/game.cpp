@@ -120,9 +120,9 @@ void Game::update() {
 void Game::updatePlaying() {
     miniBoss->checkAlive();
     if (miniBoss->isAlive()) {
-        // miniBoss->update(playerPosition);
+        miniBoss->update(playerPosition);
         miniBoss->checkAlive();
-        miniBoss->updateAbility(grid, screenBounds);
+        miniBoss->updateAbility(playerPosition, screenBounds, grid);
     }
 
     //enemy spawn: checks if a new wave needs to spawn

@@ -4,20 +4,17 @@
 
 class GoblinBoss : public Enemy {
 private:
-    //
     float scale;
+    bool usingAbility;
     sf::Vector2f debuff;
+    //
     BoxCollision hitBox;
     //
-    bool usingAbility = false;
-    //ability 1
-    BodySlam bodySlam;    
-    //ability 2
-    BulletSprayPool bullet;
-    //
+    BodySlam bodySlam; //ability 1  
+    BulletSprayPool bulletSpray; //ability 2
     virtual void checkLvlUp(const size_t level) override;
 public:
-    void updateAbility(GridSystem& grid, const sf::FloatRect& screenBounds);
+    void updateAbility(const sf::Vector2f& target, const sf::FloatRect& screenBounds, GridSystem& grid);
     void abilityCleanUp();
     GoblinBoss();
     void addExtra(GridSystem& grid);
@@ -27,10 +24,5 @@ public:
     //ENTITY fetchers
     virtual sf::FloatRect getBounds() const override;
     virtual sf::Vector2f getPosition() const override;
-
-    //
-
     virtual void render(sf::RenderWindow& window) const override;
-
-    friend class Slam;
 };

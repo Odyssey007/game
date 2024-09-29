@@ -2,7 +2,7 @@
 
 const float INITIAL_SIZE = 7.0F;
 const float BASE_SLAM_DMG = 0.0f;
-const float BASE_SLAM_SLOW = 0.9f;
+const float BASE_SLAM_SLOW = 0.75f;
 const float SLAM_DMG = 25.0f;
 const float SLAM_SLOW = 0.0f;
 
@@ -43,9 +43,9 @@ bool BodySlam::cooldown(bool& abilityActive) {
             slamCooldown = 5.0f;
             //
             abilityActive = false;
-            return false;
+            return false; //not on cooldown--move
         }
-        return true;
+        return true; //on cooldown--stop moving
     }
 
     if (!shouldSlam && slamCooldown >= 0.0f) {
@@ -58,11 +58,7 @@ bool BodySlam::cooldown(bool& abilityActive) {
             hitBox.updateSize(sprite.getGlobalBounds());
         }
     }
-    return false;
-}
-
-bool BodySlam::canSlam() const {
-    return shouldSlam;
+    return false; //on or not on cooldown--can move
 }
 
 void BodySlam::activate(const sf::Vector2f& bossPos) {
@@ -84,6 +80,10 @@ void BodySlam::activate(const sf::Vector2f& bossPos) {
     sprite.setPosition(bossPos);
     maxSizeOutline.setPosition(bossPos);
     hitBox.followEntity(sprite.getPosition());
+}
+
+bool BodySlam::canSlam() const {
+    return shouldSlam;
 }
 
 sf::FloatRect BodySlam::getBounds() const {

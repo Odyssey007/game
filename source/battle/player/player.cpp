@@ -218,6 +218,7 @@ void Player::checkLevelUp(float exp) {
 
 //x = hp | y = ms
 void Player::takeDebuffs(const sf::Vector2f& debuff) {
+    std::cout << debuff.x << ", " << debuff.y << std::endl;
     health -= debuff.x;
     if (!isSlowed && debuff.y != 0.0f) {
         isSlowed = true;

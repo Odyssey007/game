@@ -10,7 +10,7 @@ GoblinBoss::GoblinBoss() {
     //update enemy-parent
     movementSpeed = BASE_MOVEMENT_SPEED;
     debuff = {BASE_DMG, BASE_SLOW}; health = BASE_HP;
-    bounds = {35, 35, 75, 90};
+    bounds = {35, 35, 75, 90}; usingAbility = false;
     //
     scale = 1.0f;
     sprite.setTexture(*textures["goblinBoss"]);
@@ -52,32 +52,42 @@ void GoblinBoss::update(const sf::Vector2f& target) {
     //buffers
     if (bodySlam.cooldown(usingAbility)) {
         return;
-    }
+    } 
+    if (bulletSpray.cooldown(usingAbility)) {
+        return;
+    } 
     //movement
     if (!hitPlayer && !usingAbility) {
-        // meleeMovement(target);
         isMoving = true;
+        meleeMovement(target);
     } else if (hitPlayer){
         hitPlayer = false;
         debuff = {BASE_DMG, BASE_SLOW};
     }
     hitBox.followEntity(sprite.getPosition());
-    //ability1: body slam
-    // if (bodySlam.isAlive() || (distance(target, sprite.getPosition()) < 125.0f && bodySlam.canSlam())) {
-    //     bodySlam.activate(sprite.getPosition());
-    //     isMoving = false;
-    //     usingAbility = true;
-    // }
 }
 
-void GoblinBoss::updateAbility(GridSystem& grid, const sf::FloatRect& screenBounds) {
-    //ability2: bullet spray
-    bullet.activate(sprite.getPosition(), grid);
-    bullet.update(screenBounds, sprite.getPosition());
+void GoblinBoss::updateAbility(const sf::Vector2f& target, const sf::FloatRect& screenBounds, GridSystem& grid) {
+    float dist = distance(target, sprite.getPosition());
+    //ability1: bodySlam
+    if ((bodySlam.isAlive() || (dist < 225.0f && bodySlam.canSlam())) && !bulletSpray.isAlive()) {
+        isMoving = false;
+        usingAbility = true;
+        //
+        bodySlam.activate(sprite.getPosition());
+    }  
+    //ability2: bulletSpray
+    else if (bulletSpray.isAlive() || (dist < 500.0f && bulletSpray.canCast())) {
+        isMoving = false;
+        usingAbility = true;
+        //
+        bulletSpray.activate(sprite.getPosition(), grid);
+        bulletSpray.update(screenBounds, sprite.getPosition());
+    }
 }
 
 void GoblinBoss::abilityCleanUp() {
-    bullet.cleanUp();
+    bulletSpray.cleanUp();
 }
 
 void GoblinBoss::checkLvlUp(const size_t level) {
@@ -103,9 +113,8 @@ void GoblinBoss::render(sf::RenderWindow& window) const {
     if (bodySlam.canSlam()) {
         bodySlam.render(window);
     }
-
-    bullet.render(window);
-
+    if (bulletSpray.canCast()) {
+        bulletSpray.render(window);
+    }
     window.draw(sprite);
-    window.draw(hitBox.body);
 }
