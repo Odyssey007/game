@@ -6,6 +6,8 @@
 #include <random>
 #include <deque>
 #include <stack>
+#include <bitset>
+#include <sstream> 
 #include <unordered_map>
 #include "../header/deltaTime.h"
 

@@ -24,15 +24,28 @@ Player::Player() :
     hitBox.updateSize(bounds);
     //set origin
     sprite.setOrigin(sf::Vector2f((bounds.left + bounds.width/2.0f), (bounds.top + bounds.height/2.0f)));
-
-    //ability pools
-    abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
-    //abilities
 }
 
-void Player::extraSetUp(GridSystem& grid) {
-    abilities.push_back(std::make_unique<PiercingShotManager>(grid));
-    abilities.push_back(std::make_unique<EnergyBarrier>(grid));
+void Player::abilityFactory(GridSystem& grid) {
+    for (size_t i = 0; i < abilitiesAcquired.size(); ++i) {
+        bool acquired  = abilitiesAcquired.test(i);
+        if (acquired) {
+            switch (i) {
+            case 0:
+                abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
+                abilitiesAcquired.reset(i);
+                break;
+            case 1:
+                abilities.push_back(std::make_unique<EnergyBarrier>(grid));
+                abilitiesAcquired.reset(i);
+                break;
+            case 2:
+                abilities.push_back(std::make_unique<PiercingShotManager>(grid));                
+                abilitiesAcquired.reset(i);
+                break;
+            }
+        }
+    }
 }
 
 void Player::findNearestEnemy(const Entity& enemy) {
@@ -218,7 +231,6 @@ void Player::checkLevelUp(float exp) {
 
 //x = hp | y = ms
 void Player::takeDebuffs(const sf::Vector2f& debuff) {
-    std::cout << debuff.x << ", " << debuff.y << std::endl;
     health -= debuff.x;
     if (!isSlowed && debuff.y != 0.0f) {
         isSlowed = true;

@@ -7,10 +7,10 @@ Game::Game() {
     grid = GridSystem(sf::FloatRect(0, 0, screenBounds.width * 2, screenBounds.height * 2)); 
     //entity construction
     enemyPool = std::make_unique<EnemyPool>(100);
-    player = std::make_unique<Player>(); player->extraSetUp(grid);
+    player = std::make_unique<Player>();
     obstaclePool = std::make_unique<ObstaclePool>(5, screenBounds, grid);
     //wave set up
-    enemiesSpawning = 0; enemyLevel = 0;
+    enemiesSpawning = 1; enemyLevel = 0;
     //entity initial update
     player->setInitialPosition(screenBounds); grid.addEntity(*player);
     enemyPool->spawnEnemies(enemiesSpawning, enemyLevel, screenBounds, grid);
@@ -23,10 +23,10 @@ Game::Game() {
     backgroundTexture.loadFromFile("assets/background.png");
     spriteBackground.setTexture(backgroundTexture);
 
-    miniBoss = std::make_unique<GoblinBoss>();
-    miniBoss->spawn(1, screenBounds);
-    grid.addEntity(*miniBoss);
-    miniBoss->addExtra(grid);
+    // miniBoss = std::make_unique<GoblinBoss>();
+    // miniBoss->spawn(1, screenBounds);
+    // grid.addEntity(*miniBoss);
+    // miniBoss->addExtra(grid);
 }
 
 //window set up
@@ -118,12 +118,12 @@ void Game::update() {
 }
 
 void Game::updatePlaying() {
-    miniBoss->checkAlive();
-    if (miniBoss->isAlive()) {
-        miniBoss->update(playerPosition);
-        miniBoss->checkAlive();
-        miniBoss->updateAbility(playerPosition, screenBounds, grid);
-    }
+    // miniBoss->checkAlive();
+    // if (miniBoss->isAlive()) {
+    //     miniBoss->update(playerPosition);
+    //     miniBoss->checkAlive();
+    //     miniBoss->updateAbility(playerPosition, screenBounds, grid);
+    // }
 
     //enemy spawn: checks if a new wave needs to spawn
     if (waveSystem.isUpdated(enemyPool->isAllDead(), enemiesSpawning, enemyLevel)) {
@@ -136,14 +136,14 @@ void Game::updatePlaying() {
     //collision check
     grid.checkCollision();
 
-    miniBoss->applyMovement();
+    // miniBoss->applyMovement();
 
     player->applyMovement();
     enemyPool->applyMovement();
     player->tempSol(); //?hack fix later
     //clean up 
     
-    miniBoss->abilityCleanUp();
+    // miniBoss->abilityCleanUp();
 
     player->cleanUpAbilities(grid);
     enemyPool->resetEnemies(grid);
@@ -161,6 +161,7 @@ void Game::updatePlaying() {
         abilitySelectionUI->spawnCards(screenBounds);
         skipFrame = true;
     }
+    player->abilityFactory(grid);
 }
 
 void Game::updateLevelUp() {
@@ -196,9 +197,6 @@ void Game::renderPlaying() {
     window->setView(view);
     //entities
     player->renderAbilities(*window);
-
-    miniBoss->render(*window);
-
     enemyPool->renderEnemies(*window);
     enemyPool->renderExp(*window);
     player->render(*window);

@@ -1,5 +1,5 @@
 abilities
- -ability center? ** ---- implement how to store and 
+--->>>>>>>>>>ability center? ** ---- implement how to store and 
  -scaling implementation
 
 balancing
@@ -13,8 +13,8 @@ save sys
 new abilities
 ---ice throw?
 
-      ---stat boosters
-      max health
-      health regenerate
-      move speed 
-      ability cool down
+---stat boosters
+max health
+health regenerate
+move speed 
+ability cool down

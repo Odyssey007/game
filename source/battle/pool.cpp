@@ -1,5 +1,8 @@
 #include "../header/battle/pool.h"
 
+//todo spawns in exp out of nowhere (random kill spawns in more exp then supposed to)
+//todo spawns the ghost horde 🙏🙏
+
 EnemyPool::EnemyPool(const size_t totalEnemies) : 
     totalEnemies(totalEnemies), currentNumEnemies(0)
 {

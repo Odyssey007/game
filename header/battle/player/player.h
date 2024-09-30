@@ -53,14 +53,13 @@ private:
     void idle(const sf::Vector2f& mousePosition);
     void pickFacingDirection(const sf::Vector2f& mousePosition);
     //abilities
+    std::bitset<9> abilitiesAcquired;
     bool abilityActive;
     uint8_t numAttacked; //num times enemy hit player
     //basic abilities
     BlastPool blastPool;
     Dash dash;
 public:
-    void extraSetUp(GridSystem& grid);
-    //!bc of grid in update and kingdom
     void movement(const sf::Vector2f& mousePosition);
     //constructor
     Player(); 
@@ -98,7 +97,7 @@ public:
     void setAbilityInactive();
     bool getAbilityStatus() const;
 
-    void abilityFactory();
+    void abilityFactory(GridSystem& grid);
 
     void tempSol();
 };
