@@ -53,13 +53,15 @@ private:
     void idle(const sf::Vector2f& mousePosition);
     void pickFacingDirection(const sf::Vector2f& mousePosition);
     //abilities
-    std::bitset<9> abilitiesAcquired;
+    std::bitset<ABILITY_NUM> abilitiesAcquired;
     bool abilityActive;
     uint8_t numAttacked; //num times enemy hit player
     //basic abilities
     BlastPool blastPool;
     Dash dash;
 public:
+    void setCurAbilities(const std::bitset<ABILITY_NUM>& abilities);
+    std::bitset<ABILITY_NUM> getCurAbilities() const;
     void movement(const sf::Vector2f& mousePosition);
     //constructor
     Player(); 

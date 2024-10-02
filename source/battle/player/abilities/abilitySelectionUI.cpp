@@ -54,7 +54,7 @@ void AbilitySelectionUI::writeDescription(uint8_t ability) {
     switch (ability) {
         case 0:
             title.setString("Atomic Bullet");
-            description.setString("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB");
+            description.setString("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB");
             break;
         case 1:
             title.setString("Energy Barrier");
@@ -101,10 +101,6 @@ int AbilitySelectionUI::generateAbility() {
     int randomIndex = dist(gen);
     //
     int ability = availableAbilities[randomIndex];
-    if (randomIndex < 3) {
-        availableAbilities.erase(availableAbilities.begin() + randomIndex);
-    }
-    //
     return ability;
 }
 
@@ -120,30 +116,32 @@ void AbilitySelectionUI::update(uint8_t curLvl, uint8_t& lastLvl, GameState& sta
 }
 
 //?not clearing when writing on top
-void AbilitySelectionUI::confirmAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, GameState& state) {
+void AbilitySelectionUI::confirmAbility(sf::Mouse::Button button, const sf::Vector2f& mousePos, 
+                                        GameState& state, std::bitset<ABILITY_NUM>& abilityGotten) {
     if (button == sf::Mouse::Left) {
-        for (auto& card : abilityCards) {
-            if (card.getGlobalBounds().contains(mousePos)) {
-                if (selectedAbility != &card) { //only go if new card
+        for (size_t i = 0; i < abilityCards.size(); ++i) {
+            if (abilityCards[i].getGlobalBounds().contains(mousePos)) {
+                if (selectedAbility != &abilityCards[i]) { //only go if new card
                     //reset old
                     if (selectedAbility) {
                         selectedAbility->setFillColor(sf::Color::Blue);
                     }
                     //new card
-                    selectedAbility = &card;
+                    selectedAbility = &abilityCards[i];
                     selectedAbility->setFillColor(sf::Color::Red);
-                    picked = true;
+                    picked = true; pickedAbility = i;
                 }
                 break;
             }
         }
         if (picked && confirmBtn.getGlobalBounds().contains(mousePos)) {
             state = PLAYING;
-            //TODO SAVE WHICH ONE PICKED
+            if (givenAbilities[pickedAbility] < 3) //one-time
+                availableAbilities.erase(availableAbilities.begin() + givenAbilities[pickedAbility]);
+            abilityGotten.set(givenAbilities[pickedAbility]);
             //reset what is selected
             selectedAbility->setFillColor(sf::Color::Blue);
             selectedAbility = nullptr;
-            //
             givenAbilities.clear();
         } 
     }
@@ -172,7 +170,8 @@ void AbilitySelectionUI::spawnCards(const sf::FloatRect& screenBounds) {
                     (abilityCards[i].getGlobalBounds().width / 2.0f) - 
                     (abilityDescription[givenAbilities[i]].first.getGlobalBounds().width / 2.0f);
         abilityDescription[givenAbilities[i]].first.setPosition(betterPos);
-        //--
+        //
+        wrapText(abilityDescription[givenAbilities[i]].second, abilityCards[i].getGlobalBounds().width);
         abilityDescription[givenAbilities[i]].second.setPosition(abilityCards[i].getPosition());
         sf::Vector2f cardCenter = abilityCards[i].getPosition();
         cardCenter.x += abilityCards[i].getGlobalBounds().width/2.0f;
@@ -180,7 +179,6 @@ void AbilitySelectionUI::spawnCards(const sf::FloatRect& screenBounds) {
         betterPos.x = cardCenter.x - (textBound.width/2.0f);
         betterPos.y = cardCenter.y + 75.0f;
         abilityDescription[givenAbilities[i]].second.setPosition(betterPos);
-        wrapText(abilityDescription[givenAbilities[i]].second, abilityCards[i].getGlobalBounds().width-10.0f);
     }
     //confirmBtn----
     confirmBtn.setPosition(
@@ -191,36 +189,43 @@ void AbilitySelectionUI::spawnCards(const sf::FloatRect& screenBounds) {
     confirmText.setPosition(btnPos);
 }
 
-//!don't work
-void AbilitySelectionUI::wrapText(sf::Text& text, float maxWidth) {
-    std::string writing = text.getString().toAnsiString();
-    std::istringstream iss(writing);
+void AbilitySelectionUI::wrapText(sf::Text& sfText, float boxWidth, unsigned int padding) {
+    std::string text = sfText.getString();
+    std::istringstream words(text);
     std::string word;
     std::string wrappedText;
-    float spaceWidth = text.getFont()->getGlyph(' ', text.getCharacterSize(), false).advance;
-    float currentLineWidth = 0;
-
-    while (iss >> word) {
-        text.setString(word);
-        float wordWidth = text.getGlobalBounds().width + spaceWidth;  // include space in width
-
-        // Check if adding this word exceeds the max width
-        if (currentLineWidth + wordWidth > maxWidth) {
-            // Start a new line unless it's the very first word
-            if (!wrappedText.empty()) {
-                wrappedText += "\n";
-                currentLineWidth = 0;  // Reset current line width
+    float currentLineWidth = 0.0f;
+    boxWidth -= 2 * padding;
+    //
+    while (words >> word) {
+        // Check word length with a trailing space
+        sfText.setString(word + " ");
+        float wordWidth = sfText.getLocalBounds().width;
+        //word too long
+        if (wordWidth > boxWidth) {
+            for (char c : word) { //split long word in multiple lines
+                sfText.setString(std::string(1, c));
+                float charWidth = sfText.getLocalBounds().width;
+                if (currentLineWidth + charWidth > boxWidth) {
+                    wrappedText += "\n";
+                    currentLineWidth = 0.0f;
+                }
+                wrappedText += c;
+                currentLineWidth += charWidth;
             }
+            wrappedText += " ";
+            currentLineWidth += sfText.getLocalBounds().width;
+        } else { //can fit next line
+            if (currentLineWidth + wordWidth > boxWidth) {
+                wrappedText += "\n";
+                currentLineWidth = 0.0f;
+            }
+            wrappedText += word + " ";
+            currentLineWidth += wordWidth;
         }
-
-        // Append the word to the result
-        wrappedText += word + " ";
-        currentLineWidth += wordWidth; // Update current line width
     }
-
-    text.setString(wrappedText);  // Set the final string with wrapped text
+    sfText.setString(wrappedText);
 }
-
  
 void AbilitySelectionUI::render(sf::RenderWindow& window) const {
     for (size_t i = 0; i < NUM_CARDS; i++) {

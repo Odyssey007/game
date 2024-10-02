@@ -85,7 +85,10 @@ void Game::handleEventsPlaying() {
 void Game::handleEventsLevelUp() {
     if (event.type == sf::Event::MouseButtonPressed) {
         sf::Mouse::Button button = event.mouseButton.button;
-        abilitySelectionUI->confirmAbility(button, mousePosition, gameState);
+        std::bitset<ABILITY_NUM> abilities = player->getCurAbilities();
+        abilitySelectionUI->confirmAbility(button, mousePosition, gameState, abilities);
+        player->setCurAbilities(abilities);
+        player->abilityFactory(grid);
     }
 }
 
@@ -161,7 +164,6 @@ void Game::updatePlaying() {
         abilitySelectionUI->spawnCards(screenBounds);
         skipFrame = true;
     }
-    player->abilityFactory(grid);
 }
 
 void Game::updateLevelUp() {

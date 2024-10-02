@@ -10,6 +10,8 @@ enum EntityType {
 };
 enum CollisionType { BOX, CIRCLE };
 
+const uint8_t ABILITY_NUM = 9;
+
 class Entity {
 protected:
     bool alive;

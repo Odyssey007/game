@@ -10,6 +10,7 @@
 #include <sstream> 
 #include <unordered_map>
 #include "../header/deltaTime.h"
+#include "../header/battle/entity.h"
 
 enum GameState { PLAYING, LEVEL_UP_MENU, PAUSE_MENU };
 

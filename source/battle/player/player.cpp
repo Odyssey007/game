@@ -28,21 +28,23 @@ Player::Player() :
 
 void Player::abilityFactory(GridSystem& grid) {
     for (size_t i = 0; i < abilitiesAcquired.size(); ++i) {
-        bool acquired  = abilitiesAcquired.test(i);
-        if (acquired) {
+        if (abilitiesAcquired.test(i)) {
             switch (i) {
-            case 0:
-                abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
-                abilitiesAcquired.reset(i);
-                break;
-            case 1:
-                abilities.push_back(std::make_unique<EnergyBarrier>(grid));
-                abilitiesAcquired.reset(i);
-                break;
-            case 2:
-                abilities.push_back(std::make_unique<PiercingShotManager>(grid));                
-                abilitiesAcquired.reset(i);
-                break;
+                case 0:
+                    abilityPools.push_back(std::make_unique<AtomicBulletPool>(100));
+                    abilitiesAcquired.reset(i);
+                    break;
+                case 1:
+                    abilities.push_back(std::make_unique<EnergyBarrier>(grid));
+                    abilitiesAcquired.reset(i);
+                    break;
+                case 2:
+                    abilities.push_back(std::make_unique<PiercingShotManager>(grid));                
+                    abilitiesAcquired.reset(i);
+                    break;
+                case 3:
+                    abilitiesAcquired.reset(i);
+                    break;
             }
         }
     }
@@ -87,8 +89,6 @@ void Player::update(const sf::Vector2f& mousePosition, const sf::FloatRect& scre
 
     dash.update(hitWall, moveDistance); //basic
     blastPool.update(screenBounds); //basic
-
-    return; //!
 
     //ability pools
     for (auto& abilityPool : abilityPools) {
@@ -239,7 +239,17 @@ void Player::takeDebuffs(const sf::Vector2f& debuff) {
     numAttacked++;
 }
 
+//
+
+void Player::setCurAbilities(const std::bitset<ABILITY_NUM>& abilities) {
+    abilitiesAcquired = abilities;
+}
+
 //fetchers
+
+std::bitset<ABILITY_NUM> Player::getCurAbilities() const {
+    return abilitiesAcquired;
+}
 
 uint8_t Player::getLevel() const {
     return level;
